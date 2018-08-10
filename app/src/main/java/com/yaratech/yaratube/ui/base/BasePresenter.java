@@ -1,4 +1,4 @@
-package com.yaratech.yaratube.ui;
+package com.yaratech.yaratube.ui.base;
 
 public interface BasePresenter<V extends BaseView> {
 
@@ -6,7 +6,7 @@ public interface BasePresenter<V extends BaseView> {
 
     void detachView(V view);
 
-    boolean isAttached(V view);
+    boolean isAttached();
 
 
 }
