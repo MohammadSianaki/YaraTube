@@ -5,7 +5,13 @@ A Video Streamer App Written In Android As My Internship Project At Yara Informa
 # Features
 Use MVP architecture
 
-Use popular third party libraries, such as: Retrofit 2 , ButterKnife , Glide and so on
+Use popular third party libraries, such as:
+- RxJava2
+- Dagger 2
+- Retrofit 2
+- Room 
+- ButterKnife
+- Glide v4
 
 
 # License
