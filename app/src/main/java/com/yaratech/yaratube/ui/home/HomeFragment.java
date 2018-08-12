@@ -141,7 +141,6 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public void onDestroyView() {
         Log.i(TAG, "onDestroyView: ");
-        mPresenter.cancelStoreApiRequest();
         mPresenter.detachView(this);
         super.onDestroyView();
     }
