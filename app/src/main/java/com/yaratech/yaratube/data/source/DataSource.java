@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface DataSource {
 
-    interface LoadDataCallback<T> {
+    interface ApiResultCallback<T> {
 
         void onDataLoaded(List<T> list);
 
@@ -14,7 +14,7 @@ public interface DataSource {
     }
 
 
-    void fetchAllCategories(LoadDataCallback callback);
+    void fetchAllCategories(ApiResultCallback callback);
 
 
 }

@@ -25,7 +25,7 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public void fetchAllCategories(LoadDataCallback callback) {
+    public void fetchAllCategories(ApiResultCallback callback) {
         remoteDataSource.fetchAllCategories(callback);
     }
 }

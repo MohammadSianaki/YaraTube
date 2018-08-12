@@ -1,6 +1,6 @@
 package com.yaratech.yaratube.data.source.remote;
 
-import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.model.home.Category;
 
 import java.util.List;
 

@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.model.home.Category;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;

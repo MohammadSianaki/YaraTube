@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.model.home.Category;
 
 import java.util.List;
 

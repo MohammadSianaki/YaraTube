@@ -3,7 +3,7 @@ package com.yaratech.yaratube.data.source.remote;
 import android.content.Context;
 import android.util.Log;
 
-import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.model.home.Category;
 import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.utils.NetworkUtils;
 
@@ -25,7 +25,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void fetchAllCategories(final LoadDataCallback callback) {
+    public void fetchAllCategories(final ApiResultCallback callback) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchAllCategories: network available");
             Call<List<Category>> call = apiService.fetchAllCategories();
