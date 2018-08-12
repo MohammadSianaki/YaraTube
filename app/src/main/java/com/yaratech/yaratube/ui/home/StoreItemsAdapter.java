@@ -40,11 +40,11 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
             case R.layout.header_item:
-                view = inflater.inflate(R.layout.header_item, parent, false);
+                view = inflater.inflate(R.layout.header_layout, parent, false);
                 holder = new HeaderViewHolder(view);
                 break;
             case R.layout.home_item:
-                view = inflater.inflate(R.layout.home_item, parent, false);
+                view = inflater.inflate(R.layout.home_layout, parent, false);
                 holder = new HomeViewHolder(view);
                 break;
         }
@@ -77,15 +77,33 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return 1 + homeItems.size();
+        if (homeItems == null) {
+            return 0;
+        }
+        return homeItems.size();
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-
+    public class HeaderViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.rv_header_items)
         RecyclerView headerRecyclerView;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+
+        }
+
+        public void onBindHeaderView() {
+            HeaderItemsAdapter headerItemsAdapter = new HeaderItemsAdapter();
+            headerRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+            headerRecyclerView.setAdapter(headerItemsAdapter);
+            headerItemsAdapter.setHeaderItems(headerItems);
+        }
+    }
+
+    public class HomeViewHolder extends RecyclerView.ViewHolder {
+
 
         @BindView(R.id.rv_home_items)
         RecyclerView homeRecyclerView;
@@ -93,41 +111,19 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @BindView(R.id.tv_home_items_name)
         TextView homeItemsName;
 
-        public ViewHolder(View itemView) {
+        public HomeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-        }
-
-        public void onBindHeaderView() {
-            HeaderItemsAdapter headerItemsAdapter = new HeaderItemsAdapter();
-            headerRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
-            headerRecyclerView.setAdapter(headerItemsAdapter);
-            headerItemsAdapter.setHeaderItems(headerItems);
         }
 
 
         public void onBindHomeView(HomeItem homeItem) {
             HomeItemsAdapter homeItemsAdapter = new HomeItemsAdapter();
-            homeRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
-            headerRecyclerView.setAdapter(homeItemsAdapter);
+            homeRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+            homeRecyclerView.setAdapter(homeItemsAdapter);
             homeItemsAdapter.setProducts(homeItem.getProducts());
             homeItemsName.setText(homeItem.getTitle());
 
-        }
-    }
-
-
-    public class HeaderViewHolder extends ViewHolder {
-
-        public HeaderViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    public class HomeViewHolder extends ViewHolder {
-
-        public HomeViewHolder(View itemView) {
-            super(itemView);
         }
     }
 

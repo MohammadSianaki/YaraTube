@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
-import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
@@ -40,10 +39,10 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
         setupToolbar();
 
 
-        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
-        if (homeFragment == null) {
-            homeFragment = HomeFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), homeFragment, R.id.fl_base_activity_content);
+        BaseFragment baseFragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
+        if (baseFragment == null) {
+            baseFragment = BaseFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), baseFragment, R.id.fl_base_activity_content);
         }
     }
 

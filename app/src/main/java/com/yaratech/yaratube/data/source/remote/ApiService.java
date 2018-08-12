@@ -1,6 +1,7 @@
 package com.yaratech.yaratube.data.source.remote;
 
-import com.yaratech.yaratube.data.model.home.Category;
+import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.model.HomeResponse;
 
 import java.util.List;
 
@@ -12,5 +13,7 @@ public interface ApiService {
     @GET("category/16/463")
     Call<List<Category>> fetchAllCategories();
 
+    @GET("store/16")
+    Call<HomeResponse> fetchStoreItems();
 
 }

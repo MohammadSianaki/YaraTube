@@ -44,7 +44,7 @@ public class CategoryPresenter implements CategoryContract.Presenter {
         if (isAttached()) {
             // show progress bar
             mView.showProgressBarLoading();
-            repository.fetchAllCategories(new DataSource.ApiResultCallback() {
+            repository.fetchAllCategories(new DataSource.CategoryApiResultCallback() {
                 @Override
                 public void onDataLoaded(List list) {
                     Log.i(TAG, "onDataLoaded: <<<< list size is : >>>>" + list.size());

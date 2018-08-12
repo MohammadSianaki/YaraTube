@@ -1,22 +1,22 @@
-package com.yaratech.yaratube.ui.home;
+package com.yaratech.yaratube.ui;
 
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.HomeResponse;
+import com.yaratech.yaratube.ui.category.CategoryFragment;
+import com.yaratech.yaratube.ui.home.HomeFragment;
+import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,36 +24,29 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements HomeContract.View {
+public class BaseFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    //----------------------------------------------------------------------------------------
-    private static final String TAG = "HomeFragment";
-    private HomeContract.Presenter mPresenter;
-    private StoreItemsAdapter storeItemsAdapter;
+    //--------------------------------------------------------------------------------------------
+    private static final String TAG = "BaseFragment";
 
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottomNavigationView;
 
-    @BindView(R.id.pb_store_items_loading)
-    ProgressBar progressBar;
+    //--------------------------------------------------------------------------------------------
 
-    @BindView(R.id.rv_store_items)
-    RecyclerView recyclerViewStoreItems;
-
-    //----------------------------------------------------------------------------------------
-
-    public HomeFragment() {
-
+    public BaseFragment() {
         // Required empty public constructor
     }
 
-    public static HomeFragment newInstance() {
+
+    public static BaseFragment newInstance() {
 
         Bundle args = new Bundle();
 
-        HomeFragment fragment = new HomeFragment();
+        BaseFragment fragment = new BaseFragment();
         fragment.setArguments(args);
         return fragment;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -68,29 +61,19 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         super.onCreate(savedInstanceState);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_base, container, false);
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onViewCreated: ");
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        storeItemsAdapter = new StoreItemsAdapter();
-        mPresenter = new HomePresenter();
-        mPresenter.attachView(this);
-        setupRecyclerView();
-    }
-
-    private void setupRecyclerView() {
-        recyclerViewStoreItems.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        recyclerViewStoreItems.setAdapter(storeItemsAdapter);
+        chooseFragment(bottomNavigationView.getMenu().getItem(0));
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
 
@@ -98,7 +81,6 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onActivityCreated: ");
         super.onActivityCreated(savedInstanceState);
-        mPresenter.fetchStoreItems();
     }
 
     @Override
@@ -141,7 +123,6 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public void onDestroyView() {
         Log.i(TAG, "onDestroyView: ");
-        mPresenter.detachView(this);
         super.onDestroyView();
     }
 
@@ -159,29 +140,25 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
 
     @Override
-    public void showLoadedData(HomeResponse homeResponse) {
-        storeItemsAdapter.setHeaderItems(homeResponse.getHeaderItems());
-        storeItemsAdapter.setHomeItems(homeResponse.getHomeItems());
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        chooseFragment(item);
+        return true;
     }
 
-    @Override
-    public void showDataNotAvailableToast() {
-        Toast.makeText(getContext(), "Data is not available now...", Toast.LENGTH_SHORT).show();
+
+    private void chooseFragment(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.bottom_nav_category_item:
+                addFragment(CategoryFragment.newInstance());
+                break;
+            case R.id.bottom_nav_main_screen_item:
+                addFragment(HomeFragment.newInstance());
+                break;
+        }
     }
 
-    @Override
-    public void showNetworkNotAvailableToast() {
-        Toast.makeText(getContext(), "Check you network connection...", Toast.LENGTH_SHORT).show();
+    private void addFragment(Fragment fragment) {
+        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_home_fragment_content, false);
     }
-
-    @Override
-    public void showProgressBarLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void finishProgressBarLoading() {
-        progressBar.setVisibility(View.GONE);
-    }
-
 }
+

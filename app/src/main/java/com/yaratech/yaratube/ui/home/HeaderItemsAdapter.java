@@ -16,6 +16,7 @@ import com.yaratech.yaratube.utils.AppConstants;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class HeaderItemsAdapter extends RecyclerView.Adapter<HeaderItemsAdapter.HeaderViewHolder> {
 
@@ -30,7 +31,7 @@ public class HeaderItemsAdapter extends RecyclerView.Adapter<HeaderItemsAdapter.
     @Override
     public HeaderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.
-                from(parent.getContext()).inflate(R.layout.home_item, parent, false);
+                from(parent.getContext()).inflate(R.layout.header_item, parent, false);
         return new HeaderViewHolder(rootView);
     }
 
@@ -59,6 +60,7 @@ public class HeaderItemsAdapter extends RecyclerView.Adapter<HeaderItemsAdapter.
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         public void onBind(HeaderItem headerItem) {
