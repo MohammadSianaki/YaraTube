@@ -2,11 +2,11 @@ package com.yaratech.yaratube.ui.home;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
@@ -51,8 +51,6 @@ public class HeaderItemsAdapter extends RecyclerView.Adapter<HeaderItemsAdapter.
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_header_card_title)
-        TextView title;
 
         @BindView(R.id.iv_header_card_product)
         ImageView imageView;
@@ -64,8 +62,8 @@ public class HeaderItemsAdapter extends RecyclerView.Adapter<HeaderItemsAdapter.
         }
 
         public void onBind(HeaderItem headerItem) {
-            title.setText(headerItem.getName());
-            String url = AppConstants.BASE_URL + headerItem.getAvatar().getXxxdpi();
+            String url = AppConstants.BASE_URL + headerItem.getFeatureAvatar().getXxxdpi();
+            Log.i("URL", "onBind: " + url);
             Glide.with(itemView.getContext()).load(url).into(imageView);
         }
     }

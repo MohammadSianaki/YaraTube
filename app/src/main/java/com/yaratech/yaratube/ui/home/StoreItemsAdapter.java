@@ -22,6 +22,10 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<HeaderItem> headerItems;
     private List<HomeItem> homeItems;
 
+    private static final int HEADER_VIEW_TYPE = 1;
+    private static final int HOME_VIEW_TYPE = 2;
+
+
     public void setHeaderItems(List<HeaderItem> headerItems) {
         this.headerItems = headerItems;
         notifyDataSetChanged();
@@ -39,11 +43,11 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         RecyclerView.ViewHolder holder = null;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
-            case R.layout.header_item:
+            case HEADER_VIEW_TYPE:
                 view = inflater.inflate(R.layout.header_layout, parent, false);
                 holder = new HeaderViewHolder(view);
                 break;
-            case R.layout.home_item:
+            case HOME_VIEW_TYPE:
                 view = inflater.inflate(R.layout.home_layout, parent, false);
                 holder = new HomeViewHolder(view);
                 break;
@@ -58,21 +62,17 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             viewHolder.onBindHeaderView();
         } else if (holder instanceof HomeViewHolder) {
             HomeViewHolder viewHolder = (HomeViewHolder) holder;
-            viewHolder.onBindHomeView(homeItems.get(position));
+            viewHolder.onBindHomeView(homeItems.get(position - 1));
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        switch (position) {
-            case 1:
-                return R.layout.header_item;
-            case 2:
-                return R.layout.home_item;
-            default:
-                return R.layout.home_item;
+        if (position == 0) {
+            return HEADER_VIEW_TYPE;
+        } else {
+            return HOME_VIEW_TYPE;
         }
-
     }
 
     @Override
@@ -80,7 +80,7 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (homeItems == null) {
             return 0;
         }
-        return homeItems.size();
+        return homeItems.size() + 1;
     }
 
 

@@ -1,8 +1,9 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/CardView.Light"
     android:layout_width="@dimen/home_card_width"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/home_card_height"
     android:layout_margin="@dimen/home_card_margin"
     android:elevation="@dimen/home_card_elevation"
     app:cardCornerRadius="@dimen/home_card_radius">
@@ -15,7 +16,7 @@
             android:id="@+id/iv_home_card_product"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             android:src="@drawable/index"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="H,16:9"
@@ -28,36 +29,35 @@
 
         <TextView
             android:id="@+id/tv_home_card_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/home_card_desc_margin_bottom"
-            android:layout_marginStart="@dimen/home_card_desc_margin_start"
-            android:layout_marginTop="@dimen/home_card_desc_margin_top"
-            android:text="توضیحیات"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:textDirection="rtl"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tv_home_card_title"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_home_card_title"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@id/tv_home_card_title" />
 
         <TextView
             android:id="@+id/tv_home_card_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/home_card_title_margin_end"
-            android:layout_marginStart="@dimen/home_card_title_margin_start"
-            android:layout_marginTop="@dimen/home_card_title_margin_top"
-            android:text="عنوان"
+            android:layout_width="0dp"
+            android:layout_height="49dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:textColor="@color/black"
+            android:textDirection="rtl"
             android:textSize="@dimen/home_card_title_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tv_home_card_description"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_home_card_product"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed" />
 
 
     </android.support.constraint.ConstraintLayout>
