@@ -46,19 +46,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final Category currentCategory = categoryList.get(position);
-
-        holder.textView.setText(currentCategory.getTitle());
-        if (currentCategory.getAvatar() != null) {
-
-            Glide
-                    .with(holder.itemView.getContext())
-                    .load(TextUtils.concat(AppConstants.BASE_URL, currentCategory.getAvatar()))
-                    .into(holder.imageView);
-        }
-
-        holder.itemView.setOnClickListener(view -> {
-            listener.onItemClicked(currentCategory);
-        });
+        holder.onBind(currentCategory);
 
     }
 
@@ -82,6 +70,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void onBind(Category category) {
+            textView.setText(category.getTitle());
+
+            if (category.getAvatar() != null) {
+
+                Glide
+                        .with(itemView.getContext())
+                        .load(TextUtils.concat(AppConstants.BASE_URL, category.getAvatar()))
+                        .into(imageView);
+            }
+
+            itemView.setOnClickListener(view -> {
+                listener.onItemClicked(category);
+            });
         }
     }
 

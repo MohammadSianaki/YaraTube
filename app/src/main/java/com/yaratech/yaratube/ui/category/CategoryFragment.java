@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
@@ -35,6 +36,8 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     @BindView(R.id.rv_categories)
     RecyclerView recyclerViewCategories;
 
+    @BindView(R.id.pb_category_loading)
+    ProgressBar progressBar;
 
     private CategoryAdapter categoryAdapter;
     private CategoryContract.Presenter mPresenter;
@@ -93,6 +96,33 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     }
 
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i(TAG, "onActivityCreated: ");
+        mPresenter.fetchCategoriesFromRemoteDataSource();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy: ");
+        mPresenter.detachView(this);
+        super.onDestroy();
+    }
+
+    private void setupRecyclerView() {
+        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewCategories.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+        recyclerViewCategories.setAdapter(categoryAdapter);
+    }
+
+    @Override
+    public void onItemClicked(Category category) {
+        mListener.onClick(category);
+    }
+
     @Override
     public void showLoadedData(List list) {
         categoryAdapter.setCategoryList(list);
@@ -108,31 +138,16 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         Toast.makeText(getContext(), "Check you network connection...", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.i(TAG, "onActivityCreated: ");
-        mPresenter.fetchCategoriesFromRemoteDataSource();
-    }
 
-    private void setupRecyclerView() {
-        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewCategories.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerViewCategories.setAdapter(categoryAdapter);
+    @Override
+    public void showProgressBarLoading() {
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onDestroy() {
-        Log.i(TAG, "onDestroy: ");
-        mPresenter.detachView(this);
-        super.onDestroy();
+    public void finishProgressBarLoading() {
+        progressBar.setVisibility(View.GONE);
     }
-
-    @Override
-    public void onItemClicked(Category category) {
-        mListener.onClick(category);
-    }
-
 
     public interface OnCategoryFragmentInteractionListener {
         void onClick(Category item);

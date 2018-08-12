@@ -39,22 +39,31 @@ public class CategoryPresenter implements CategoryContract.Presenter {
     @Override
     public void fetchCategoriesFromRemoteDataSource() {
         Log.i(TAG, "fetchCategoriesFromRemoteDataSource: ");
-        repository.fetchAllCategories(new DataSource.LoadDataCallback() {
-            @Override
-            public void onDataLoaded(List list) {
-                Log.i(TAG, "onDataLoaded: <<<< list size is : >>>>" + list.size());
-                mView.showLoadedData(list);
-            }
 
-            @Override
-            public void onDataNotAvailable() {
-                mView.showDataNotAvailableToast();
-            }
+        // check if view is attached to the presenter
+        if (isAttached()) {
+            // show progress bar
+            mView.showProgressBarLoading();
+            repository.fetchAllCategories(new DataSource.LoadDataCallback() {
+                @Override
+                public void onDataLoaded(List list) {
+                    Log.i(TAG, "onDataLoaded: <<<< list size is : >>>>" + list.size());
+                    mView.finishProgressBarLoading();
+                    mView.showLoadedData(list);
+                }
 
-            @Override
-            public void onNetworkNotAvailable() {
-                mView.showNetworkNotAvailableToast();
-            }
-        });
+                @Override
+                public void onDataNotAvailable() {
+                    mView.finishProgressBarLoading();
+                    mView.showDataNotAvailableToast();
+                }
+
+                @Override
+                public void onNetworkNotAvailable() {
+                    mView.finishProgressBarLoading();
+                    mView.showNetworkNotAvailableToast();
+                }
+            });
+        }
     }
 }

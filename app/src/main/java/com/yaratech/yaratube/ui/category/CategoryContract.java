@@ -15,6 +15,10 @@ public interface CategoryContract {
 
         void showNetworkNotAvailableToast();
 
+        void showProgressBarLoading();
+
+        void finishProgressBarLoading();
+
     }
 
 
