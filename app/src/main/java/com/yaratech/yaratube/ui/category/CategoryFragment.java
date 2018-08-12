@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.home.Category;
+import com.yaratech.yaratube.data.model.Category;
 
 import java.util.List;
 
@@ -113,7 +113,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     }
 
     private void setupRecyclerView() {
-        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewCategories.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         recyclerViewCategories.setAdapter(categoryAdapter);
     }

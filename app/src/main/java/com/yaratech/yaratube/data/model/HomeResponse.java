@@ -1,15 +1,25 @@
 
 package com.yaratech.yaratube.data.model;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class HomeResponse {
+
+
+    @SerializedName("homeitem")
+    @Expose
+    private List<HomeItem> homeItems = null;
 
     @SerializedName("name")
     @Expose
     private String name;
+
+    @SerializedName("headeritem")
+    @Expose
+    private List<HeaderItem> headerItems = null;
     @SerializedName("tabStrip")
     @Expose
     private List<Object> tabStrip = null;
@@ -63,4 +73,19 @@ public class HomeResponse {
         this.parentCategories = parentCategories;
     }
 
+    public List<HomeItem> getHomeItems() {
+        return homeItems;
+    }
+
+    public void setHomeItems(List<HomeItem> homeItems) {
+        this.homeItems = homeItems;
+    }
+
+    public List<HeaderItem> getHeaderItems() {
+        return headerItems;
+    }
+
+    public void setHeaderItems(List<HeaderItem> headerItems) {
+        this.headerItems = headerItems;
+    }
 }
