@@ -17,6 +17,10 @@ android {
         }
     }
     buildToolsVersion "27.0.3"
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -43,11 +47,10 @@ dependencies {
     // Retrofit 2
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
 
     // Room
-
     implementation "android.arch.persistence.room:runtime:$rootProject.roomVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
-
 
 }

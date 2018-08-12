@@ -1,0 +1,60 @@
+package com.yaratech.yaratube.ui.category;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.yaratech.yaratube.data.source.DataSource;
+import com.yaratech.yaratube.data.source.Repository;
+import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
+
+import java.util.List;
+
+public class CategoryPresenter implements CategoryContract.Presenter {
+
+    private static final String TAG = "CategoryPresenter";
+    private CategoryContract.View mView;
+    private Repository repository;
+
+    public CategoryPresenter() {
+    }
+
+    @Override
+    public void attachView(CategoryContract.View view) {
+        mView = view;
+        Context context = ((CategoryFragment) mView).getContext();
+        this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
+    }
+
+    @Override
+    public void detachView(CategoryContract.View view) {
+        mView = null;
+    }
+
+    @Override
+    public boolean isAttached() {
+        return mView != null;
+    }
+
+
+    @Override
+    public void fetchCategoriesFromRemoteDataSource() {
+        Log.i(TAG, "fetchCategoriesFromRemoteDataSource: ");
+        repository.fetchAllCategories(new DataSource.LoadDataCallback() {
+            @Override
+            public void onDataLoaded(List list) {
+                Log.i(TAG, "onDataLoaded: <<<< list size is : >>>>" + list.size());
+                mView.showLoadedData(list);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                mView.showDataNotAvailableToast();
+            }
+
+            @Override
+            public void onNetworkNotAvailable() {
+                mView.showNetworkNotAvailableToast();
+            }
+        });
+    }
+}

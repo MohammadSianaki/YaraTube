@@ -5,23 +5,33 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.ui.category.CategoryFragment;
+import com.yaratech.yaratube.ui.main.MainFragment;
+import com.yaratech.yaratube.utils.ActivityUtils;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements HomeContract.View, BottomNavigationView.OnNavigationItemSelectedListener {
 
     //--------------------------------------------------------------------------------------------
     private static final String TAG = "HomeFragment";
     private HomeContract.Presenter mPresenter;
 
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottomNavigationView;
 
     //--------------------------------------------------------------------------------------------
 
@@ -65,6 +75,9 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onViewCreated: ");
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+        chooseFragment(bottomNavigationView.getMenu().getItem(0));
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
 
@@ -72,6 +85,11 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onActivityCreated: ");
         super.onActivityCreated(savedInstanceState);
+
+        mPresenter = new HomePresenter();
+        mPresenter.attachView(this);
+
+
     }
 
     @Override
@@ -114,6 +132,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         Log.i(TAG, "onDestroyView: ");
+        mPresenter.detachView(this);
         super.onDestroyView();
     }
 
@@ -127,6 +146,29 @@ public class HomeFragment extends Fragment {
     public void onDetach() {
         Log.i(TAG, "onDetach: ");
         super.onDetach();
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        chooseFragment(item);
+        return true;
+    }
+
+
+    private void chooseFragment(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.bottom_nav_category_item:
+                addFragment(CategoryFragment.newInstance());
+                break;
+            case R.id.bottom_nav_main_screen_item:
+                addFragment(MainFragment.newInstance());
+                break;
+        }
+    }
+
+    private void addFragment(Fragment fragment) {
+        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_home_fragment_content, false);
     }
 }
 

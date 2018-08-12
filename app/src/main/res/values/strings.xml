@@ -1,6 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="app_name">YaraTube</string>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nav_profile">پروفایل</string>
+    <string name="nav_about_us">درباره ما</string>
+    <string name="nav_contact_us">تماس با ما</string>
+    <string name="bottom_nav_category_item">دسته بندی ها</string>
+    <string name="bottom_nav__main_screen_item">صفحه اصلی</string>
 </resources>
+
