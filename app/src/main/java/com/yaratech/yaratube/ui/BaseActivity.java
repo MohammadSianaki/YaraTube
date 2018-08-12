@@ -1,6 +1,7 @@
 package com.yaratech.yaratube.ui;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
+import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
@@ -19,7 +21,7 @@ import butterknife.ButterKnife;
 public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener {
 
 
-    private static final String TAG = "BaseActivity";
+    private static final String TAG = "lifecycle";
     //------------------------------------------------------------------------------------------------
 
     @BindView(R.id.toolbar)
@@ -33,6 +35,7 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+        Log.i(TAG, "onCreate: BaseActivity");
         ButterKnife.bind(this);
 
         ActivityUtils.checkAndSetRtl(this);
@@ -50,22 +53,71 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     @Override
     public void onAttachFragment(android.support.v4.app.Fragment fragment) {
         super.onAttachFragment(fragment);
-        Log.i(TAG, "onAttachFragment: ");
+        Log.i(TAG, "onAttachFragment: BaseActivity");
+        if (fragment instanceof BaseFragment) {
+            Log.i(TAG, "onAttachFragment: <<<<BaseFragment Added>>>>");
+        }
+        if (fragment instanceof HomeFragment) {
+            Log.i(TAG, "onAttachFragment: <<<HomeFragment Added>>>>");
+
+        }
         if (fragment instanceof CategoryFragment) {
             Log.i(TAG, "onAttachFragment: <<<<CategoryFragment Added>>>>");
         }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG, "onPause: ");
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: BaseActivity");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.i(TAG, "onRestoreInstanceState: BaseActivity");
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        Log.i(TAG, "onPostCreate: BaseActivity");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume: ");
+        Log.i(TAG, "onResume: BaseActivity");
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.i(TAG, "onPostResume: BaseActivity");
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        Log.i(TAG, "onAttachedToWindow: BaseActivity");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: BaseActivity");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: BaseActivity");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: BaseActivity");
     }
 
     @Override

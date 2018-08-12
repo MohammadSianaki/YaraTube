@@ -34,4 +34,14 @@ public class Repository implements DataSource {
     public void fetchStoreItems(StoreApiResultCallback callback) {
         remoteDataSource.fetchStoreItems(callback);
     }
+
+    @Override
+    public void cancelCategoryApiRequest() {
+        remoteDataSource.cancelCategoryApiRequest();
+    }
+
+    @Override
+    public void cancelStoreApiRequest() {
+        remoteDataSource.cancelStoreApiRequest();
+    }
 }

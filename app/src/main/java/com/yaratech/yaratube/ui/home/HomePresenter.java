@@ -62,4 +62,9 @@ public class HomePresenter implements HomeContract.Presenter {
             });
         }
     }
+
+    @Override
+    public void cancelStoreApiRequest() {
+        repository.cancelStoreApiRequest();
+    }
 }

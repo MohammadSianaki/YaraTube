@@ -30,7 +30,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     //------------------------------------------------------------------------------------------------
 
-    private static final String TAG = "CategoryFragment";
+    private static final String TAG = "lifecycle";
 
     @BindView(R.id.rv_categories)
     RecyclerView recyclerViewCategories;
@@ -60,7 +60,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i(TAG, "onAttach: ");
+        Log.i(TAG, "onAttach: CategoryFragment");
         if (context instanceof OnCategoryFragmentInteractionListener) {
             mListener = (OnCategoryFragmentInteractionListener) context;
         } else {
@@ -71,14 +71,14 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: ");
+        Log.i(TAG, "onCreate: CategoryFragment");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.i(TAG, "onCreateView: ");
+        Log.i(TAG, "onCreateView: CategoryFragment");
         return inflater.inflate(R.layout.fragment_category, container, false);
     }
 
@@ -86,7 +86,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.i(TAG, "onViewCreated: ");
+        Log.i(TAG, "onViewCreated: CategoryFragment");
         ButterKnife.bind(this, view);
         categoryAdapter = new CategoryAdapter(this);
         mPresenter = new CategoryPresenter();
@@ -99,16 +99,66 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i(TAG, "onActivityCreated: ");
+        Log.i(TAG, "onActivityCreated: CategoryFragment");
         mPresenter.fetchCategoriesFromRemoteDataSource();
     }
 
 
     @Override
-    public void onDestroy() {
-        Log.i(TAG, "onDestroy: ");
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        Log.i(TAG, "onViewStateRestored: CategoryFragment");
+        super.onViewStateRestored(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        Log.i(TAG, "onStart: CategoryFragment");
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        Log.i(TAG, "onResume: CategoryFragment");
+        super.onResume();
+    }
+
+
+    @Override
+    public void onPause() {
+        Log.i(TAG, "onPause: CategoryFragment");
+        super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Log.i(TAG, "onSaveInstanceState: CategoryFragment");
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onStop() {
+        Log.i(TAG, "onStop: CategoryFragment");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.cancelCategoryApiRequest();
         mPresenter.detachView(this);
+        super.onDestroyView();
+        Log.i(TAG, "onDestroyView: CategoryFragment");
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy: CategoryFragment");
         super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.i(TAG, "onDetach: CategoryFragment");
     }
 
     private void setupRecyclerView() {

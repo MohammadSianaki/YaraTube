@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 public class HomeFragment extends Fragment implements HomeContract.View {
 
     //----------------------------------------------------------------------------------------
-    private static final String TAG = "HomeFragment";
+    private static final String TAG = "lifecycle";
     private HomeContract.Presenter mPresenter;
     private StoreItemsAdapter storeItemsAdapter;
 
@@ -57,21 +57,21 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void onAttach(Context context) {
-        Log.i(TAG, "onAttach: ");
+        Log.i(TAG, "onAttach: HomeFragment");
         super.onAttach(context);
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate: ");
+        Log.i(TAG, "onCreate: HomeFragment");
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView: ");
+        Log.i(TAG, "onCreateView: HomeFragment");
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onViewCreated: ");
+        Log.i(TAG, "onViewCreated: HomeFragment");
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         storeItemsAdapter = new StoreItemsAdapter();
@@ -88,75 +88,76 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         setupRecyclerView();
     }
 
-    private void setupRecyclerView() {
-        recyclerViewStoreItems.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
-        recyclerViewStoreItems.setAdapter(storeItemsAdapter);
-    }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onActivityCreated: ");
+        Log.i(TAG, "onActivityCreated: HomeFragment");
         super.onActivityCreated(savedInstanceState);
         mPresenter.fetchStoreItems();
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onViewStateRestored: ");
+        Log.i(TAG, "onViewStateRestored: HomeFragment");
         super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
     public void onStart() {
-        Log.i(TAG, "onStart: ");
+        Log.i(TAG, "onStart: HomeFragment");
         super.onStart();
     }
 
     @Override
     public void onResume() {
-        Log.i(TAG, "onResume: ");
+        Log.i(TAG, "onResume: HomeFragment");
         super.onResume();
     }
 
 
     @Override
     public void onPause() {
-        Log.i(TAG, "onPause: ");
+        Log.i(TAG, "onPause: HomeFragment");
         super.onPause();
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        Log.i(TAG, "onSaveInstanceState: ");
+        Log.i(TAG, "onSaveInstanceState: HomeFragment");
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onStop() {
-        Log.i(TAG, "onStop: ");
+        Log.i(TAG, "onStop: HomeFragment");
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
-        Log.i(TAG, "onDestroyView: ");
+        Log.i(TAG, "onDestroyView: HomeFragment");
+        mPresenter.cancelStoreApiRequest();
         mPresenter.detachView(this);
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy: ");
+        Log.i(TAG, "onDestroy: HomeFragment");
         super.onDestroy();
     }
 
     @Override
     public void onDetach() {
-        Log.i(TAG, "onDetach: ");
+        Log.i(TAG, "onDetach: HomeFragment");
         super.onDetach();
     }
 
+
+    private void setupRecyclerView() {
+        recyclerViewStoreItems.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerViewStoreItems.setAdapter(storeItemsAdapter);
+    }
 
     @Override
     public void showLoadedData(HomeResponse homeResponse) {

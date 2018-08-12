@@ -66,4 +66,9 @@ public class CategoryPresenter implements CategoryContract.Presenter {
             });
         }
     }
+
+    @Override
+    public void cancelCategoryApiRequest() {
+        repository.cancelCategoryApiRequest();
+    }
 }

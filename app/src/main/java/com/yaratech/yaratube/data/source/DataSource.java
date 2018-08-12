@@ -30,4 +30,8 @@ public interface DataSource {
 
     void fetchStoreItems(StoreApiResultCallback callback);
 
+    void cancelStoreApiRequest();
+
+    void cancelCategoryApiRequest();
+
 }

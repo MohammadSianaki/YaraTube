@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 public class BaseFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     //--------------------------------------------------------------------------------------------
-    private static final String TAG = "BaseFragment";
+    private static final String TAG = "lifecycle";
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
@@ -50,21 +50,21 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
 
     @Override
     public void onAttach(Context context) {
-        Log.i(TAG, "onAttach: ");
+        Log.i(TAG, "onAttach: BaseFragment");
         super.onAttach(context);
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate: ");
+        Log.i(TAG, "onCreate: BaseFragment");
         super.onCreate(savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView: ");
+        Log.i(TAG, "onCreateView: BaseFragment");
         return inflater.inflate(R.layout.fragment_base, container, false);
     }
 
@@ -79,62 +79,62 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onActivityCreated: ");
+        Log.i(TAG, "onActivityCreated: BaseFragment");
         super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onViewStateRestored: ");
+        Log.i(TAG, "onViewStateRestored: BaseFragment");
         super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
     public void onStart() {
-        Log.i(TAG, "onStart: ");
+        Log.i(TAG, "onStart: BaseFragment");
         super.onStart();
     }
 
     @Override
     public void onResume() {
-        Log.i(TAG, "onResume: ");
+        Log.i(TAG, "onResume: BaseFragment");
         super.onResume();
     }
 
 
     @Override
     public void onPause() {
-        Log.i(TAG, "onPause: ");
+        Log.i(TAG, "onPause: BaseFragment");
         super.onPause();
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        Log.i(TAG, "onSaveInstanceState: ");
+        Log.i(TAG, "onSaveInstanceState: BaseFragment");
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onStop() {
-        Log.i(TAG, "onStop: ");
+        Log.i(TAG, "onStop: BaseFragment");
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
-        Log.i(TAG, "onDestroyView: ");
+        Log.i(TAG, "onDestroyView: BaseFragment");
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy: ");
+        Log.i(TAG, "onDestroy: BaseFragment");
         super.onDestroy();
     }
 
     @Override
     public void onDetach() {
-        Log.i(TAG, "onDetach: ");
+        Log.i(TAG, "onDetach: BaseFragment");
         super.onDetach();
     }
 

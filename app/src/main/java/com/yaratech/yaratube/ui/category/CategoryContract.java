@@ -26,6 +26,7 @@ public interface CategoryContract {
 
         void fetchCategoriesFromRemoteDataSource();
 
+        void cancelCategoryApiRequest();
     }
 
 
