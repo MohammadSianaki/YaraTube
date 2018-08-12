@@ -7,7 +7,6 @@ import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.data.source.Repository;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
-import com.yaratech.yaratube.ui.BaseFragment;
 
 public class HomePresenter implements HomeContract.Presenter {
 
@@ -60,6 +59,13 @@ public class HomePresenter implements HomeContract.Presenter {
                     mView.showNetworkNotAvailableToast();
                 }
             });
+        }
+    }
+
+    @Override
+    public void cancelStoreApiRequest() {
+        if (isAttached()) {
+            repository.cancelStoreApiRequest();
         }
     }
 }

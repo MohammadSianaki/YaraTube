@@ -39,11 +39,11 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         RecyclerView.ViewHolder holder = null;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
-            case R.layout.header_item:
+            case R.layout.header_layout:
                 view = inflater.inflate(R.layout.header_layout, parent, false);
                 holder = new HeaderViewHolder(view);
                 break;
-            case R.layout.home_item:
+            case R.layout.home_layout:
                 view = inflater.inflate(R.layout.home_layout, parent, false);
                 holder = new HomeViewHolder(view);
                 break;
@@ -64,15 +64,11 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        switch (position) {
-            case 1:
-                return R.layout.header_item;
-            case 2:
-                return R.layout.home_item;
-            default:
-                return R.layout.home_item;
+        if (position == 0) {
+            return R.layout.header_layout;
+        } else {
+            return R.layout.home_layout;
         }
-
     }
 
     @Override

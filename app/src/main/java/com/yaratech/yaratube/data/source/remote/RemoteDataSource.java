@@ -19,6 +19,8 @@ public class RemoteDataSource implements DataSource {
     private static final String TAG = "RemoteDataSource";
     private Context context;
     private ApiService apiService;
+    private Call<HomeResponse> homeResponseCall;
+    private Call<List<Category>> categoryCall;
 
     public RemoteDataSource(Context context) {
         this.context = context;
@@ -29,8 +31,8 @@ public class RemoteDataSource implements DataSource {
     public void fetchAllCategories(final CategoryApiResultCallback callback) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchAllCategories: network available");
-            Call<List<Category>> call = apiService.fetchAllCategories();
-            call.enqueue(new Callback<List<Category>>() {
+            categoryCall = apiService.fetchAllCategories();
+            categoryCall.enqueue(new Callback<List<Category>>() {
                 @Override
                 public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                     Log.i(TAG, "onResponse: ");
@@ -60,7 +62,7 @@ public class RemoteDataSource implements DataSource {
     public void fetchStoreItems(StoreApiResultCallback callback) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchStoreItems: network available");
-            Call<HomeResponse> homeResponseCall = apiService.fetchStoreItems();
+            homeResponseCall = apiService.fetchStoreItems();
             homeResponseCall.enqueue(new Callback<HomeResponse>() {
                 @Override
                 public void onResponse(Call<HomeResponse> call, Response<HomeResponse> response) {
@@ -86,5 +88,16 @@ public class RemoteDataSource implements DataSource {
             Log.i(TAG, "fetchAllCategories: network not available");
             callback.onNetworkNotAvailable();
         }
+    }
+
+    @Override
+    public void cancelCategoryApiRequest() {
+        categoryCall.cancel();
+    }
+
+    @Override
+    public void cancelStoreApiRequest() {
+        homeResponseCall.cancel();
+
     }
 }

@@ -104,11 +104,16 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         mPresenter.fetchCategoriesFromRemoteDataSource();
     }
 
+    @Override
+    public void onDestroyView() {
+        mPresenter.cancelCategoryApiRequest();
+        mPresenter.detachView(this);
+        super.onDestroyView();
+    }
 
     @Override
     public void onDestroy() {
         Log.i(TAG, "onDestroy: ");
-        mPresenter.detachView(this);
         super.onDestroy();
     }
 
