@@ -73,7 +73,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        mPresenter = new DetailsPresenter();
+        mPresenter = new DetailsPresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
     }
 

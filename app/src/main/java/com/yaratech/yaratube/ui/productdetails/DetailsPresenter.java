@@ -12,19 +12,21 @@ public class DetailsPresenter implements DetailsContract.Presenter {
     //---------------------------------------------------------------------------------------------
     private DetailsContract.View mView;
     private Repository repository;
-    private Context context;
 
     //---------------------------------------------------------------------------------------------
-    @Override
-    public void attachView(DetailsContract.View view) {
-        mView = view;
-        context = ((DetailsFragment) mView).getContext();
+
+
+    public DetailsPresenter(Context context) {
         this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
     }
 
     @Override
+    public void attachView(DetailsContract.View view) {
+        mView = view;
+    }
+
+    @Override
     public void detachView(DetailsContract.View view) {
-        context = null;
         mView = null;
     }
 

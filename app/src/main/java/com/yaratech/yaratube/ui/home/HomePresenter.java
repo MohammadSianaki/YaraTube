@@ -13,18 +13,19 @@ public class HomePresenter implements HomeContract.Presenter {
     private HomeContract.View mView;
     private Repository repository;
     private static final String TAG = "HomePresenter";
-    private Context context;
 
-    @Override
-    public void attachView(HomeContract.View view) {
-        mView = view;
-        context = ((HomeFragment) mView).getContext();
+
+    public HomePresenter(Context context) {
         this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
     }
 
     @Override
+    public void attachView(HomeContract.View view) {
+        mView = view;
+    }
+
+    @Override
     public void detachView(HomeContract.View view) {
-        context = null;
         mView = null;
     }
 

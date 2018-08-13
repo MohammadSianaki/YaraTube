@@ -17,18 +17,18 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
 
     private GridCategoryContract.View mView;
     private Repository repository;
-    private Context context;
 
-    @Override
-    public void attachView(GridCategoryContract.View view) {
-        mView = view;
-        context = ((GridCategoryFragment) mView).getContext();
+    public GridCategoryPresenter(Context context) {
         this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
     }
 
     @Override
+    public void attachView(GridCategoryContract.View view) {
+        mView = view;
+    }
+
+    @Override
     public void detachView(GridCategoryContract.View view) {
-        context = null;
         mView = null;
     }
 

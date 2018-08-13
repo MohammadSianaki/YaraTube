@@ -84,7 +84,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         ButterKnife.bind(this, view);
 
         gridCategoryAdapter = new GridCategoryAdapter(this);
-        mPresenter = new GridCategoryPresenter();
+        mPresenter = new GridCategoryPresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
         setupRecyclerView();
 

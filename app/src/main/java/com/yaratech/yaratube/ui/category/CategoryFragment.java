@@ -89,7 +89,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         Log.i(TAG, "onViewCreated: CategoryFragment");
         ButterKnife.bind(this, view);
         categoryAdapter = new CategoryAdapter(this);
-        mPresenter = new CategoryPresenter();
+        mPresenter = new CategoryPresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
         setupRecyclerView();
 
