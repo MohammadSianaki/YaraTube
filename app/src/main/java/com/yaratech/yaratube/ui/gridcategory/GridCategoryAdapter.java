@@ -24,6 +24,11 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
     List<Product> productList;
 
     private static final String TAG = "GridCategoryAdapter";
+    private OnCategoryGridClickListener mListener;
+
+    public GridCategoryAdapter(OnCategoryGridClickListener mListener) {
+        this.mListener = mListener;
+    }
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
@@ -75,6 +80,7 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
 
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(v -> mListener.onClickedItem(productList.get(getAdapterPosition())));
         }
 
 
@@ -84,8 +90,10 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
             title.setText(product.getName());
             description.setText(product.getShortDescription());
         }
+    }
 
-
+    public interface OnCategoryGridClickListener {
+        public void onClickedItem(Product item);
     }
 }
 

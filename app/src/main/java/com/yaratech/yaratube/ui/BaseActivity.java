@@ -21,7 +21,7 @@ import com.yaratech.yaratube.utils.ActivityUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, HomeFragment.OnHomeFragmentInteractionListener {
+public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, HomeFragment.OnHomeFragmentInteractionListener, GridCategoryFragment.OnGridCategoryInteraction {
 
 
     private static final String TAG = "lifecycle";
@@ -171,6 +171,18 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
 
     @Override
     public void showRequestedProductDetails(Product item) {
+        int productId = item.getId();
+        ActivityUtils.replaceFragmentToActivity(
+                getSupportFragmentManager(),
+                DetailsFragment.newInstance(productId),
+                R.id.fl_base_activity_content,
+                true);
+        Log.i(TAG, "onProductItemClicked: <<<<" + item.getName() + "\t" + item.getId() + ">>>>");
+
+    }
+
+    @Override
+    public void goToProductDetails(Product item) {
         int productId = item.getId();
         ActivityUtils.replaceFragmentToActivity(
                 getSupportFragmentManager(),

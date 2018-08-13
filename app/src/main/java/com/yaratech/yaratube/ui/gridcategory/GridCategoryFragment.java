@@ -17,6 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.ui.BaseActivity;
 
 import java.util.List;
 
@@ -28,12 +30,14 @@ import static android.content.ContentValues.TAG;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GridCategoryFragment extends Fragment implements GridCategoryContract.View {
+public class GridCategoryFragment extends Fragment implements GridCategoryContract.View, GridCategoryAdapter.OnCategoryGridClickListener {
     private static final String KEY_ID = "KEY_ID";
     //-------------------------------------------------------------------------------------------
 
     private GridCategoryContract.Presenter mPresenter;
     private GridCategoryAdapter gridCategoryAdapter;
+    private OnGridCategoryInteraction onGridCategoryInteraction;
+
     @BindView(R.id.rv_products_of_category)
     RecyclerView recyclerViewOfProducts;
 
@@ -56,6 +60,9 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void onAttach(Context context) {
+        if (context instanceof BaseActivity) {
+            onGridCategoryInteraction = (OnGridCategoryInteraction) context;
+        }
         super.onAttach(context);
     }
 
@@ -76,7 +83,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        gridCategoryAdapter = new GridCategoryAdapter();
+        gridCategoryAdapter = new GridCategoryAdapter(this);
         mPresenter = new GridCategoryPresenter();
         mPresenter.attachView(this);
         setupRecyclerView();
@@ -139,5 +146,15 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onClickedItem(Product item) {
+        onGridCategoryInteraction.goToProductDetails(item);
+    }
+
+
+    public interface OnGridCategoryInteraction {
+        public void goToProductDetails(Product item);
     }
 }
