@@ -36,15 +36,16 @@ public class HomePresenter implements HomeContract.Presenter {
     public void fetchStoreItems() {
         if (isAttached()) {
             mView.showProgressBarLoading();
-            repository.fetchStoreItems(new DataSource.StoreApiResultCallback() {
+            repository.fetchStoreItems(new DataSource.ApiResultCallback() {
 
                 @Override
-                public void onDataLoaded(HomeResponse response) {
-                    Log.i(TAG, "onDataLoaded: <<<< header item size is : >>>>" + response.getHeaderItems().size());
-                    Log.i(TAG, "onDataLoaded: <<<< home item size is : >>>>" + response.getHomeItems().size());
+                public void onDataLoaded(Object response) {
+                    HomeResponse homeResponse = (HomeResponse) response;
+                    Log.i(TAG, "onDataLoaded: <<<< header item size is : >>>>" + homeResponse.getHeaderItems().size());
+                    Log.i(TAG, "onDataLoaded: <<<< home item size is : >>>>" + homeResponse.getHomeItems().size());
                     if (mView != null) {
                         mView.finishProgressBarLoading();
-                        mView.showLoadedData(response);
+                        mView.showLoadedData(homeResponse);
                     }
                 }
 

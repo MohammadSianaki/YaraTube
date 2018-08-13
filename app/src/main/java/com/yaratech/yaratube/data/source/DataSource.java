@@ -1,24 +1,10 @@
 package com.yaratech.yaratube.data.source;
 
-import com.yaratech.yaratube.data.model.HomeResponse;
-
-import java.util.List;
-
 public interface DataSource {
 
-    interface CategoryApiResultCallback<T> {
+    interface ApiResultCallback<T> {
 
-        void onDataLoaded(List<T> list);
-
-        void onDataNotAvailable();
-
-        void onNetworkNotAvailable();
-    }
-
-
-    interface StoreApiResultCallback {
-
-        void onDataLoaded(HomeResponse response);
+        void onDataLoaded(T response);
 
         void onDataNotAvailable();
 
@@ -26,9 +12,9 @@ public interface DataSource {
     }
 
 
-    void fetchAllCategories(CategoryApiResultCallback callback);
+    void fetchAllCategories(ApiResultCallback callback);
 
-    void fetchStoreItems(StoreApiResultCallback callback);
+    void fetchStoreItems(ApiResultCallback callback);
 
     void cancelStoreApiRequest();
 

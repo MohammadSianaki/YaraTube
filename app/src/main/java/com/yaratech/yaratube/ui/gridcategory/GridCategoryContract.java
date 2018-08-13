@@ -13,8 +13,7 @@ public interface GridCategoryContract {
 
 
     interface Presenter extends BasePresenter<View> {
-
-
+        void fetchProducts();
     }
 }
 

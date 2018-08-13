@@ -28,7 +28,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void fetchAllCategories(final CategoryApiResultCallback callback) {
+    public void fetchAllCategories(final ApiResultCallback callback) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchAllCategories: network available");
             categoryCall = apiService.fetchAllCategories();
@@ -59,7 +59,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void fetchStoreItems(StoreApiResultCallback callback) {
+    public void fetchStoreItems(ApiResultCallback callback) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchStoreItems: network available");
             homeResponseCall = apiService.fetchStoreItems();
