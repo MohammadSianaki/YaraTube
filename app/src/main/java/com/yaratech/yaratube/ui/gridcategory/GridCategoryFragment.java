@@ -145,6 +145,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void onDetach() {
+        onGridCategoryInteraction = null;
         super.onDetach();
     }
 

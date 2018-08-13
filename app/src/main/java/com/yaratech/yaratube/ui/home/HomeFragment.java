@@ -155,6 +155,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     @Override
     public void onDetach() {
         Log.i(TAG, "onDetach: HomeFragment");
+        listener = null;
         super.onDetach();
     }
 

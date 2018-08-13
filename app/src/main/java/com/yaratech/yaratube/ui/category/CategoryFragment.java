@@ -157,6 +157,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     @Override
     public void onDetach() {
+        mListener = null;
         super.onDetach();
         Log.i(TAG, "onDetach: CategoryFragment");
     }
