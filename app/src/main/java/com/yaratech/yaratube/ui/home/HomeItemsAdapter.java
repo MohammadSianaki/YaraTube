@@ -80,8 +80,7 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
         public void onBind(Product product) {
             title.setText(product.getName());
             description.setText(product.getShortDescription());
-            String url = AppConstants.BASE_URL + product.getAvatar().getXxxdpi();
-            Glide.with(itemView.getContext()).load(url).into(imageView);
+            Glide.with(itemView.getContext()).load(product.getAvatar().getXxxDpiUrl()).into(imageView);
         }
     }
 

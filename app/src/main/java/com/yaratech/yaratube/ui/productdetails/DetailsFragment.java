@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.utils.AppConstants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,8 +86,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
 
     @Override
     public void showLoadedData(Product product) {
-        String url = AppConstants.BASE_URL + product.getAvatar().getXxxdpi();
-        Glide.with(getContext()).load(url).into(productDetailsMedia);
+        Glide.with(getContext()).load(product.getAvatar().getXxxDpiUrl()).into(productDetailsMedia);
         productDetailsTitle.setText(product.getName());
         productDetailsDescription.setText(product.getShortDescription());
     }

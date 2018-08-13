@@ -62,9 +62,7 @@ public class HeaderItemsAdapter extends RecyclerView.Adapter<HeaderItemsAdapter.
         }
 
         public void onBind(HeaderItem headerItem) {
-            String url = AppConstants.BASE_URL + headerItem.getFeatureAvatar().getXxxdpi();
-            Log.i("URL", "onBind: " + url);
-            Glide.with(itemView.getContext()).load(url).into(imageView);
+            Glide.with(itemView.getContext()).load(headerItem.getFeatureAvatar().getXxxDpiUrl()).into(imageView);
         }
     }
 }
