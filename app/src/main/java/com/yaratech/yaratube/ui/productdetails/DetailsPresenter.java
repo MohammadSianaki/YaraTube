@@ -18,7 +18,7 @@ public class DetailsPresenter implements DetailsContract.Presenter {
     @Override
     public void attachView(DetailsContract.View view) {
         mView = view;
-        Context context = ((HomeFragment) mView).getContext();
+        Context context = ((DetailsFragment) mView).getContext();
         this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
     }
 

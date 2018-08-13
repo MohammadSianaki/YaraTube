@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.HomeResponse;
+import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
 
 import butterknife.BindView;
@@ -25,13 +26,13 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements HomeContract.View {
+public class HomeFragment extends Fragment implements HomeContract.View, HomeItemsAdapter.OnHomeItemsClickListener {
 
     //----------------------------------------------------------------------------------------
     private static final String TAG = "lifecycle";
     private HomeContract.Presenter mPresenter;
     private StoreItemsAdapter storeItemsAdapter;
-
+    private OnHomeFragmentInteractionListener listener;
 
     @BindView(R.id.pb_store_items_loading)
     ProgressBar progressBar;
@@ -60,11 +61,10 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach: HomeFragment");
         if (context instanceof BaseActivity) {
-            Log.i(TAG, "onAttach: <<<<context is base activity>>>>");
+            listener = (OnHomeFragmentInteractionListener) context;
         }
         super.onAttach(context);
     }
-
 
 
     @Override
@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         Log.i(TAG, "onViewCreated: HomeFragment");
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        storeItemsAdapter = new StoreItemsAdapter();
+        storeItemsAdapter = new StoreItemsAdapter(this);
         mPresenter = new HomePresenter();
         mPresenter.attachView(this);
         setupRecyclerView();
@@ -190,4 +190,12 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         progressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onProductItemClicked(Product item) {
+        listener.showRequestedProductDetails(item);
+    }
+
+    public interface OnHomeFragmentInteractionListener {
+        void showRequestedProductDetails(Product item);
+    }
 }

@@ -169,7 +169,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     @Override
     public void onItemClicked(Category category) {
-        mListener.onClick(category);
+        mListener.onCategoryItemClicked(category);
     }
 
     @Override
@@ -199,7 +199,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     }
 
     public interface OnCategoryFragmentInteractionListener {
-        void onClick(Category item);
+        void onCategoryItemClicked(Category item);
     }
 
 }

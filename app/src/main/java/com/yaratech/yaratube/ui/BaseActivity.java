@@ -11,15 +11,17 @@ import android.view.MenuItem;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
+import com.yaratech.yaratube.ui.productdetails.DetailsFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener {
+public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, HomeFragment.OnHomeFragmentInteractionListener {
 
 
     private static final String TAG = "lifecycle";
@@ -155,7 +157,7 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
 
 
     @Override
-    public void onClick(Category item) {
+    public void onCategoryItemClicked(Category item) {
         int categoryId = item.getId();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -164,6 +166,18 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
                 getSupportFragmentManager(),
                 GridCategoryFragment.newInstance(categoryId),
                 R.id.fl_base_activity_content, true);
-        Log.i(TAG, "onClick: <<<<" + item.getTitle() + "\t" + item.getId() + ">>>>");
+        Log.i(TAG, "onProductItemClicked: <<<<" + item.getTitle() + "\t" + item.getId() + ">>>>");
+    }
+
+    @Override
+    public void showRequestedProductDetails(Product item) {
+        int productId = item.getId();
+        ActivityUtils.replaceFragmentToActivity(
+                getSupportFragmentManager(),
+                DetailsFragment.newInstance(productId),
+                R.id.fl_base_activity_content,
+                true);
+        Log.i(TAG, "onProductItemClicked: <<<<" + item.getName() + "\t" + item.getId() + ">>>>");
+
     }
 }

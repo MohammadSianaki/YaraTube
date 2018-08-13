@@ -21,9 +21,15 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private List<HeaderItem> headerItems;
     private List<HomeItem> homeItems;
+    private HomeItemsAdapter.OnHomeItemsClickListener mListener;
+
 
     private static final int HEADER_VIEW_TYPE = 1;
     private static final int HOME_VIEW_TYPE = 2;
+
+    public StoreItemsAdapter(HomeItemsAdapter.OnHomeItemsClickListener mListener) {
+        this.mListener = mListener;
+    }
 
 
     public void setHeaderItems(List<HeaderItem> headerItems) {
@@ -118,7 +124,7 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
         public void onBindHomeView(HomeItem homeItem) {
-            HomeItemsAdapter homeItemsAdapter = new HomeItemsAdapter();
+            HomeItemsAdapter homeItemsAdapter = new HomeItemsAdapter(mListener);
             homeRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
             homeRecyclerView.setAdapter(homeItemsAdapter);
             homeItemsAdapter.setProducts(homeItem.getProducts());

@@ -22,6 +22,11 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
 
 
     private List<Product> products;
+    private OnHomeItemsClickListener mListener;
+
+    public HomeItemsAdapter(OnHomeItemsClickListener mListener) {
+        this.mListener = mListener;
+    }
 
     public void setProducts(List<Product> products) {
         this.products = products;
@@ -65,6 +70,11 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
         public HomeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(
+                    v -> {
+                        mListener.onProductItemClicked(products.get(getAdapterPosition()));
+                    }
+            );
         }
 
         public void onBind(Product product) {
@@ -73,5 +83,9 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
             String url = AppConstants.BASE_URL + product.getAvatar().getXxxdpi();
             Glide.with(itemView.getContext()).load(url).into(imageView);
         }
+    }
+
+    public interface OnHomeItemsClickListener {
+        public void onProductItemClicked(Product item);
     }
 }
