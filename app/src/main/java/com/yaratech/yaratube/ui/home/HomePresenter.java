@@ -7,7 +7,6 @@ import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.data.source.Repository;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
-import com.yaratech.yaratube.ui.BaseFragment;
 
 public class HomePresenter implements HomeContract.Presenter {
 
@@ -43,21 +42,26 @@ public class HomePresenter implements HomeContract.Presenter {
                 public void onDataLoaded(HomeResponse response) {
                     Log.i(TAG, "onDataLoaded: <<<< header item size is : >>>>" + response.getHeaderItems().size());
                     Log.i(TAG, "onDataLoaded: <<<< home item size is : >>>>" + response.getHomeItems().size());
-
-                    mView.finishProgressBarLoading();
-                    mView.showLoadedData(response);
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showLoadedData(response);
+                    }
                 }
 
                 @Override
                 public void onDataNotAvailable() {
-                    mView.finishProgressBarLoading();
-                    mView.showDataNotAvailableToast();
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showDataNotAvailableToast();
+                    }
                 }
 
                 @Override
                 public void onNetworkNotAvailable() {
-                    mView.finishProgressBarLoading();
-                    mView.showNetworkNotAvailableToast();
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showNetworkNotAvailableToast();
+                    }
                 }
             });
         }

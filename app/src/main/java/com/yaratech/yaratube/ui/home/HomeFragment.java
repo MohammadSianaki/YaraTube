@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.HomeResponse;
+import com.yaratech.yaratube.ui.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,8 +59,12 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     @Override
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach: HomeFragment");
+        if (context instanceof BaseActivity) {
+            Log.i(TAG, "onAttach: <<<<context is base activity>>>>");
+        }
         super.onAttach(context);
     }
+
 
 
     @Override

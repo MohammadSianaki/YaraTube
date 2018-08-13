@@ -48,20 +48,26 @@ public class CategoryPresenter implements CategoryContract.Presenter {
                 @Override
                 public void onDataLoaded(List list) {
                     Log.i(TAG, "onDataLoaded: <<<< list size is : >>>>" + list.size());
-                    mView.finishProgressBarLoading();
-                    mView.showLoadedData(list);
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showLoadedData(list);
+                    }
                 }
 
                 @Override
                 public void onDataNotAvailable() {
-                    mView.finishProgressBarLoading();
-                    mView.showDataNotAvailableToast();
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showDataNotAvailableToast();
+                    }
                 }
 
                 @Override
                 public void onNetworkNotAvailable() {
-                    mView.finishProgressBarLoading();
-                    mView.showNetworkNotAvailableToast();
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showNetworkNotAvailableToast();
+                    }
                 }
             });
         }

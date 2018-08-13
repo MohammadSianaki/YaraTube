@@ -136,6 +136,10 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
+//            if (fragment instanceof CategoryFragment) {
+//                BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+//                bottomNavigationView.seto
+//            }
             super.onBackPressed();
         }
 

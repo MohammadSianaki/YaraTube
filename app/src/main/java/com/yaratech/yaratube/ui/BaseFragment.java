@@ -71,6 +71,7 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.i(TAG, "onViewCreated: BaseFragment");
         ButterKnife.bind(this, view);
         chooseFragment(bottomNavigationView.getMenu().getItem(0));
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -142,6 +143,7 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         chooseFragment(item);
+        item.setChecked(true);
         return true;
     }
 
@@ -149,16 +151,23 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     private void chooseFragment(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.bottom_nav_category_item:
-                addFragment(CategoryFragment.newInstance());
+                addFragment(CategoryFragment.newInstance(), false);
                 break;
             case R.id.bottom_nav_main_screen_item:
-                addFragment(HomeFragment.newInstance());
+                addFragment(HomeFragment.newInstance(), false);
                 break;
         }
     }
 
-    private void addFragment(Fragment fragment) {
-        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_home_fragment_content, false);
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        Log.i(TAG, "onAttachFragment: <<<<Child Fragment Added>>>>");
     }
+
+    private void addFragment(Fragment fragment, boolean addToBackStack) {
+        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_home_fragment_content, addToBackStack);
+    }
+
 }
 

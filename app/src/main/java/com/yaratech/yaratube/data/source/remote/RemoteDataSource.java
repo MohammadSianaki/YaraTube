@@ -92,11 +92,15 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public void cancelCategoryApiRequest() {
-        categoryCall.cancel();
+        if (homeResponseCall != null) {
+            homeResponseCall.cancel();
+        }
     }
 
     @Override
     public void cancelStoreApiRequest() {
-        homeResponseCall.cancel();
+        if (homeResponseCall != null) {
+            homeResponseCall.cancel();
+        }
     }
 }
