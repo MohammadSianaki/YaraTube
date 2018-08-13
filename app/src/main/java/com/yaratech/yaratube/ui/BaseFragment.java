@@ -166,7 +166,11 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     }
 
     private void addFragment(Fragment fragment, boolean addToBackStack) {
-        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_home_fragment_content, addToBackStack);
+        getActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .hide(getActivity().getSupportFragmentManager().findFragmentById(R.id.fl_base_fragment_content));
+        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_base_fragment_content, addToBackStack);
     }
 
 }

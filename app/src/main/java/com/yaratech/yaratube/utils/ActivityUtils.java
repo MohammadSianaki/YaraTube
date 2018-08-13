@@ -13,15 +13,23 @@ public class ActivityUtils {
                                              Fragment fragment, int frameId) {
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(frameId, fragment);
+        transaction.add(frameId, fragment);
         transaction.commit();
     }
 
 
     public static void replaceFragmentToActivity(FragmentManager fragmentManager,
                                                  Fragment fragment, int frameId, boolean addToBackStack) {
-
+//        boolean addFragmentFlag = true;
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        for (Fragment fr : fragmentManager.getFragments()) {
+//            if (fr == fragment) {
+//                Log.i(TAG, "replaceFragmentToActivity: equal");
+//                addFragmentFlag = false;
+//                break;
+//            }
+//        }
+
         transaction.replace(frameId, fragment);
         if (addToBackStack) {
             transaction.addToBackStack(null);

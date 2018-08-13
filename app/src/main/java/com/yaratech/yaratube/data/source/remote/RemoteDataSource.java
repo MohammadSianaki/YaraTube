@@ -23,6 +23,8 @@ public class RemoteDataSource implements DataSource {
     private Call<HomeResponse> homeResponseCall;
     private Call<List<Category>> categoryCall;
     private Call<List<Product>> productsByCategoryCall;
+    private Call<Product> productDetailsByProductIdCall;
+
 
     public RemoteDataSource(Context context) {
         this.context = context;
@@ -89,9 +91,46 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void cancelProductApiRequest() {
+    public void fetchProductDetailsByProductId(ApiResultCallback callback, int productId) {
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            Log.i(TAG, "fetchProductDetailsByProductId: network available");
+
+            productDetailsByProductIdCall = apiService.fetchProductDetailsByProductId(productId);
+            productDetailsByProductIdCall.enqueue(new Callback<Product>() {
+                @Override
+                public void onResponse(Call<Product> call, Response<Product> response) {
+                    if (response.isSuccessful()) {
+                        callback.onDataLoaded(response.body());
+                        Log.i(TAG, "onResponse: successful");
+                    } else {
+                        callback.onDataNotAvailable();
+                        Log.i(TAG, "onResponse: not successful");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Product> call, Throwable t) {
+                    callback.onDataNotAvailable();
+                    Log.i(TAG, "onFailure: " + t.getMessage());
+                }
+            });
+        } else {
+            Log.i(TAG, "fetchProductDetailsByProductId: network not available");
+            callback.onNetworkNotAvailable();
+        }
+    }
+
+    @Override
+    public void cancelProductsByCategoryIdApiRequest() {
         if (productsByCategoryCall != null) {
             productsByCategoryCall.cancel();
+        }
+    }
+
+    @Override
+    public void cancelProductDetailsByProductIdApiRequest() {
+        if (productDetailsByProductIdCall != null) {
+            productDetailsByProductIdCall.cancel();
         }
     }
 

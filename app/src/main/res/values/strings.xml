@@ -8,5 +8,6 @@
     <string name="nav_contact_us">تماس با ما</string>
     <string name="bottom_nav_category_item">دسته بندی ها</string>
     <string name="bottom_nav__main_screen_item">صفحه اصلی</string>
+    <string name="btn_submit_comment_text">نظر دهید</string>
 </resources>
 

@@ -35,6 +35,11 @@ public class Repository implements DataSource {
         remoteDataSource.fetchProductsByCategoryId(callback, categoryId);
     }
 
+    @Override
+    public void fetchProductDetailsByProductId(ApiResultCallback callback, int productId) {
+        remoteDataSource.fetchProductDetailsByProductId(callback, productId);
+    }
+
 
     @Override
     public void fetchStoreItems(ApiResultCallback callback) {
@@ -42,8 +47,13 @@ public class Repository implements DataSource {
     }
 
     @Override
-    public void cancelProductApiRequest() {
-        remoteDataSource.cancelProductApiRequest();
+    public void cancelProductsByCategoryIdApiRequest() {
+        remoteDataSource.cancelProductsByCategoryIdApiRequest();
+    }
+
+    @Override
+    public void cancelProductDetailsByProductIdApiRequest() {
+        remoteDataSource.cancelProductDetailsByProductIdApiRequest();
     }
 
     @Override

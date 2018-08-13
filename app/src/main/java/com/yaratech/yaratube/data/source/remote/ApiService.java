@@ -20,4 +20,7 @@ public interface ApiService {
 
     @GET("listproducts/{category_id}")
     Call<List<Product>> fetchProductsByCategoryId(@Path("category_id") int categoryId);
+
+    @GET("product/{productId}")
+    Call<Product> fetchProductDetailsByProductId(@Path("productId") int productId);
 }

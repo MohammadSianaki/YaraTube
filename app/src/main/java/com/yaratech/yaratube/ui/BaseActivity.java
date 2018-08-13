@@ -157,6 +157,9 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     @Override
     public void onClick(Category item) {
         int categoryId = item.getId();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .hide(getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content));
         ActivityUtils.replaceFragmentToActivity(
                 getSupportFragmentManager(),
                 GridCategoryFragment.newInstance(categoryId),
