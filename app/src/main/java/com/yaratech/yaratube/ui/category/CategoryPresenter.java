@@ -14,6 +14,7 @@ public class CategoryPresenter implements CategoryContract.Presenter {
     private static final String TAG = "CategoryPresenter";
     private CategoryContract.View mView;
     private Repository repository;
+    private Context context;
 
     public CategoryPresenter() {
     }
@@ -21,12 +22,13 @@ public class CategoryPresenter implements CategoryContract.Presenter {
     @Override
     public void attachView(CategoryContract.View view) {
         mView = view;
-        Context context = ((CategoryFragment) mView).getContext();
+        context = ((CategoryFragment) mView).getContext();
         this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
     }
 
     @Override
     public void detachView(CategoryContract.View view) {
+        context = null;
         mView = null;
     }
 

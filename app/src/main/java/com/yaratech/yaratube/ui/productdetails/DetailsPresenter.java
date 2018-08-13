@@ -6,24 +6,25 @@ import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.data.source.Repository;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
-import com.yaratech.yaratube.ui.home.HomeFragment;
 
 public class DetailsPresenter implements DetailsContract.Presenter {
 
     //---------------------------------------------------------------------------------------------
     private DetailsContract.View mView;
     private Repository repository;
+    private Context context;
 
     //---------------------------------------------------------------------------------------------
     @Override
     public void attachView(DetailsContract.View view) {
         mView = view;
-        Context context = ((DetailsFragment) mView).getContext();
+        context = ((DetailsFragment) mView).getContext();
         this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
     }
 
     @Override
     public void detachView(DetailsContract.View view) {
+        context = null;
         mView = null;
     }
 
