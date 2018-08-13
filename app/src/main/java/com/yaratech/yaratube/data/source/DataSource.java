@@ -16,8 +16,13 @@ public interface DataSource {
 
     void fetchStoreItems(ApiResultCallback callback);
 
+    void fetchProductsByCategoryId(ApiResultCallback callback, int categoryId);
+
     void cancelStoreApiRequest();
 
     void cancelCategoryApiRequest();
+
+    void cancelProductApiRequest();
+
 
 }

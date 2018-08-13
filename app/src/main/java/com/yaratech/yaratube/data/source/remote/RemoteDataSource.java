@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.data.model.HomeResponse;
+import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.utils.NetworkUtils;
 
@@ -21,6 +22,7 @@ public class RemoteDataSource implements DataSource {
     private ApiService apiService;
     private Call<HomeResponse> homeResponseCall;
     private Call<List<Category>> categoryCall;
+    private Call<List<Product>> productsByCategoryCall;
 
     public RemoteDataSource(Context context) {
         this.context = context;
@@ -55,6 +57,41 @@ public class RemoteDataSource implements DataSource {
         } else {
             Log.i(TAG, "fetchAllCategories: network not available");
             callback.onNetworkNotAvailable();
+        }
+    }
+
+    @Override
+    public void fetchProductsByCategoryId(ApiResultCallback callback, int categoryId) {
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            productsByCategoryCall = apiService.fetchProductsByCategoryId(categoryId);
+            productsByCategoryCall.enqueue(new Callback<List<Product>>() {
+                @Override
+                public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+                    if (response.isSuccessful()) {
+                        Log.i(TAG, "onResponse: successful");
+                        callback.onDataLoaded(response.body());
+                    } else {
+                        Log.i(TAG, "onResponse: not successful");
+                        callback.onDataNotAvailable();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Product>> call, Throwable t) {
+                    Log.i(TAG, "onFailure: " + t.getMessage());
+                    callback.onDataNotAvailable();
+                }
+            });
+        } else {
+            callback.onNetworkNotAvailable();
+            Log.i(TAG, "fetchProductsByCategoryId: network not available");
+        }
+    }
+
+    @Override
+    public void cancelProductApiRequest() {
+        if (productsByCategoryCall != null) {
+            productsByCategoryCall.cancel();
         }
     }
 

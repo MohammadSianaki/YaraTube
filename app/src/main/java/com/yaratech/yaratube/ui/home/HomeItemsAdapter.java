@@ -53,13 +53,13 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
 
     public class HomeViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.iv_home_card_product)
+        @BindView(R.id.iv_category_card_product)
         ImageView imageView;
 
-        @BindView(R.id.tv_home_card_title)
+        @BindView(R.id.tv_category_card_title)
         TextView title;
 
-        @BindView(R.id.tv_home_card_description)
+        @BindView(R.id.tv_category_card_description)
         TextView description;
 
         public HomeViewHolder(View itemView) {

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
+import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
@@ -155,6 +156,11 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
 
     @Override
     public void onClick(Category item) {
-        Log.i(TAG, "onClick: " + item.getTitle());
+        int categoryId = item.getId();
+        ActivityUtils.replaceFragmentToActivity(
+                getSupportFragmentManager(),
+                GridCategoryFragment.newInstance(categoryId),
+                R.id.fl_base_activity_content, true);
+        Log.i(TAG, "onClick: <<<<" + item.getTitle() + "\t" + item.getId() + ">>>>");
     }
 }
