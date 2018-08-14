@@ -139,7 +139,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     public void onDestroyView() {
         mUnBinder.unbind();
         mPresenter.cancelProductApiRequest();
-        mPresenter.detachView(this);
+        mPresenter.detachView();
         super.onDestroyView();
     }
 

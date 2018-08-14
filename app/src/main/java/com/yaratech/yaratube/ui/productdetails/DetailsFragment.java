@@ -122,7 +122,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     public void onDestroyView() {
         mUnBinder.unbind();
         mPresenter.cancelProductDetailsApiRequest();
-        mPresenter.detachView(this);
+        mPresenter.detachView();
         super.onDestroyView();
     }
 

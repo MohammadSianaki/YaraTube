@@ -7,13 +7,14 @@ import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.data.source.Repository;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
 
+import java.lang.ref.WeakReference;
+
 public class HomePresenter implements HomeContract.Presenter {
     //------------------------------------------------------------------------------------
     private static final String TAG = "HomePresenter";
 
-    private HomeContract.View mView;
     private Repository repository;
-
+    private WeakReference<HomeContract.View> mWeakReference;
     //------------------------------------------------------------------------------------
 
     public HomePresenter(Context context) {
@@ -22,47 +23,47 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void attachView(HomeContract.View view) {
-        mView = view;
+        mWeakReference = new WeakReference<>(view);
     }
 
     @Override
-    public void detachView(HomeContract.View view) {
-        mView = null;
+    public void detachView() {
+        mWeakReference = null;
     }
 
     @Override
     public boolean isAttached() {
-        return mView != null;
+        return mWeakReference != null;
     }
 
     @Override
     public void fetchStoreItems() {
         if (isAttached()) {
-            mView.showProgressBarLoading();
+            mWeakReference.get().showProgressBarLoading();
             repository.fetchStoreItems(new DataSource.ApiResultCallback() {
 
                 @Override
                 public void onDataLoaded(Object response) {
                     HomeResponse homeResponse = (HomeResponse) response;
-                    if (mView != null) {
-                        mView.finishProgressBarLoading();
-                        mView.showLoadedData(homeResponse);
+                    if (mWeakReference != null) {
+                        mWeakReference.get().finishProgressBarLoading();
+                        mWeakReference.get().showLoadedData(homeResponse);
                     }
                 }
 
                 @Override
                 public void onDataNotAvailable() {
-                    if (mView != null) {
-                        mView.finishProgressBarLoading();
-                        mView.showDataNotAvailableToast();
+                    if (mWeakReference != null) {
+                        mWeakReference.get().finishProgressBarLoading();
+                        mWeakReference.get().showDataNotAvailableToast();
                     }
                 }
 
                 @Override
                 public void onNetworkNotAvailable() {
-                    if (mView != null) {
-                        mView.finishProgressBarLoading();
-                        mView.showNetworkNotAvailableToast();
+                    if (mWeakReference != null) {
+                        mWeakReference.get().finishProgressBarLoading();
+                        mWeakReference.get().showNetworkNotAvailableToast();
                     }
                 }
             });

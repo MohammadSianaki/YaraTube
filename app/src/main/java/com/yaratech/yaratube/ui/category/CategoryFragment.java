@@ -141,7 +141,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     public void onDestroyView() {
         mUnBinder.unbind();
         mPresenter.cancelCategoryApiRequest();
-        mPresenter.detachView(this);
+        mPresenter.detachView();
         super.onDestroyView();
         Log.i(TAG, "onDestroyView: CategoryFragment");
     }

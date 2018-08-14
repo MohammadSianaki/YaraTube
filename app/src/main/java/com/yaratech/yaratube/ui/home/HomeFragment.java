@@ -140,7 +140,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
         Log.i(TAG, "onDestroyView: HomeFragment");
         mUnBinder.unbind();
         mPresenter.cancelStoreApiRequest();
-        mPresenter.detachView(this);
+        mPresenter.detachView();
         super.onDestroyView();
     }
 
