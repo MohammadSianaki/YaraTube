@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 public class BaseFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     //--------------------------------------------------------------------------------------------
-    private static final String TAG = "lifecycle";
+    private static final String TAG = "BaseFragment";
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
@@ -82,12 +82,6 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onActivityCreated: BaseFragment");
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onViewStateRestored: BaseFragment");
-        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
@@ -151,26 +145,16 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     private void chooseFragment(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.bottom_nav_category_item:
-                addFragment(CategoryFragment.newInstance(), false);
+                addFragment(CategoryFragment.newInstance());
                 break;
             case R.id.bottom_nav_main_screen_item:
-                addFragment(HomeFragment.newInstance(), false);
+                addFragment(HomeFragment.newInstance());
                 break;
         }
     }
 
-    @Override
-    public void onAttachFragment(Fragment childFragment) {
-        super.onAttachFragment(childFragment);
-        Log.i(TAG, "onAttachFragment: <<<<Child Fragment Added>>>>");
-    }
-
-    private void addFragment(Fragment fragment, boolean addToBackStack) {
-//        getActivity()
-//                .getSupportFragmentManager()
-//                .beginTransaction()
-//                .hide(getActivity().getSupportFragmentManager().findFragmentById(R.id.fl_base_fragment_content));
-        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_base_fragment_content, addToBackStack);
+    private void addFragment(Fragment fragment) {
+        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_base_fragment_content, false);
     }
 
 }
