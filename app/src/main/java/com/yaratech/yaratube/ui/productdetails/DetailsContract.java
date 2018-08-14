@@ -6,11 +6,11 @@ import com.yaratech.yaratube.ui.base.BaseView;
 
 public interface DetailsContract {
 
-    public interface View extends BaseView {
+    interface View extends BaseView {
         void showLoadedData(Product product);
     }
 
-    public interface Presenter extends BasePresenter<View> {
+    interface Presenter extends BasePresenter<View> {
         void fetchProductDetails(int productId);
 
         void cancelProductDetailsApiRequest();

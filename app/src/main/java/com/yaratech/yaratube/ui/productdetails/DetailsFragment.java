@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
  */
 public class DetailsFragment extends Fragment implements DetailsContract.View {
     private final static String KEY_ID = "KEY_ID";
-
+    private static final String TAG = "DetailsFragment";
     //------------------------------------------------------------------------------------------------------
 
     private DetailsContract.Presenter mPresenter;
@@ -61,6 +62,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView: DetailsFragment");
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_details, container, false);
     }
@@ -71,7 +73,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
+        Log.i(TAG, "onViewCreated: DetailsFragment");
         mPresenter = new DetailsPresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
     }
@@ -79,6 +81,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.i(TAG, "onActivityCreated: DetailsFragment");
         mPresenter.fetchProductDetails(getArguments().getInt(KEY_ID));
 
     }
@@ -86,7 +89,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
 
     @Override
     public void showLoadedData(Product product) {
-        Glide.with(getContext()).load(product.getAvatar().getXxxDpiUrl()).into(productDetailsMedia);
+        Glide.with(this).load(product.getAvatar().getXxxDpiUrl()).into(productDetailsMedia);
         productDetailsTitle.setText(product.getName());
         productDetailsDescription.setText(product.getShortDescription());
     }
