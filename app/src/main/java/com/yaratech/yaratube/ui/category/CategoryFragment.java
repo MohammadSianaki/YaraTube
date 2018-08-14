@@ -30,7 +30,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     //------------------------------------------------------------------------------------------------
 
-    private static final String TAG = "lifecycle";
+    private static final String TAG = "CategoryFragment";
 
     @BindView(R.id.rv_categories)
     RecyclerView recyclerViewCategories;
@@ -72,7 +72,6 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate: CategoryFragment");
-
     }
 
     @Override
@@ -104,12 +103,6 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         mPresenter.fetchCategoriesFromRemoteDataSource();
     }
 
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onViewStateRestored: CategoryFragment");
-        super.onViewStateRestored(savedInstanceState);
-    }
 
     @Override
     public void onStart() {
@@ -159,13 +152,12 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     @Override
     public void onDetach() {
         mListener = null;
-        super.onDetach();
         Log.i(TAG, "onDetach: CategoryFragment");
+        super.onDetach();
     }
 
     private void setupRecyclerView() {
         recyclerViewCategories.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-//        recyclerViewCategories.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerViewCategories.setAdapter(categoryAdapter);
     }
 

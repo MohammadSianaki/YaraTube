@@ -3,6 +3,7 @@ package com.yaratech.yaratube.data.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.yaratech.yaratube.utils.AppConstants;
 
 import java.util.List;
 
@@ -138,4 +139,7 @@ public class Category {
         this.childs = childs;
     }
 
+    public String getAvatarUrl() {
+        return AppConstants.BASE_URL + getAvatar();
+    }
 }

@@ -1,7 +1,6 @@
 package com.yaratech.yaratube.ui.category;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.data.source.Repository;
@@ -37,8 +36,6 @@ public class CategoryPresenter implements CategoryContract.Presenter {
 
     @Override
     public void fetchCategoriesFromRemoteDataSource() {
-        Log.i(TAG, "fetchCategoriesFromRemoteDataSource: ");
-
         // check if view is attached to the presenter
         if (isAttached()) {
             // show progress bar
@@ -48,7 +45,6 @@ public class CategoryPresenter implements CategoryContract.Presenter {
                 @Override
                 public void onDataLoaded(Object response) {
                     List list = (List) response;
-                    Log.i(TAG, "onDataLoaded: <<<< list size is : >>>>" + list.size());
                     if (mView != null) {
                         mView.finishProgressBarLoading();
                         mView.showLoadedData(list);
