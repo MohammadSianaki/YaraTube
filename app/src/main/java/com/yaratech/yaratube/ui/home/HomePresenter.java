@@ -1,7 +1,6 @@
 package com.yaratech.yaratube.ui.home;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.source.DataSource;
@@ -9,11 +8,13 @@ import com.yaratech.yaratube.data.source.Repository;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
 
 public class HomePresenter implements HomeContract.Presenter {
+    //------------------------------------------------------------------------------------
+    private static final String TAG = "HomePresenter";
 
     private HomeContract.View mView;
     private Repository repository;
-    private static final String TAG = "HomePresenter";
 
+    //------------------------------------------------------------------------------------
 
     public HomePresenter(Context context) {
         this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
@@ -43,8 +44,6 @@ public class HomePresenter implements HomeContract.Presenter {
                 @Override
                 public void onDataLoaded(Object response) {
                     HomeResponse homeResponse = (HomeResponse) response;
-                    Log.i(TAG, "onDataLoaded: <<<< header item size is : >>>>" + homeResponse.getHeaderItems().size());
-                    Log.i(TAG, "onDataLoaded: <<<< home item size is : >>>>" + homeResponse.getHomeItems().size());
                     if (mView != null) {
                         mView.finishProgressBarLoading();
                         mView.showLoadedData(homeResponse);

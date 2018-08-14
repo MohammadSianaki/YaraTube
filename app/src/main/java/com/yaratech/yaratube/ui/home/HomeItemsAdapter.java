@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.utils.AppConstants;
 
 import java.util.List;
 
@@ -85,6 +84,6 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
     }
 
     public interface OnHomeItemsClickListener {
-        public void onProductItemClicked(Product item);
+        void onProductItemClicked(Product item);
     }
 }

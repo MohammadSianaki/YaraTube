@@ -15,11 +15,11 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.yaratech.yaratube.OnRequestedProductItemClickListener;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
+import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,10 +30,10 @@ import butterknife.ButterKnife;
 public class HomeFragment extends Fragment implements HomeContract.View, HomeItemsAdapter.OnHomeItemsClickListener {
 
     //----------------------------------------------------------------------------------------
-    private static final String TAG = "lifecycle";
+    private static final String TAG = "HomeFragment";
     private HomeContract.Presenter mPresenter;
-    private StoreItemsAdapter storeItemsAdapter;
-    private OnRequestedProductItemClickListener listener;
+    private StoreItemsAdapter mStoreItemsAdapter;
+    private OnRequestedProductItemClickListener mListener;
 
     @BindView(R.id.pb_store_items_loading)
     ProgressBar progressBar;
@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach: HomeFragment");
         if (context instanceof BaseActivity) {
-            listener = (OnRequestedProductItemClickListener) context;
+            mListener = (OnRequestedProductItemClickListener) context;
         }
         super.onAttach(context);
     }
@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
         Log.i(TAG, "onViewCreated: HomeFragment");
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        storeItemsAdapter = new StoreItemsAdapter(this);
+        mStoreItemsAdapter = new StoreItemsAdapter(this);
         mPresenter = new HomePresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
         setupRecyclerView();
@@ -104,12 +104,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onViewStateRestored: HomeFragment");
-        super.onViewStateRestored(savedInstanceState);
-    }
-
-    @Override
     public void onStart() {
         Log.i(TAG, "onStart: HomeFragment");
         super.onStart();
@@ -120,7 +114,6 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
         Log.i(TAG, "onResume: HomeFragment");
         super.onResume();
     }
-
 
     @Override
     public void onPause() {
@@ -157,20 +150,20 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     @Override
     public void onDetach() {
         Log.i(TAG, "onDetach: HomeFragment");
-        listener = null;
+        mListener = null;
         super.onDetach();
     }
 
 
     private void setupRecyclerView() {
         recyclerViewStoreItems.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerViewStoreItems.setAdapter(storeItemsAdapter);
+        recyclerViewStoreItems.setAdapter(mStoreItemsAdapter);
     }
 
     @Override
     public void showLoadedData(HomeResponse homeResponse) {
-        storeItemsAdapter.setHeaderItems(homeResponse.getHeaderItems());
-        storeItemsAdapter.setHomeItems(homeResponse.getHomeItems());
+        mStoreItemsAdapter.setHeaderItems(homeResponse.getHeaderItems());
+        mStoreItemsAdapter.setHomeItems(homeResponse.getHomeItems());
     }
 
     @Override
@@ -195,7 +188,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
 
     @Override
     public void onProductItemClicked(Product item) {
-        listener.showProductDetailsOfRequestedProductItem(item);
+        mListener.showProductDetailsOfRequestedProductItem(item);
     }
 
 }
