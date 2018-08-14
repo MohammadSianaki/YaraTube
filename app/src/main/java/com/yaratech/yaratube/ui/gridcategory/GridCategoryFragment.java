@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.yaratech.yaratube.OnRequestedProductItemClickListener;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
@@ -36,7 +37,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     private GridCategoryContract.Presenter mPresenter;
     private GridCategoryAdapter gridCategoryAdapter;
-    private OnGridCategoryInteraction onGridCategoryInteraction;
+    private OnRequestedProductItemClickListener onRequestedProductItemClickListener;
 
     @BindView(R.id.rv_products_of_category)
     RecyclerView recyclerViewOfProducts;
@@ -61,7 +62,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     @Override
     public void onAttach(Context context) {
         if (context instanceof BaseActivity) {
-            onGridCategoryInteraction = (OnGridCategoryInteraction) context;
+            onRequestedProductItemClickListener = (OnRequestedProductItemClickListener) context;
         }
         super.onAttach(context);
     }
@@ -145,17 +146,13 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void onDetach() {
-        onGridCategoryInteraction = null;
+        onRequestedProductItemClickListener = null;
         super.onDetach();
     }
 
     @Override
     public void onClickedItem(Product item) {
-        onGridCategoryInteraction.goToProductDetails(item);
+        onRequestedProductItemClickListener.showProductDetailsOfRequestedProductItem(item);
     }
 
-
-    public interface OnGridCategoryInteraction {
-        public void goToProductDetails(Product item);
-    }
 }

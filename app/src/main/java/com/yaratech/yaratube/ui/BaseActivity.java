@@ -1,7 +1,6 @@
 package com.yaratech.yaratube.ui;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.yaratech.yaratube.OnRequestedProductItemClickListener;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.data.model.Product;
@@ -22,14 +22,15 @@ import com.yaratech.yaratube.utils.ActivityUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, HomeFragment.OnHomeFragmentInteractionListener, GridCategoryFragment.OnGridCategoryInteraction {
+public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, OnRequestedProductItemClickListener {
 
 
-    private static final String TAG = "lifecycle";
+    private static final String TAG = "BaseActivity";
     //------------------------------------------------------------------------------------------------
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
@@ -41,13 +42,13 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
         setContentView(R.layout.activity_base);
         Log.i(TAG, "onCreate: BaseActivity");
         ButterKnife.bind(this);
-
         ActivityUtils.checkAndSetRtl(this);
         setupToolbar();
 
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
         if (fragment == null) {
+            Log.i(TAG, "onCreate: content fragment is null");
             fragment = BaseFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.fl_base_activity_content);
         }
@@ -57,16 +58,15 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     @Override
     public void onAttachFragment(android.support.v4.app.Fragment fragment) {
         super.onAttachFragment(fragment);
-        Log.i(TAG, "onAttachFragment: BaseActivity");
         if (fragment instanceof BaseFragment) {
-            Log.i(TAG, "onAttachFragment: <<<<BaseFragment Added>>>>");
+            Log.i(TAG, "onAttachFragment: <<<<  BaseFragment Added  >>>>");
         }
         if (fragment instanceof HomeFragment) {
-            Log.i(TAG, "onAttachFragment: <<<HomeFragment Added>>>>");
+            Log.i(TAG, "onAttachFragment: <<<   HomeFragment Added  >>>>");
 
         }
         if (fragment instanceof CategoryFragment) {
-            Log.i(TAG, "onAttachFragment: <<<<CategoryFragment Added>>>>");
+            Log.i(TAG, "onAttachFragment: <<<<  CategoryFragment Added  >>>>");
         }
     }
 
@@ -83,27 +83,16 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     }
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        Log.i(TAG, "onPostCreate: BaseActivity");
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: BaseActivity");
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        Log.i(TAG, "onPostResume: BaseActivity");
-    }
 
     @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        Log.i(TAG, "onAttachedToWindow: BaseActivity");
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "onSaveInstanceState: BaseActivity");
     }
 
     @Override
@@ -139,14 +128,8 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-//            if (fragment instanceof CategoryFragment) {
-//                BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-//                bottomNavigationView.seto
-//            }
-            super.onBackPressed();
         }
-
+        super.onBackPressed();
     }
 
     private void setupToolbar() {
@@ -158,7 +141,7 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
 
 
     @Override
-    public void onCategoryItemClicked(Category item) {
+    public void showProductsOfRequestedCategoryItem(Category item) {
         int categoryId = item.getId();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -167,30 +150,19 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
                 getSupportFragmentManager(),
                 GridCategoryFragment.newInstance(categoryId),
                 R.id.fl_base_activity_content, true);
-        Log.i(TAG, "onProductItemClicked: <<<<" + item.getTitle() + "\t" + item.getId() + ">>>>");
+        Log.i(TAG, "onProductItemClicked: <<<<  " + item.getTitle() + "\t" + item.getId() + " >>>>");
     }
 
     @Override
-    public void showRequestedProductDetails(Product item) {
+    public void showProductDetailsOfRequestedProductItem(Product item) {
         int productId = item.getId();
+        Log.i(TAG, "onProductItemClicked: <<<<  " + item.getName() + "\t" + item.getId() + "  >>>>");
         ActivityUtils.replaceFragmentToActivity(
                 getSupportFragmentManager(),
                 DetailsFragment.newInstance(productId),
                 R.id.fl_base_activity_content,
                 true);
-        Log.i(TAG, "onProductItemClicked: <<<<" + item.getName() + "\t" + item.getId() + ">>>>");
 
     }
 
-    @Override
-    public void goToProductDetails(Product item) {
-        int productId = item.getId();
-        ActivityUtils.replaceFragmentToActivity(
-                getSupportFragmentManager(),
-                DetailsFragment.newInstance(productId),
-                R.id.fl_base_activity_content,
-                true);
-        Log.i(TAG, "onProductItemClicked: <<<<" + item.getName() + "\t" + item.getId() + ">>>>");
-
-    }
 }

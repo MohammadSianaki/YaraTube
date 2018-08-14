@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.yaratech.yaratube.OnRequestedProductItemClickListener;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.model.Product;
@@ -32,7 +33,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     private static final String TAG = "lifecycle";
     private HomeContract.Presenter mPresenter;
     private StoreItemsAdapter storeItemsAdapter;
-    private OnHomeFragmentInteractionListener listener;
+    private OnRequestedProductItemClickListener listener;
 
     @BindView(R.id.pb_store_items_loading)
     ProgressBar progressBar;
@@ -61,7 +62,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     public void onAttach(Context context) {
         Log.i(TAG, "onAttach: HomeFragment");
         if (context instanceof BaseActivity) {
-            listener = (OnHomeFragmentInteractionListener) context;
+            listener = (OnRequestedProductItemClickListener) context;
         }
         super.onAttach(context);
     }
@@ -194,10 +195,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
 
     @Override
     public void onProductItemClicked(Product item) {
-        listener.showRequestedProductDetails(item);
+        listener.showProductDetailsOfRequestedProductItem(item);
     }
 
-    public interface OnHomeFragmentInteractionListener {
-        void showRequestedProductDetails(Product item);
-    }
 }
