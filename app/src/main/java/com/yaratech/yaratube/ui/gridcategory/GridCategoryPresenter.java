@@ -1,7 +1,6 @@
 package com.yaratech.yaratube.ui.gridcategory;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.DataSource;
@@ -9,8 +8,6 @@ import com.yaratech.yaratube.data.source.Repository;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
 
 import java.util.List;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class GridCategoryPresenter implements GridCategoryContract.Presenter {
 
@@ -49,10 +46,8 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
                     List<Product> productList = null;
                     try {
                         productList = (List<Product>) response;
-                        Log.i(TAG, "onDataLoaded: ");
                     } catch (ClassCastException e) {
-                        Log.i(TAG, "onDataLoaded: ClassCastException");
-                        e.printStackTrace();
+                        throw new ClassCastException("response is not instance of List<Product>");
                     }
                     if (mView != null) {
                         mView.finishProgressBarLoading();

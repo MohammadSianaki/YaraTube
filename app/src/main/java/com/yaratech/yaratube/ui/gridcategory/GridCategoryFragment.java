@@ -16,23 +16,22 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
+import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class GridCategoryFragment extends Fragment implements GridCategoryContract.View, GridCategoryAdapter.OnCategoryGridClickListener {
     private static final String KEY_ID = "KEY_ID";
+    private static final String TAG = "GridCategoryFragment";
     //-------------------------------------------------------------------------------------------
 
     private GridCategoryContract.Presenter mPresenter;
@@ -61,6 +60,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void onAttach(Context context) {
+        Log.i(TAG, "onAttach: GridCategoryFragment");
         if (context instanceof BaseActivity) {
             onRequestedProductItemClickListener = (OnRequestedProductItemClickListener) context;
         }
@@ -69,6 +69,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate: GridCategoryFragment");
         super.onCreate(savedInstanceState);
     }
 
@@ -76,6 +77,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.i(TAG, "onCreateView: GridCategoryFragment");
         return inflater.inflate(R.layout.fragment_grid_category, container, false);
     }
 
@@ -83,7 +85,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
+        Log.i(TAG, "onViewCreated: GridCategoryFragment");
         gridCategoryAdapter = new GridCategoryAdapter(this);
         mPresenter = new GridCategoryPresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
@@ -92,18 +94,17 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     }
 
     private void setupRecyclerView() {
-        recyclerViewOfProducts.setLayoutManager(
-                new GridLayoutManager(getContext(),
-                        2,
-                        LinearLayoutManager.VERTICAL,
-                        false));
+        recyclerViewOfProducts.setLayoutManager(new GridLayoutManager(
+                getContext(),
+                2,
+                LinearLayoutManager.VERTICAL,
+                false));
         recyclerViewOfProducts.setAdapter(gridCategoryAdapter);
     }
 
     @Override
     public void showLoadedData(List list) {
         gridCategoryAdapter.setProductList(list);
-        Log.i(TAG, "showLoadedData: <<<<" + list.size() + " >>>>");
     }
 
     @Override
