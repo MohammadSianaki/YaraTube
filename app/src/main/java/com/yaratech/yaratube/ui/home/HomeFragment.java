@@ -23,6 +23,7 @@ import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +35,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     private HomeContract.Presenter mPresenter;
     private StoreItemsAdapter mStoreItemsAdapter;
     private OnRequestedProductItemClickListener mListener;
+    private Unbinder mUnBinder;
 
     @BindView(R.id.pb_store_items_loading)
     ProgressBar progressBar;
@@ -88,7 +90,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onViewCreated: HomeFragment");
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+        mUnBinder = ButterKnife.bind(this, view);
         mStoreItemsAdapter = new StoreItemsAdapter(this);
         mPresenter = new HomePresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
@@ -136,6 +138,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     @Override
     public void onDestroyView() {
         Log.i(TAG, "onDestroyView: HomeFragment");
+        mUnBinder.unbind();
         mPresenter.cancelStoreApiRequest();
         mPresenter.detachView(this);
         super.onDestroyView();

@@ -25,6 +25,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +38,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     private GridCategoryContract.Presenter mPresenter;
     private GridCategoryAdapter gridCategoryAdapter;
     private OnRequestedProductItemClickListener onRequestedProductItemClickListener;
+    private Unbinder mUnBinder;
 
     @BindView(R.id.rv_products_of_category)
     RecyclerView recyclerViewOfProducts;
@@ -84,7 +86,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+        mUnBinder = ButterKnife.bind(this, view);
         Log.i(TAG, "onViewCreated: GridCategoryFragment");
         gridCategoryAdapter = new GridCategoryAdapter(this);
         mPresenter = new GridCategoryPresenter(getActivity().getApplicationContext());
@@ -135,6 +137,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void onDestroyView() {
+        mUnBinder.unbind();
         mPresenter.cancelProductApiRequest();
         mPresenter.detachView(this);
         super.onDestroyView();

@@ -22,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +42,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     private CategoryAdapter categoryAdapter;
     private CategoryContract.Presenter mPresenter;
     private OnCategoryFragmentInteractionListener mListener;
+    private Unbinder mUnBinder;
 
     //------------------------------------------------------------------------------------------------
     public CategoryFragment() {
@@ -87,7 +89,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.i(TAG, "onViewCreated: CategoryFragment");
-        ButterKnife.bind(this, view);
+        mUnBinder = ButterKnife.bind(this, view);
         categoryAdapter = new CategoryAdapter(this);
         mPresenter = new CategoryPresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
@@ -137,6 +139,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     @Override
     public void onDestroyView() {
+        mUnBinder.unbind();
         mPresenter.cancelCategoryApiRequest();
         mPresenter.detachView(this);
         super.onDestroyView();

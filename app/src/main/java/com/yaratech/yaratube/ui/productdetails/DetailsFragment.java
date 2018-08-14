@@ -20,6 +20,7 @@ import com.yaratech.yaratube.data.model.Product;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +31,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
     //------------------------------------------------------------------------------------------------------
 
     private DetailsContract.Presenter mPresenter;
+    private Unbinder mUnBinder;
 
     @BindView(R.id.iv_product_details_media)
     ImageView productDetailsMedia;
@@ -72,7 +74,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+        mUnBinder = ButterKnife.bind(this, view);
         Log.i(TAG, "onViewCreated: DetailsFragment");
         mPresenter = new DetailsPresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
@@ -118,6 +120,7 @@ public class DetailsFragment extends Fragment implements DetailsContract.View {
 
     @Override
     public void onDestroyView() {
+        mUnBinder.unbind();
         mPresenter.cancelProductDetailsApiRequest();
         mPresenter.detachView(this);
         super.onDestroyView();
