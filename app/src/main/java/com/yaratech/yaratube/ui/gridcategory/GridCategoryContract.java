@@ -10,14 +10,6 @@ public interface GridCategoryContract {
 
     interface View extends BaseView {
         void showLoadedData(List list);
-
-        void showDataNotAvailableToast();
-
-        void showNetworkNotAvailableToast();
-
-        void showProgressBarLoading();
-
-        void finishProgressBarLoading();
     }
 
 

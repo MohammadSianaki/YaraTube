@@ -8,14 +8,6 @@ public interface DetailsContract {
 
     public interface View extends BaseView {
         void showLoadedData(Product product);
-
-        void showDataNotAvailableToast();
-
-        void showNetworkNotAvailableToast();
-
-        void showProgressBarLoading();
-
-        void finishProgressBarLoading();
     }
 
     public interface Presenter extends BasePresenter<View> {
