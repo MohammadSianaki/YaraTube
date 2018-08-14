@@ -72,6 +72,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate: CategoryFragment");
+
     }
 
     @Override

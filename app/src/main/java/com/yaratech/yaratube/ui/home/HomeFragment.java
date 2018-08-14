@@ -71,6 +71,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreate: HomeFragment");
         super.onCreate(savedInstanceState);
+
     }
 
     @Override

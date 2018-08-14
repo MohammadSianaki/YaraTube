@@ -2,6 +2,7 @@ package com.yaratech.yaratube.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -45,10 +46,10 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
         setupToolbar();
 
 
-        BaseFragment baseFragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
-        if (baseFragment == null) {
-            baseFragment = BaseFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), baseFragment, R.id.fl_base_activity_content);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
+        if (fragment == null) {
+            fragment = BaseFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.fl_base_activity_content);
         }
     }
 
