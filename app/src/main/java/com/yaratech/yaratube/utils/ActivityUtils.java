@@ -6,8 +6,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
+import java.util.HashMap;
+
 public class ActivityUtils {
 
+    public static final HashMap<String, Fragment> cachedFragments = new HashMap<>();
 
     public static void addFragmentToActivity(FragmentManager fragmentManager,
                                              Fragment fragment, int frameId) {
@@ -18,11 +21,10 @@ public class ActivityUtils {
     }
 
 
-    public static void replaceFragmentToActivity(FragmentManager fragmentManager,
-                                                 Fragment fragment, int frameId, boolean addToBackStack, String tag) {
+    public static void addFragmentToActivity(FragmentManager fragmentManager,
+                                             Fragment fragment, int frameId, boolean addToBackStack, String tag) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-        transaction.replace(frameId, fragment);
+        transaction.add(frameId, fragment, tag);
         if (addToBackStack) {
             transaction.addToBackStack(tag);
         }

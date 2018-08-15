@@ -33,6 +33,8 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
 
+    private HomeFragment homeFragment;
+    private CategoryFragment categoryFragment;
     //--------------------------------------------------------------------------------------------
 
     public BaseFragment() {
@@ -60,6 +62,10 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreate: BaseFragment");
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            homeFragment = HomeFragment.newInstance();
+            categoryFragment = CategoryFragment.newInstance();
+        }
     }
 
     @Nullable
@@ -144,30 +150,55 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
 
 
     private void chooseFragment(MenuItem item) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         switch (item.getItemId()) {
             case R.id.bottom_nav_category_item:
-                addFragment(CategoryFragment.newInstance(), true, "CategoryFragment");
+                if (categoryFragment.isAdded()) {
+                    Log.i(TAG, "chooseFragment: <<<< CategoryFragment is  added before >>>>");
+                    fragmentManager
+                            .beginTransaction()
+                            .show(categoryFragment)
+                            .commit();
+                } else {
+                    addFragment(categoryFragment, false, "CategoryFragment");
+                    Log.i(TAG, "chooseFragment: <<<< CategoryFragment is NOT added before >>>>");
+                }
+                if (homeFragment.isAdded()) {
+                    Log.i(TAG, "chooseFragment <<<< bottom_nav_category_item >>>> : <<<< HomeFragment is added before >>>>");
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(homeFragment)
+                            .commit();
+                }
                 break;
             case R.id.bottom_nav_main_screen_item:
-                addFragment(HomeFragment.newInstance(), false, "HomeFragment");
+                if (homeFragment.isAdded()) {
+                    Log.i(TAG, "chooseFragment: <<<< HomeFragment is added before >>>>");
+                    fragmentManager
+                            .beginTransaction()
+                            .show(homeFragment)
+                            .commit();
+                } else {
+                    addFragment(homeFragment, false, "HomeFragment");
+                    Log.i(TAG, "chooseFragment: <<<< HomeFragment is NOT added before >>>>");
+                }
+                if (categoryFragment.isAdded()) {
+                    Log.i(TAG, "chooseFragment <<<< bottom_nav_category_item >>>> : <<<< categoryFragment is added before >>>>");
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(categoryFragment)
+                            .commit();
+                }
                 break;
         }
     }
 
     private void addFragment(Fragment fragment, boolean addToBackStack, String tag) {
-        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_base_fragment_content, addToBackStack, tag);
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        int count = fragmentManager.getBackStackEntryCount();
-        fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                if (fragmentManager.getBackStackEntryCount() <= count) {
-                    fragmentManager.popBackStack("CategoryFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    fragmentManager.removeOnBackStackChangedListener(this);
-                    bottomNavigationView.getMenu().getItem(0).setChecked(true);
-                }
-            }
-        });
+        ActivityUtils
+                .addFragmentToActivity(
+                        getActivity().getSupportFragmentManager(),
+                        fragment, R.id.fl_base_fragment_content,
+                        addToBackStack, tag);
     }
 
 }

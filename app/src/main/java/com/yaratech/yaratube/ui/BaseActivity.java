@@ -145,7 +145,7 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
         getSupportFragmentManager()
                 .beginTransaction()
                 .hide(getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content));
-        ActivityUtils.replaceFragmentToActivity(
+        ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
                 GridCategoryFragment.newInstance(categoryId),
                 R.id.fl_base_activity_content, true, null);
@@ -156,7 +156,7 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     public void showProductDetailsOfRequestedProductItem(Product item) {
         int productId = item.getId();
         Log.i(TAG, "onProductItemClicked: <<<<  " + item.getName() + "\t" + item.getId() + "  >>>>");
-        ActivityUtils.replaceFragmentToActivity(
+        ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
                 DetailsFragment.newInstance(productId),
                 R.id.fl_base_activity_content,
