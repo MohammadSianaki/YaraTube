@@ -6,11 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-import java.util.HashMap;
-
 public class ActivityUtils {
 
-    public static final HashMap<String, Fragment> cachedFragments = new HashMap<>();
 
     public static void addFragmentToActivity(FragmentManager fragmentManager,
                                              Fragment fragment, int frameId) {

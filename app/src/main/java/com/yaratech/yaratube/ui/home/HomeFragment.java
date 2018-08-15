@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
         Log.i(TAG, "onViewCreated: HomeFragment");
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mStoreItemsAdapter = new StoreItemsAdapter(this);
+        mStoreItemsAdapter = new StoreItemsAdapter(this, getFragmentManager());
         mPresenter = new HomePresenter(getActivity().getApplicationContext());
         mPresenter.attachView(this);
         setupRecyclerView();

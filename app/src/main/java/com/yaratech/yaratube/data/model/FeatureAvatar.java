@@ -1,11 +1,15 @@
 
 package com.yaratech.yaratube.data.model;
 
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.yaratech.yaratube.utils.AppConstants;
 
-public class FeatureAvatar {
+import org.parceler.Parcel;
+
+public class FeatureAvatar implements Parcelable {
 
     @SerializedName("mdpi")
     @Expose
@@ -22,6 +26,26 @@ public class FeatureAvatar {
     @SerializedName("xhdpi")
     @Expose
     private String xhdpi;
+
+    protected FeatureAvatar(android.os.Parcel in) {
+        mdpi = in.readString();
+        xxxdpi = in.readString();
+        hdpi = in.readString();
+        xxhdpi = in.readString();
+        xhdpi = in.readString();
+    }
+
+    public static final Creator<FeatureAvatar> CREATOR = new Creator<FeatureAvatar>() {
+        @Override
+        public FeatureAvatar createFromParcel(android.os.Parcel in) {
+            return new FeatureAvatar(in);
+        }
+
+        @Override
+        public FeatureAvatar[] newArray(int size) {
+            return new FeatureAvatar[size];
+        }
+    };
 
     public String getMdpi() {
         return mdpi;
@@ -68,4 +92,17 @@ public class FeatureAvatar {
         return AppConstants.BASE_URL + getXxxdpi();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        dest.writeString(mdpi);
+        dest.writeString(xxxdpi);
+        dest.writeString(hdpi);
+        dest.writeString(xxhdpi);
+        dest.writeString(xhdpi);
+    }
 }

@@ -1,11 +1,15 @@
 
 package com.yaratech.yaratube.data.model;
 
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.yaratech.yaratube.utils.AppConstants;
 
-public class Avatar {
+import org.parceler.Parcel;
+
+public class Avatar implements Parcelable{
 
     @SerializedName("mdpi")
     @Expose
@@ -22,6 +26,26 @@ public class Avatar {
     @SerializedName("xhdpi")
     @Expose
     private String xhdpi;
+
+    protected Avatar(android.os.Parcel in) {
+        mdpi = in.readString();
+        xxxdpi = in.readString();
+        hdpi = in.readString();
+        xxhdpi = in.readString();
+        xhdpi = in.readString();
+    }
+
+    public static final Creator<Avatar> CREATOR = new Creator<Avatar>() {
+        @Override
+        public Avatar createFromParcel(android.os.Parcel in) {
+            return new Avatar(in);
+        }
+
+        @Override
+        public Avatar[] newArray(int size) {
+            return new Avatar[size];
+        }
+    };
 
     public String getMdpi() {
         return mdpi;
@@ -67,4 +91,17 @@ public class Avatar {
         return AppConstants.BASE_URL + getXxxdpi();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        dest.writeString(mdpi);
+        dest.writeString(xxxdpi);
+        dest.writeString(hdpi);
+        dest.writeString(xxhdpi);
+        dest.writeString(xhdpi);
+    }
 }

@@ -1,10 +1,13 @@
 
 package com.yaratech.yaratube.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Support {
+public class Support implements Parcelable {
 
     @SerializedName("instagram")
     @Expose
@@ -30,6 +33,29 @@ public class Support {
     @SerializedName("tel")
     @Expose
     private String tel;
+
+    protected Support(Parcel in) {
+        instagram = in.readString();
+        linkedin = in.readString();
+        name = in.readString();
+        email = in.readString();
+        googlePlus = in.readString();
+        telegram = in.readString();
+        website = in.readString();
+        tel = in.readString();
+    }
+
+    public static final Creator<Support> CREATOR = new Creator<Support>() {
+        @Override
+        public Support createFromParcel(Parcel in) {
+            return new Support(in);
+        }
+
+        @Override
+        public Support[] newArray(int size) {
+            return new Support[size];
+        }
+    };
 
     public String getInstagram() {
         return instagram;
@@ -95,4 +121,20 @@ public class Support {
         this.tel = tel;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(instagram);
+        dest.writeString(linkedin);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(googlePlus);
+        dest.writeString(telegram);
+        dest.writeString(website);
+        dest.writeString(tel);
+    }
 }
