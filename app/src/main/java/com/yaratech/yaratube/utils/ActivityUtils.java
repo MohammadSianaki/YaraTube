@@ -19,22 +19,15 @@ public class ActivityUtils {
 
 
     public static void replaceFragmentToActivity(FragmentManager fragmentManager,
-                                                 Fragment fragment, int frameId, boolean addToBackStack) {
-//        boolean addFragmentFlag = true;
+                                                 Fragment fragment, int frameId, boolean addToBackStack, String tag) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-//        for (Fragment fr : fragmentManager.getFragments()) {
-//            if (fr == fragment) {
-//                Log.i(TAG, "replaceFragmentToActivity: equal");
-//                addFragmentFlag = false;
-//                break;
-//            }
-//        }
 
         transaction.replace(frameId, fragment);
         if (addToBackStack) {
-            transaction.addToBackStack(null);
+            transaction.addToBackStack(tag);
         }
         transaction.commit();
+
     }
 
 

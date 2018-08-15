@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -145,16 +146,28 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     private void chooseFragment(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.bottom_nav_category_item:
-                addFragment(CategoryFragment.newInstance());
+                addFragment(CategoryFragment.newInstance(), true, "CategoryFragment");
                 break;
             case R.id.bottom_nav_main_screen_item:
-                addFragment(HomeFragment.newInstance());
+                addFragment(HomeFragment.newInstance(), false, "HomeFragment");
                 break;
         }
     }
 
-    private void addFragment(Fragment fragment) {
-        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_base_fragment_content, false);
+    private void addFragment(Fragment fragment, boolean addToBackStack, String tag) {
+        ActivityUtils.replaceFragmentToActivity(getActivity().getSupportFragmentManager(), fragment, R.id.fl_base_fragment_content, addToBackStack, tag);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        int count = fragmentManager.getBackStackEntryCount();
+        fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (fragmentManager.getBackStackEntryCount() <= count) {
+                    fragmentManager.popBackStack("CategoryFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    fragmentManager.removeOnBackStackChangedListener(this);
+                    bottomNavigationView.getMenu().getItem(0).setChecked(true);
+                }
+            }
+        });
     }
 
 }

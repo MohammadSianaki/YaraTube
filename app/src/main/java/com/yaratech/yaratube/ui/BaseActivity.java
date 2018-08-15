@@ -148,7 +148,7 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
         ActivityUtils.replaceFragmentToActivity(
                 getSupportFragmentManager(),
                 GridCategoryFragment.newInstance(categoryId),
-                R.id.fl_base_activity_content, true);
+                R.id.fl_base_activity_content, true, null);
         Log.i(TAG, "onProductItemClicked: <<<<  " + item.getTitle() + "\t" + item.getId() + " >>>>");
     }
 
@@ -160,7 +160,7 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
                 getSupportFragmentManager(),
                 DetailsFragment.newInstance(productId),
                 R.id.fl_base_activity_content,
-                true);
+                true, null);
 
     }
 
