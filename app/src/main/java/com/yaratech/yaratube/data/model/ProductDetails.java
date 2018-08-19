@@ -27,7 +27,7 @@ public class ProductDetails {
     private String producerName;
     @SerializedName("payment_type")
     @Expose
-    private List<Object> paymentType = null;
+    private List<Integer> paymentType = null;
     @SerializedName("category")
     @Expose
     private List<Integer> category = null;
@@ -42,7 +42,10 @@ public class ProductDetails {
     private FeatureAvatar featureAvatar;
     @SerializedName("rank")
     @Expose
-    private int rank;
+    private double rank;
+    @SerializedName("is_enable")
+    @Expose
+    private boolean isEnable;
     @SerializedName("totalInstalled")
     @Expose
     private int totalInstalled;
@@ -54,46 +57,28 @@ public class ProductDetails {
     private String description;
     @SerializedName("promotionalContainers")
     @Expose
-    private List<Object> promotionalContainers = null;
+    private List<PromotionalContainer> promotionalContainers = null;
     @SerializedName("is_purchased")
     @Expose
     private boolean isPurchased;
     @SerializedName("comments")
     @Expose
     private int comments;
-    @SerializedName("files")
-    @Expose
-    private List<File> files = null;
-    @SerializedName("generic_files")
-    @Expose
-    private List<Object> genericFiles = null;
-    @SerializedName("director")
-    @Expose
-    private List<Object> director = null;
-    @SerializedName("movie_producer")
-    @Expose
-    private List<Object> movieProducer = null;
-    @SerializedName("cast")
-    @Expose
-    private List<Object> cast = null;
-    @SerializedName("date_create")
-    @Expose
-    private Object dateCreate;
-    @SerializedName("is_jalali")
-    @Expose
-    private boolean isJalali;
     @SerializedName("is_bookmarked")
     @Expose
     private boolean isBookmarked;
     @SerializedName("sku")
     @Expose
     private String sku;
+    @SerializedName("files")
+    @Expose
+    private List<Object> files = null;
     @SerializedName("tags")
     @Expose
-    private List<String> tags = null;
+    private List<Object> tags = null;
     @SerializedName("category_model")
     @Expose
-    private List<CategoryModel> categoryModel = null;
+    private List<Object> categoryModel = null;
     @SerializedName("comments_summery")
     @Expose
     private List<CommentsSummery> commentsSummery = null;
@@ -103,9 +88,6 @@ public class ProductDetails {
     @SerializedName("total_view")
     @Expose
     private int totalView;
-    @SerializedName("is_enable")
-    @Expose
-    private boolean isEnable;
     @SerializedName("custom_json")
     @Expose
     private Object customJson;
@@ -188,11 +170,11 @@ public class ProductDetails {
         this.producerName = producerName;
     }
 
-    public List<Object> getPaymentType() {
+    public List<Integer> getPaymentType() {
         return paymentType;
     }
 
-    public void setPaymentType(List<Object> paymentType) {
+    public void setPaymentType(List<Integer> paymentType) {
         this.paymentType = paymentType;
     }
 
@@ -228,12 +210,20 @@ public class ProductDetails {
         this.featureAvatar = featureAvatar;
     }
 
-    public int getRank() {
+    public double getRank() {
         return rank;
     }
 
-    public void setRank(int rank) {
+    public void setRank(double rank) {
         this.rank = rank;
+    }
+
+    public boolean isIsEnable() {
+        return isEnable;
+    }
+
+    public void setIsEnable(boolean isEnable) {
+        this.isEnable = isEnable;
     }
 
     public int getTotalInstalled() {
@@ -260,11 +250,11 @@ public class ProductDetails {
         this.description = description;
     }
 
-    public List<Object> getPromotionalContainers() {
+    public List<PromotionalContainer> getPromotionalContainers() {
         return promotionalContainers;
     }
 
-    public void setPromotionalContainers(List<Object> promotionalContainers) {
+    public void setPromotionalContainers(List<PromotionalContainer> promotionalContainers) {
         this.promotionalContainers = promotionalContainers;
     }
 
@@ -284,62 +274,6 @@ public class ProductDetails {
         this.comments = comments;
     }
 
-    public List<File> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<File> files) {
-        this.files = files;
-    }
-
-    public List<Object> getGenericFiles() {
-        return genericFiles;
-    }
-
-    public void setGenericFiles(List<Object> genericFiles) {
-        this.genericFiles = genericFiles;
-    }
-
-    public List<Object> getDirector() {
-        return director;
-    }
-
-    public void setDirector(List<Object> director) {
-        this.director = director;
-    }
-
-    public List<Object> getMovieProducer() {
-        return movieProducer;
-    }
-
-    public void setMovieProducer(List<Object> movieProducer) {
-        this.movieProducer = movieProducer;
-    }
-
-    public List<Object> getCast() {
-        return cast;
-    }
-
-    public void setCast(List<Object> cast) {
-        this.cast = cast;
-    }
-
-    public Object getDateCreate() {
-        return dateCreate;
-    }
-
-    public void setDateCreate(Object dateCreate) {
-        this.dateCreate = dateCreate;
-    }
-
-    public boolean isIsJalali() {
-        return isJalali;
-    }
-
-    public void setIsJalali(boolean isJalali) {
-        this.isJalali = isJalali;
-    }
-
     public boolean isIsBookmarked() {
         return isBookmarked;
     }
@@ -356,19 +290,27 @@ public class ProductDetails {
         this.sku = sku;
     }
 
-    public List<String> getTags() {
+    public List<Object> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<Object> files) {
+        this.files = files;
+    }
+
+    public List<Object> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<Object> tags) {
         this.tags = tags;
     }
 
-    public List<CategoryModel> getCategoryModel() {
+    public List<Object> getCategoryModel() {
         return categoryModel;
     }
 
-    public void setCategoryModel(List<CategoryModel> categoryModel) {
+    public void setCategoryModel(List<Object> categoryModel) {
         this.categoryModel = categoryModel;
     }
 
@@ -394,14 +336,6 @@ public class ProductDetails {
 
     public void setTotalView(int totalView) {
         this.totalView = totalView;
-    }
-
-    public boolean isIsEnable() {
-        return isEnable;
-    }
-
-    public void setIsEnable(boolean isEnable) {
-        this.isEnable = isEnable;
     }
 
     public Object getCustomJson() {

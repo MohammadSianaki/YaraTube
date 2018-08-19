@@ -112,7 +112,7 @@ public class RemoteDataSource implements DataSource {
 
                 @Override
                 public void onFailure(Call<List<Comment>> call, Throwable t) {
-                    Log.e(TAG, "onFailure: ", t);
+                    Log.i(TAG, "onFailure: "+ t.getMessage());
                     callback.onDataNotAvailable();
                 }
             });
