@@ -7,14 +7,13 @@ import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.data.source.Repository;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class GridCategoryPresenter implements GridCategoryContract.Presenter {
 
 
     private Repository repository;
-    private WeakReference<GridCategoryContract.View> mWeakReference;
+    private GridCategoryContract.View mView;
 
     public GridCategoryPresenter(Context context) {
         this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
@@ -22,12 +21,12 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
 
     @Override
     public void attachView(GridCategoryContract.View view) {
-        mWeakReference = new WeakReference<>(view);
+        mView = view;
     }
 
     @Override
     public void detachView() {
-        mWeakReference = null;
+        mView = null;
     }
 
     @Override
@@ -40,7 +39,7 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
     @Override
     public void fetchProducts(int id) {
         if (isAttached()) {
-            mWeakReference.get().showProgressBarLoading();
+            mView.showProgressBarLoading();
             repository.fetchProductsByCategoryId(new DataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
@@ -50,25 +49,25 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
                     } catch (ClassCastException e) {
                         throw new ClassCastException("response is not instance of List<Product>");
                     }
-                    if (mWeakReference != null) {
-                        mWeakReference.get().finishProgressBarLoading();
-                        mWeakReference.get().showLoadedData(productList);
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showLoadedData(productList);
                     }
                 }
 
                 @Override
                 public void onDataNotAvailable() {
-                    if (mWeakReference != null) {
-                        mWeakReference.get().finishProgressBarLoading();
-                        mWeakReference.get().showDataNotAvailableToast();
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showDataNotAvailableToast();
                     }
                 }
 
                 @Override
                 public void onNetworkNotAvailable() {
-                    if (mWeakReference != null) {
-                        mWeakReference.get().finishProgressBarLoading();
-                        mWeakReference.get().showNetworkNotAvailableToast();
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showNetworkNotAvailableToast();
                     }
                 }
             }, id);
@@ -77,6 +76,6 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
 
     @Override
     public boolean isAttached() {
-        return mWeakReference != null;
+        return mView != null;
     }
 }

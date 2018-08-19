@@ -8,14 +8,13 @@ import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.data.source.Repository;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class DetailsPresenter implements DetailsContract.Presenter {
 
     //---------------------------------------------------------------------------------------------
     private Repository repository;
-    private WeakReference<DetailsContract.View> mWeakReference;
+    private DetailsContract.View mView;
     //---------------------------------------------------------------------------------------------
 
 
@@ -25,46 +24,46 @@ public class DetailsPresenter implements DetailsContract.Presenter {
 
     @Override
     public void attachView(DetailsContract.View view) {
-        mWeakReference = new WeakReference<>(view);
+        mView = view;
     }
 
     @Override
     public void detachView() {
-        mWeakReference = null;
+        mView = null;
     }
 
     @Override
     public boolean isAttached() {
-        return mWeakReference != null;
+        return mView != null;
     }
 
     @Override
     public void fetchProductDetails(int productId) {
         if (isAttached()) {
-            mWeakReference.get().showProgressBarLoading();
+            mView.showProgressBarLoading();
             repository.fetchProductDetailsByProductId(new DataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
                     ProductDetails product = (ProductDetails) response;
-                    if (mWeakReference != null) {
-                        mWeakReference.get().finishProgressBarLoading();
-                        mWeakReference.get().showLoadedData(product);
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showLoadedData(product);
                     }
                 }
 
                 @Override
                 public void onDataNotAvailable() {
-                    if (mWeakReference != null) {
-                        mWeakReference.get().finishProgressBarLoading();
-                        mWeakReference.get().showDataNotAvailableToast();
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showDataNotAvailableToast();
                     }
                 }
 
                 @Override
                 public void onNetworkNotAvailable() {
-                    if (mWeakReference != null) {
-                        mWeakReference.get().finishProgressBarLoading();
-                        mWeakReference.get().showNetworkNotAvailableToast();
+                    if (mView != null) {
+                        mView.finishProgressBarLoading();
+                        mView.showNetworkNotAvailableToast();
                     }
                 }
             }, productId);
@@ -74,30 +73,30 @@ public class DetailsPresenter implements DetailsContract.Presenter {
     @Override
     public void fetchProductComments(int productId) {
         if (isAttached()) {
-            mWeakReference.get().showCommentLoading();
+            mView.showCommentLoading();
             repository.fetchCommentsOfProductByProductId(new DataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
                     List<Comment> commentList = (List<Comment>) response;
-                    if (mWeakReference != null) {
-                        mWeakReference.get().hideCommentLoading();
-                        mWeakReference.get().showLoadedComments(commentList);
+                    if (mView != null) {
+                        mView.hideCommentLoading();
+                        mView.showLoadedComments(commentList);
                     }
                 }
 
                 @Override
                 public void onDataNotAvailable() {
-                    if (mWeakReference != null) {
-                        mWeakReference.get().hideCommentLoading();
-                        mWeakReference.get().showDataNotAvailableToast();
+                    if (mView != null) {
+                        mView.hideCommentLoading();
+                        mView.showDataNotAvailableToast();
                     }
                 }
 
                 @Override
                 public void onNetworkNotAvailable() {
-                    if (mWeakReference != null) {
-                        mWeakReference.get().hideCommentLoading();
-                        mWeakReference.get().showNetworkNotAvailableToast();
+                    if (mView != null) {
+                        mView.hideCommentLoading();
+                        mView.showNetworkNotAvailableToast();
                     }
                 }
             }, productId);
