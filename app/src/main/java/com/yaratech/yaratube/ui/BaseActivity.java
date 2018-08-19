@@ -11,17 +11,19 @@ import android.view.MenuItem;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.model.HeaderItem;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
-import com.yaratech.yaratube.ui.productdetails.DetailsFragment;
+import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
+import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, OnRequestedProductItemClickListener {
+public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, OnRequestedProductItemClickListener, HeaderItemsFragment.OnHeaderItemsInteractionListener {
 
 
     private static final String TAG = "BaseActivity";
@@ -127,8 +129,9 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
     private void setupToolbar() {
@@ -145,6 +148,7 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
         getSupportFragmentManager()
                 .beginTransaction()
                 .hide(getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content));
+
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
                 GridCategoryFragment.newInstance(categoryId),
@@ -153,12 +157,22 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     }
 
     @Override
+    public void showRequestedHeaderItemDetails(HeaderItem item) {
+        int headerId = item.getId();
+        ActivityUtils.addFragmentToActivity(
+                getSupportFragmentManager(),
+                ProductDetailsFragment.newInstance(headerId),
+                R.id.fl_base_activity_content,
+                true, null);
+    }
+
+    @Override
     public void showProductDetailsOfRequestedProductItem(Product item) {
         int productId = item.getId();
         Log.i(TAG, "onProductItemClicked: <<<<  " + item.getName() + "\t" + item.getId() + "  >>>>");
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
-                DetailsFragment.newInstance(productId),
+                ProductDetailsFragment.newInstance(productId),
                 R.id.fl_base_activity_content,
                 true, null);
 

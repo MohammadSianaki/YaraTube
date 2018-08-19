@@ -4,8 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.model.ProductDetails;
 import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.utils.NetworkUtils;
 
@@ -23,8 +25,8 @@ public class RemoteDataSource implements DataSource {
     private Call<HomeResponse> homeResponseCall;
     private Call<List<Category>> categoryCall;
     private Call<List<Product>> productsByCategoryCall;
-    private Call<Product> productDetailsByProductIdCall;
-
+    private Call<ProductDetails> productDetailsByProductIdCall;
+    private Call<List<Comment>> commentOfProductsByProductId;
 
     public RemoteDataSource(Context context) {
         this.context = context;
@@ -91,14 +93,51 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
+    public void fetchCommentsOfProductByProductId(ApiResultCallback callback, int productId) {
+        commentOfProductsByProductId = apiService.fetchCommentOfProductsByProductId(productId);
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            Log.i(TAG, "fetchCommentsOfProductByProductId: network available");
+            commentOfProductsByProductId.enqueue(new Callback<List<Comment>>() {
+                @Override
+                public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                    Log.i(TAG, "onResponse: ");
+                    if (response.isSuccessful()) {
+                        Log.i(TAG, "onResponse: successful");
+                        callback.onDataLoaded(response.body());
+                    } else {
+                        Log.i(TAG, "onResponse: nut successful");
+                        callback.onDataNotAvailable();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Comment>> call, Throwable t) {
+                    Log.e(TAG, "onFailure: ", t);
+                    callback.onDataNotAvailable();
+                }
+            });
+        } else {
+            Log.i(TAG, "fetchCommentsOfProductByProductId: network not available");
+            callback.onNetworkNotAvailable();
+        }
+    }
+
+    @Override
+    public void cancelCommentApiRequest() {
+        if (commentOfProductsByProductId != null) {
+            commentOfProductsByProductId.cancel();
+        }
+    }
+
+    @Override
     public void fetchProductDetailsByProductId(ApiResultCallback callback, int productId) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchProductDetailsByProductId: network available");
 
             productDetailsByProductIdCall = apiService.fetchProductDetailsByProductId(productId);
-            productDetailsByProductIdCall.enqueue(new Callback<Product>() {
+            productDetailsByProductIdCall.enqueue(new Callback<ProductDetails>() {
                 @Override
-                public void onResponse(Call<Product> call, Response<Product> response) {
+                public void onResponse(Call<ProductDetails> call, Response<ProductDetails> response) {
                     if (response.isSuccessful()) {
                         callback.onDataLoaded(response.body());
                         Log.i(TAG, "onResponse: successful");
@@ -109,7 +148,7 @@ public class RemoteDataSource implements DataSource {
                 }
 
                 @Override
-                public void onFailure(Call<Product> call, Throwable t) {
+                public void onFailure(Call<ProductDetails> call, Throwable t) {
                     callback.onDataNotAvailable();
                     Log.i(TAG, "onFailure: " + t.getMessage());
                 }

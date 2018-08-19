@@ -79,7 +79,7 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
         public void onBind(Product product) {
             title.setText(product.getName());
             description.setText(product.getShortDescription());
-            Glide.with(itemView.getContext()).load(product.getAvatar().getXxxDpiUrl()).into(imageView);
+            Glide.with(itemView.getContext()).load(product.getFeatureAvatar().getXxxDpiUrl()).into(imageView);
         }
     }
 

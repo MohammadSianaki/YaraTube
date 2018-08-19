@@ -20,6 +20,10 @@ public interface DataSource {
 
     void fetchProductDetailsByProductId(ApiResultCallback callback, int productId);
 
+    void fetchCommentsOfProductByProductId(ApiResultCallback callback, int productId);
+
+    void cancelCommentApiRequest();
+
     void cancelStoreApiRequest();
 
     void cancelCategoryApiRequest();

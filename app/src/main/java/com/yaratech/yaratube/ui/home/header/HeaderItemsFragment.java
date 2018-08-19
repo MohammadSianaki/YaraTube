@@ -1,6 +1,7 @@
-package com.yaratech.yaratube.ui.home;
+package com.yaratech.yaratube.ui.home.header;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ public class HeaderItemsFragment extends Fragment {
     private final static String KEY_HEADER_ITEM = "KEY_HEADER_ITEM";
     private HeaderItem headerItem;
     private Unbinder unbinder;
+    private OnHeaderItemsInteractionListener mListener;
 
     @BindView(R.id.iv_header_pager)
     ImageView imageView;
@@ -41,6 +43,14 @@ public class HeaderItemsFragment extends Fragment {
         HeaderItemsFragment fragment = new HeaderItemsFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnHeaderItemsInteractionListener) {
+            mListener = (OnHeaderItemsInteractionListener) context;
+        }
     }
 
     @Override
@@ -62,6 +72,7 @@ public class HeaderItemsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
+        view.setOnClickListener(v -> mListener.showRequestedHeaderItemDetails(headerItem));
         Glide.with(this).load(headerItem.getFeatureAvatar().getXxxDpiUrl()).into(imageView);
     }
 
@@ -70,5 +81,9 @@ public class HeaderItemsFragment extends Fragment {
     public void onDestroyView() {
         unbinder.unbind();
         super.onDestroyView();
+    }
+
+    public interface OnHeaderItemsInteractionListener {
+         void showRequestedHeaderItemDetails(HeaderItem item);
     }
 }

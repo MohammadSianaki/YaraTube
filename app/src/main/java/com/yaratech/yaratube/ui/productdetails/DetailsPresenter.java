@@ -2,12 +2,14 @@ package com.yaratech.yaratube.ui.productdetails;
 
 import android.content.Context;
 
-import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.model.Comment;
+import com.yaratech.yaratube.data.model.ProductDetails;
 import com.yaratech.yaratube.data.source.DataSource;
 import com.yaratech.yaratube.data.source.Repository;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class DetailsPresenter implements DetailsContract.Presenter {
 
@@ -43,7 +45,7 @@ public class DetailsPresenter implements DetailsContract.Presenter {
             repository.fetchProductDetailsByProductId(new DataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
-                    Product product = (Product) response;
+                    ProductDetails product = (ProductDetails) response;
                     if (mWeakReference != null) {
                         mWeakReference.get().finishProgressBarLoading();
                         mWeakReference.get().showLoadedData(product);
@@ -67,6 +69,44 @@ public class DetailsPresenter implements DetailsContract.Presenter {
                 }
             }, productId);
         }
+    }
+
+    @Override
+    public void fetchProductComments(int productId) {
+        if (isAttached()) {
+            mWeakReference.get().showCommentLoading();
+            repository.fetchCommentsOfProductByProductId(new DataSource.ApiResultCallback() {
+                @Override
+                public void onDataLoaded(Object response) {
+                    List<Comment> commentList = (List<Comment>) response;
+                    if (mWeakReference != null) {
+                        mWeakReference.get().hideCommentLoading();
+                        mWeakReference.get().showLoadedComments(commentList);
+                    }
+                }
+
+                @Override
+                public void onDataNotAvailable() {
+                    if (mWeakReference != null) {
+                        mWeakReference.get().hideCommentLoading();
+                        mWeakReference.get().showDataNotAvailableToast();
+                    }
+                }
+
+                @Override
+                public void onNetworkNotAvailable() {
+                    if (mWeakReference != null) {
+                        mWeakReference.get().hideCommentLoading();
+                        mWeakReference.get().showNetworkNotAvailableToast();
+                    }
+                }
+            }, productId);
+        }
+    }
+
+    @Override
+    public void cancelProductCommentApiRequest() {
+
     }
 
     @Override

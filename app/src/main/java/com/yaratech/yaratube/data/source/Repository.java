@@ -40,6 +40,16 @@ public class Repository implements DataSource {
         remoteDataSource.fetchProductDetailsByProductId(callback, productId);
     }
 
+    @Override
+    public void fetchCommentsOfProductByProductId(ApiResultCallback callback, int productId) {
+        remoteDataSource.fetchCommentsOfProductByProductId(callback, productId);
+    }
+
+    @Override
+    public void cancelCommentApiRequest() {
+        remoteDataSource.cancelCommentApiRequest();
+    }
+
 
     @Override
     public void fetchStoreItems(ApiResultCallback callback) {

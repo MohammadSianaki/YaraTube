@@ -1,8 +1,10 @@
 package com.yaratech.yaratube.data.source.remote;
 
 import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.model.ProductDetails;
 
 import java.util.List;
 
@@ -22,5 +24,8 @@ public interface ApiService {
     Call<List<Product>> fetchProductsByCategoryId(@Path("category_id") int categoryId);
 
     @GET("product/{productId}")
-    Call<Product> fetchProductDetailsByProductId(@Path("productId") int productId);
+    Call<ProductDetails> fetchProductDetailsByProductId(@Path("productId") int productId);
+
+    @GET("comment/{productId}")
+    Call<List<Comment>> fetchCommentOfProductsByProductId(@Path("productId") int productId);
 }

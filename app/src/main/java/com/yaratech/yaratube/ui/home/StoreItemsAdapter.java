@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.HeaderItem;
 import com.yaratech.yaratube.data.model.HomeItem;
+import com.yaratech.yaratube.ui.home.header.HeaderItemsAdapter;
+import com.yaratech.yaratube.ui.home.header.HeaderPagerAdapter;
 
 import java.util.List;
 
