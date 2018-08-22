@@ -17,7 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RemoteDataSource implements DataSource {
+public class RemoteDataSource implements DataSource.Remote {
 
     private static final String TAG = "RemoteDataSource";
     private Context context;
@@ -34,7 +34,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void fetchAllCategories(final ApiResultCallback callback) {
+    public void fetchAllCategories(final DataSource.ApiResultCallback callback) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchAllCategories: network available");
             categoryCall = apiService.fetchAllCategories();
@@ -65,7 +65,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void fetchProductsByCategoryId(ApiResultCallback callback, int categoryId) {
+    public void fetchProductsByCategoryId(DataSource.ApiResultCallback callback, int categoryId) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             productsByCategoryCall = apiService.fetchProductsByCategoryId(categoryId);
             productsByCategoryCall.enqueue(new Callback<List<Product>>() {
@@ -93,7 +93,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void fetchCommentsOfProductByProductId(ApiResultCallback callback, int productId) {
+    public void fetchCommentsOfProductByProductId(DataSource.ApiResultCallback callback, int productId) {
         commentOfProductsByProductId = apiService.fetchCommentOfProductsByProductId(productId);
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchCommentsOfProductByProductId: network available");
@@ -112,7 +112,7 @@ public class RemoteDataSource implements DataSource {
 
                 @Override
                 public void onFailure(Call<List<Comment>> call, Throwable t) {
-                    Log.i(TAG, "onFailure: "+ t.getMessage());
+                    Log.i(TAG, "onFailure: " + t.getMessage());
                     callback.onDataNotAvailable();
                 }
             });
@@ -130,7 +130,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void fetchProductDetailsByProductId(ApiResultCallback callback, int productId) {
+    public void fetchProductDetailsByProductId(DataSource.ApiResultCallback callback, int productId) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchProductDetailsByProductId: network available");
 
@@ -174,7 +174,7 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
-    public void fetchStoreItems(ApiResultCallback callback) {
+    public void fetchStoreItems(DataSource.ApiResultCallback callback) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchStoreItems: network available");
             homeResponseCall = apiService.fetchStoreItems();

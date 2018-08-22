@@ -1,13 +1,16 @@
 package com.yaratech.yaratube.data.source;
 
+import com.yaratech.yaratube.data.source.local.LocalDataSource;
+import com.yaratech.yaratube.data.source.local.UserLoginInfo;
 import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
 
-public class Repository implements DataSource {
+public class Repository implements DataSource.Remote, DataSource.Local {
 
     private static Repository INSTANCE = null;
     private RemoteDataSource remoteDataSource;
+    private LocalDataSource localDataSource;
 
-    private Repository(DataSource remoteDataSource) {
+    private Repository(DataSource.Remote remoteDataSource, DataSource.Local localDataSource) {
         //no instance
         if (remoteDataSource instanceof RemoteDataSource) {
             this.remoteDataSource = (RemoteDataSource) remoteDataSource;
@@ -15,33 +18,40 @@ public class Repository implements DataSource {
             throw new ClassCastException("IS NOT INSTANCE OF RemoteDataSource");
         }
 
+        if (localDataSource instanceof LocalDataSource) {
+            this.localDataSource = (LocalDataSource) localDataSource;
+        } else {
+            throw new ClassCastException("IS NOT INSTANCE OF LocalDataSource");
+
+        }
+
     }
 
-    public static Repository getINSTANCE(DataSource remoteDataSource) {
+    public static Repository getINSTANCE(DataSource.Remote remoteDataSource, DataSource.Local localDataSource) {
         if (INSTANCE == null) {
-            INSTANCE = new Repository(remoteDataSource);
+            INSTANCE = new Repository(remoteDataSource, localDataSource);
         }
         return INSTANCE;
     }
 
     @Override
-    public void fetchAllCategories(ApiResultCallback callback) {
+    public void fetchAllCategories(DataSource.ApiResultCallback callback) {
         remoteDataSource.fetchAllCategories(callback);
     }
 
 
     @Override
-    public void fetchProductsByCategoryId(ApiResultCallback callback, int categoryId) {
+    public void fetchProductsByCategoryId(DataSource.ApiResultCallback callback, int categoryId) {
         remoteDataSource.fetchProductsByCategoryId(callback, categoryId);
     }
 
     @Override
-    public void fetchProductDetailsByProductId(ApiResultCallback callback, int productId) {
+    public void fetchProductDetailsByProductId(DataSource.ApiResultCallback callback, int productId) {
         remoteDataSource.fetchProductDetailsByProductId(callback, productId);
     }
 
     @Override
-    public void fetchCommentsOfProductByProductId(ApiResultCallback callback, int productId) {
+    public void fetchCommentsOfProductByProductId(DataSource.ApiResultCallback callback, int productId) {
         remoteDataSource.fetchCommentsOfProductByProductId(callback, productId);
     }
 
@@ -52,7 +62,7 @@ public class Repository implements DataSource {
 
 
     @Override
-    public void fetchStoreItems(ApiResultCallback callback) {
+    public void fetchStoreItems(DataSource.ApiResultCallback callback) {
         remoteDataSource.fetchStoreItems(callback);
     }
 
@@ -74,5 +84,15 @@ public class Repository implements DataSource {
     @Override
     public void cancelStoreApiRequest() {
         remoteDataSource.cancelStoreApiRequest();
+    }
+
+    @Override
+    public void insertUserLoginInfo(DataSource.DatabaseResultCallback callback, UserLoginInfo userLoginInfo) {
+        localDataSource.insertUserLoginInfo(callback, userLoginInfo);
+    }
+
+    @Override
+    public void checkIfUserIsAuthorized(DataSource.DatabaseResultCallback callback) {
+        localDataSource.checkIfUserIsAuthorized(callback);
     }
 }

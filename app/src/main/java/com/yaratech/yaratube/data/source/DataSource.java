@@ -1,5 +1,9 @@
 package com.yaratech.yaratube.data.source;
 
+import com.yaratech.yaratube.data.source.local.UserLoginInfo;
+
+import io.reactivex.disposables.Disposable;
+
 public interface DataSource {
 
     interface ApiResultCallback<T> {
@@ -11,25 +15,45 @@ public interface DataSource {
         void onNetworkNotAvailable();
     }
 
+    interface DatabaseResultCallback<T> {
+        void onUserLoginInfoLoaded(T data);
 
-    void fetchAllCategories(ApiResultCallback callback);
+        void onUserLoginInserted();
 
-    void fetchStoreItems(ApiResultCallback callback);
+        void onUserIsAuthorized(boolean isAuthorized);
 
-    void fetchProductsByCategoryId(ApiResultCallback callback, int categoryId);
+        void onAddedToCompositeDisposable(Disposable disposable);
 
-    void fetchProductDetailsByProductId(ApiResultCallback callback, int productId);
+        void onFailureMessage(String message);
 
-    void fetchCommentsOfProductByProductId(ApiResultCallback callback, int productId);
+    }
 
-    void cancelCommentApiRequest();
+    interface Remote {
+        void fetchAllCategories(ApiResultCallback callback);
 
-    void cancelStoreApiRequest();
+        void fetchStoreItems(ApiResultCallback callback);
 
-    void cancelCategoryApiRequest();
+        void fetchProductsByCategoryId(ApiResultCallback callback, int categoryId);
 
-    void cancelProductsByCategoryIdApiRequest();
+        void fetchProductDetailsByProductId(ApiResultCallback callback, int productId);
 
-    void cancelProductDetailsByProductIdApiRequest();
+        void fetchCommentsOfProductByProductId(ApiResultCallback callback, int productId);
 
+        void cancelCommentApiRequest();
+
+        void cancelStoreApiRequest();
+
+        void cancelCategoryApiRequest();
+
+        void cancelProductsByCategoryIdApiRequest();
+
+        void cancelProductDetailsByProductIdApiRequest();
+    }
+
+
+    interface Local {
+        void checkIfUserIsAuthorized(DatabaseResultCallback callback);
+
+        void insertUserLoginInfo(DatabaseResultCallback callback, UserLoginInfo userLoginInfo);
+    }
 }
