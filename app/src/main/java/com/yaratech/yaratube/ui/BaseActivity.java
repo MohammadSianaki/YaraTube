@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +38,7 @@ import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 public class BaseActivity extends AppCompatActivity implements
@@ -68,7 +68,7 @@ public class BaseActivity extends AppCompatActivity implements
     private LocalDataSource localDataSource;
     private StoreRemoteDataSource storeRemoteDataSource;
     private UserRemoteDataSource userRemoteDataSource;
-
+    private CompositeDisposable compositeDisposable;
     //------------------------------------------------------------------------------------------------
 
     @Override
@@ -84,10 +84,13 @@ public class BaseActivity extends AppCompatActivity implements
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
+        BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
         if (fragment == null) {
             Log.i(TAG, "onCreate: content fragment is null");
             fragment = BaseFragment.newInstance();
+            fragment.setCompositeDisposable(compositeDisposable);
+            fragment.setStoreRepository(storeRepository);
+            fragment.setUserRepository(userRepository);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.fl_base_activity_content);
         }
     }
@@ -98,6 +101,7 @@ public class BaseActivity extends AppCompatActivity implements
         this.localDataSource = LocalDataSource.getINSTANCE(this);
         this.userRepository = UserRepository.getINSTANCE(userRemoteDataSource, localDataSource);
         this.storeRepository = StoreRepository.getINSTANCE(storeRemoteDataSource);
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     private void requestPermissions() {
@@ -165,6 +169,7 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        compositeDisposable.clear();
         Log.i(TAG, "onDestroy: BaseActivity");
     }
 
@@ -202,10 +207,11 @@ public class BaseActivity extends AppCompatActivity implements
         getSupportFragmentManager()
                 .beginTransaction()
                 .hide(getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content));
-
+        GridCategoryFragment gridCategoryFragment = GridCategoryFragment.newInstance(categoryId);
+        gridCategoryFragment.setStoreRepository(storeRepository);
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
-                GridCategoryFragment.newInstance(categoryId),
+                gridCategoryFragment,
                 R.id.fl_base_activity_content, true, null);
         Log.i(TAG, "onProductItemClicked: <<<<  " + item.getTitle() + "\t" + item.getId() + " >>>>");
     }
@@ -213,9 +219,11 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     public void showRequestedHeaderItemDetails(HeaderItem item) {
         int headerId = item.getId();
+        ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(headerId);
+        detailsFragment.setStoreRepository(storeRepository);
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
-                ProductDetailsFragment.newInstance(headerId),
+                detailsFragment,
                 R.id.fl_base_activity_content,
                 true, null);
     }
@@ -240,6 +248,9 @@ public class BaseActivity extends AppCompatActivity implements
                 @Override
                 public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
                     if (userLoginInfo.getIsAuthorized() == 1) {
+                        if (userLoginInfo == null) {
+                            Log.d(TAG, "onUserLoginInfoLoaded: null");
+                        }
                         Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
                         Toast.makeText(BaseActivity.this, "You Are Just  Logged In", Toast.LENGTH_SHORT).show();
                     } else {
@@ -250,16 +261,15 @@ public class BaseActivity extends AppCompatActivity implements
 
                 @Override
                 public void onAddedToCompositeDisposable(Disposable disposable) {
-
+                    compositeDisposable.add(disposable);
                 }
 
                 @Override
                 public void onFailureMessage(String message) {
-
+                    Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
                 }
             });
 
-            return true;
         }
         return false;
     }
@@ -275,4 +285,5 @@ public class BaseActivity extends AppCompatActivity implements
         VerificationDialogFragment dialogFragment = VerificationDialogFragment.newInstance(phoneNumber);
         dialogFragment.show(getSupportFragmentManager(), VerificationDialogFragment.class.getSimpleName());
     }
+
 }

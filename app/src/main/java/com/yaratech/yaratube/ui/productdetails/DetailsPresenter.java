@@ -1,12 +1,9 @@
 package com.yaratech.yaratube.ui.productdetails;
 
-import android.content.Context;
-
 import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.ProductDetails;
 import com.yaratech.yaratube.data.source.StoreDataSource;
 import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 
 import java.util.List;
 
@@ -18,8 +15,8 @@ public class DetailsPresenter implements DetailsContract.Presenter {
     //---------------------------------------------------------------------------------------------
 
 
-    public DetailsPresenter(Context context) {
-        this.repository = StoreRepository.getINSTANCE(new StoreRemoteDataSource((context)));
+    public DetailsPresenter(StoreRepository storeRepository) {
+        this.repository = storeRepository;
     }
 
     @Override

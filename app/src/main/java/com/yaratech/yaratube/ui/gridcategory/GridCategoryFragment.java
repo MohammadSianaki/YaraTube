@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.source.StoreRepository;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 
@@ -39,6 +40,8 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     private GridCategoryAdapter gridCategoryAdapter;
     private OnRequestedProductItemClickListener onRequestedProductItemClickListener;
     private Unbinder mUnBinder;
+    private StoreRepository storeRepository;
+
 
     @BindView(R.id.rv_products_of_category)
     RecyclerView recyclerViewOfProducts;
@@ -89,7 +92,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         mUnBinder = ButterKnife.bind(this, view);
         Log.i(TAG, "onViewCreated: GridCategoryFragment");
         gridCategoryAdapter = new GridCategoryAdapter(this);
-        mPresenter = new GridCategoryPresenter(getActivity().getApplicationContext());
+        mPresenter = new GridCategoryPresenter(storeRepository);
         mPresenter.attachView(this);
         setupRecyclerView();
 
@@ -159,4 +162,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         onRequestedProductItemClickListener.showProductDetailsOfRequestedProductItem(item);
     }
 
+    public void setStoreRepository(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
+    }
 }

@@ -17,12 +17,18 @@ import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
+import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.source.local.LocalDataSource;
+import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
+import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +49,12 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     private CategoryContract.Presenter mPresenter;
     private OnCategoryFragmentInteractionListener mListener;
     private Unbinder mUnBinder;
+    private UserRepository userRepository;
+    private StoreRepository storeRepository;
+    private LocalDataSource localDataSource;
+    private StoreRemoteDataSource storeRemoteDataSource;
+    private UserRemoteDataSource userRemoteDataSource;
+    private CompositeDisposable compositeDisposable;
 
     //------------------------------------------------------------------------------------------------
     public CategoryFragment() {
@@ -91,7 +103,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         Log.i(TAG, "onViewCreated: CategoryFragment");
         mUnBinder = ButterKnife.bind(this, view);
         categoryAdapter = new CategoryAdapter(this);
-        mPresenter = new CategoryPresenter(getActivity().getApplicationContext());
+        mPresenter = new CategoryPresenter(storeRepository);
         mPresenter.attachView(this);
         setupRecyclerView();
 
@@ -195,8 +207,34 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         progressBar.setVisibility(View.GONE);
     }
 
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setStoreRepository(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
+    }
+
+    public void setLocalDataSource(LocalDataSource localDataSource) {
+        this.localDataSource = localDataSource;
+    }
+
+    public void setStoreRemoteDataSource(StoreRemoteDataSource storeRemoteDataSource) {
+        this.storeRemoteDataSource = storeRemoteDataSource;
+    }
+
+    public void setUserRemoteDataSource(UserRemoteDataSource userRemoteDataSource) {
+        this.userRemoteDataSource = userRemoteDataSource;
+    }
+
+    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
+        this.compositeDisposable = compositeDisposable;
+    }
+
     public interface OnCategoryFragmentInteractionListener {
         void showProductsOfRequestedCategoryItem(Category item);
     }
+
 
 }

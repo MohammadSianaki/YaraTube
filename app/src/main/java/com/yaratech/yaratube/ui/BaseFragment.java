@@ -15,12 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +38,11 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
 
     private HomeFragment homeFragment;
     private CategoryFragment categoryFragment;
+
+    private UserRepository userRepository;
+    private StoreRepository storeRepository;
+    private CompositeDisposable compositeDisposable;
+
     //--------------------------------------------------------------------------------------------
 
     public BaseFragment() {
@@ -65,7 +73,21 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
         if (savedInstanceState == null) {
             homeFragment = HomeFragment.newInstance();
             categoryFragment = CategoryFragment.newInstance();
+            initHomeFragmentDependency();
+            initCategoryFragmentDependency();
         }
+    }
+
+    private void initHomeFragmentDependency() {
+        homeFragment.setCompositeDisposable(compositeDisposable);
+        homeFragment.setStoreRepository(storeRepository);
+        homeFragment.setUserRepository(userRepository);
+    }
+
+    private void initCategoryFragmentDependency() {
+        categoryFragment.setCompositeDisposable(compositeDisposable);
+        categoryFragment.setStoreRepository(storeRepository);
+        categoryFragment.setUserRepository(userRepository);
     }
 
     @Nullable
@@ -201,5 +223,17 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
                         addToBackStack, tag);
     }
 
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setStoreRepository(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
+    }
+
+
+    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
+        this.compositeDisposable = compositeDisposable;
+    }
 }
 

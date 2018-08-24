@@ -1,7 +1,5 @@
 package com.yaratech.yaratube.ui.gridcategory;
 
-import android.content.Context;
-
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreDataSource;
 import com.yaratech.yaratube.data.source.StoreRepository;
@@ -15,8 +13,8 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
     private StoreRepository repository;
     private GridCategoryContract.View mView;
 
-    public GridCategoryPresenter(Context context) {
-        this.repository = StoreRepository.getINSTANCE(new StoreRemoteDataSource((context)));
+    public GridCategoryPresenter(StoreRepository storeRepository) {
+        this.repository = storeRepository;
     }
 
     @Override

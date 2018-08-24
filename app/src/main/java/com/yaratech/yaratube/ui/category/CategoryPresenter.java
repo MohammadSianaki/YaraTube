@@ -1,10 +1,7 @@
 package com.yaratech.yaratube.ui.category;
 
-import android.content.Context;
-
 import com.yaratech.yaratube.data.source.StoreDataSource;
 import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 
 import java.util.List;
 
@@ -14,8 +11,8 @@ public class CategoryPresenter implements CategoryContract.Presenter {
     private StoreRepository repository;
     private CategoryContract.View mView;
 
-    public CategoryPresenter(Context context) {
-        this.repository = StoreRepository.getINSTANCE(new StoreRemoteDataSource((context)));
+    public CategoryPresenter(StoreRepository storeRepository) {
+        this.repository = storeRepository;
     }
 
     @Override

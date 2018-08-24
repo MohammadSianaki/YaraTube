@@ -18,12 +18,18 @@ import android.widget.Toast;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.source.local.LocalDataSource;
+import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
+import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +42,14 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
     private StoreItemsAdapter mStoreItemsAdapter;
     private OnRequestedProductItemClickListener mListener;
     private Unbinder mUnBinder;
+
+    private UserRepository userRepository;
+    private StoreRepository storeRepository;
+    private LocalDataSource localDataSource;
+    private StoreRemoteDataSource storeRemoteDataSource;
+    private UserRemoteDataSource userRemoteDataSource;
+    private CompositeDisposable compositeDisposable;
+
 
     @BindView(R.id.pb_store_items_loading)
     ProgressBar progressBar;
@@ -92,7 +106,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
         mStoreItemsAdapter = new StoreItemsAdapter(this, getFragmentManager());
-        mPresenter = new HomePresenter(getActivity().getApplicationContext());
+        mPresenter = new HomePresenter(storeRepository);
         mPresenter.attachView(this);
         setupRecyclerView();
     }
@@ -194,4 +208,27 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
         mListener.showProductDetailsOfRequestedProductItem(item);
     }
 
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setStoreRepository(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
+    }
+
+    public void setLocalDataSource(LocalDataSource localDataSource) {
+        this.localDataSource = localDataSource;
+    }
+
+    public void setStoreRemoteDataSource(StoreRemoteDataSource storeRemoteDataSource) {
+        this.storeRemoteDataSource = storeRemoteDataSource;
+    }
+
+    public void setUserRemoteDataSource(UserRemoteDataSource userRemoteDataSource) {
+        this.userRemoteDataSource = userRemoteDataSource;
+    }
+
+    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
+        this.compositeDisposable = compositeDisposable;
+    }
 }

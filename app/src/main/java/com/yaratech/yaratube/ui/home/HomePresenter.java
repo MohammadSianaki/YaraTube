@@ -1,11 +1,8 @@
 package com.yaratech.yaratube.ui.home;
 
-import android.content.Context;
-
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.source.StoreDataSource;
 import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 
 public class HomePresenter implements HomeContract.Presenter {
     //------------------------------------------------------------------------------------
@@ -15,8 +12,8 @@ public class HomePresenter implements HomeContract.Presenter {
     private HomeContract.View mView;
     //------------------------------------------------------------------------------------
 
-    public HomePresenter(Context context) {
-        this.repository = StoreRepository.getINSTANCE(new StoreRemoteDataSource((context)));
+    public HomePresenter(StoreRepository storeRepository) {
+        this.repository = storeRepository;
 
     }
 

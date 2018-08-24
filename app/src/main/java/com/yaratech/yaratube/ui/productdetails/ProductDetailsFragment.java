@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.ProductDetails;
+import com.yaratech.yaratube.data.source.StoreRepository;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     private DetailsContract.Presenter mPresenter;
     private Unbinder mUnBinder;
     private CommentAdapter commentAdapter;
-
+    private StoreRepository storeRepository;
     @BindView(R.id.iv_product_details_media)
     ImageView productDetailsMedia;
 
@@ -89,7 +90,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
         mUnBinder = ButterKnife.bind(this, view);
         Log.i(TAG, "onViewCreated: ProductDetailsFragment");
-        mPresenter = new DetailsPresenter(getActivity().getApplicationContext());
+        mPresenter = new DetailsPresenter(storeRepository);
         mPresenter.attachView(this);
         commentAdapter = new CommentAdapter();
         setRecyclerView();
@@ -170,5 +171,9 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public void setStoreRepository(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
     }
 }
