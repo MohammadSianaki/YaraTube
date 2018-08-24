@@ -30,6 +30,11 @@ public class LocalDataSource implements UserDataSource {
     }
 
     @Override
+    public void verifyUserWithThisCode(ApiResultCallback callback, String code, String phoneNumber) {
+
+    }
+
+    @Override
     public void checkIfUserIsAuthorized(UserDataSource.DatabaseResultCallback callback) {
 
 

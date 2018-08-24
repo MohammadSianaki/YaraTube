@@ -1,8 +1,12 @@
 package com.yaratech.yaratube.ui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,15 +25,22 @@ import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
 import com.yaratech.yaratube.ui.login.loginmethod.LoginMethodFragment;
 import com.yaratech.yaratube.ui.login.phonenumberlogin.PhoneNumberLoginFragment;
+import com.yaratech.yaratube.ui.login.verification.VerificationDialogFragment;
 import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, OnRequestedProductItemClickListener, HeaderItemsFragment.OnHeaderItemsInteractionListener, NavigationView.OnNavigationItemSelectedListener, LoginMethodFragment.OnLoginFragmentInteractionListener {
+public class BaseActivity extends AppCompatActivity implements
+        CategoryFragment.OnCategoryFragmentInteractionListener,
+        OnRequestedProductItemClickListener,
+        HeaderItemsFragment.OnHeaderItemsInteractionListener,
+        NavigationView.OnNavigationItemSelectedListener,
+        LoginMethodFragment.OnLoginFragmentInteractionListener,
+        PhoneNumberLoginFragment.OnPhoneNumberLoginFragmentInteractionListener {
 
-
+    public static final int PERMISSION_REQUEST_CODE = 1234;
     private static final String TAG = "BaseActivity";
     //------------------------------------------------------------------------------------------------
 
@@ -52,6 +63,9 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
         ActivityUtils.checkAndSetRtl(this);
         setupToolbar();
 
+        requestPermissions();
+
+
         navigationView.setNavigationItemSelectedListener(this);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
@@ -59,6 +73,15 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
             Log.i(TAG, "onCreate: content fragment is null");
             fragment = BaseFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.fl_base_activity_content);
+        }
+    }
+
+    private void requestPermissions() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1 &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
+                        != PackageManager.PERMISSION_GRANTED) {
+            String[] permissions = new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS};
+            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -200,5 +223,11 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     public void openToEnterMobilePhoneNumberDialog() {
         PhoneNumberLoginFragment phoneNumberLoginFragment = PhoneNumberLoginFragment.newInstance();
         phoneNumberLoginFragment.show(getSupportFragmentManager(), PhoneNumberLoginFragment.class.getSimpleName());
+    }
+
+    @Override
+    public void showVerificationCodeDialog(String phoneNumber) {
+        VerificationDialogFragment dialogFragment = VerificationDialogFragment.newInstance(phoneNumber);
+        dialogFragment.show(getSupportFragmentManager(), VerificationDialogFragment.class.getSimpleName());
     }
 }

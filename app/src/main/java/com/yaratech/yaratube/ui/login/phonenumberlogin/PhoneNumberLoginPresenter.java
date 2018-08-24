@@ -41,6 +41,7 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
                         return input.startsWith("09") && input.length() == 11;
                     }
                 })
+
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
         Disposable disposable = (Disposable) o.subscribeWith(new DisposableObserver<String>() {
@@ -50,9 +51,17 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
             public void onNext(String phoneNumber) {
                 Log.d(TAG, "onNext() called with: phoneNumber = [" + phoneNumber + "]");
                 repository.registerUserWithThisPhoneNumber(new UserDataSource.ApiResultCallback() {
+
                     @Override
-                    public void onSuccessMessage(String message, int responseCode) {
+                    public void onSuccessMessage(String message, int responseCode, Object response) {
                         Log.d(TAG, "onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
+                        mView.showVerificationCodeDialog(phoneNumber);
+                    }
+
+                    @Override
+                    public void onErrorMessage(String message, int responseCode) {
+                        Log.d(TAG, "onErrorMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
+                        mView.showToastError(message);
                     }
 
                     @Override

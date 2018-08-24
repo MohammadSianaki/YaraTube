@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.yaratech.yaratube.data.model.MobileLoginStepOneResponse;
+import com.yaratech.yaratube.data.model.MobileLoginStepTwoResponse;
 import com.yaratech.yaratube.data.source.UserDataSource;
 import com.yaratech.yaratube.data.source.local.UserLoginInfo;
 import com.yaratech.yaratube.utils.DeviceUtils;
@@ -22,6 +23,7 @@ public class UserRemoteDataSource implements UserDataSource {
     private ApiService apiService;
     private Context context;
     private Single<Response<MobileLoginStepOneResponse>> mobileLoginStepOneResponseSingle;
+    private Single<Response<MobileLoginStepTwoResponse>> mobileLoginStepTwoResponseSingle;
 
     public UserRemoteDataSource(Context context) {
         this.context = context;
@@ -48,10 +50,10 @@ public class UserRemoteDataSource implements UserDataSource {
                     public void onSuccess(Response<MobileLoginStepOneResponse> response) {
                         if (response.isSuccessful()) {
                             Log.d(TAG, "onSuccess() called with: response.isSuccessful() ");
-                            callback.onSuccessMessage(response.message(), response.code());
+                            callback.onSuccessMessage(response.message(), response.code(), response.body());
                         } else {
                             Log.d(TAG, "onSuccess() called with: NOT response.isSuccessful() ");
-                            callback.onFailureMessage(response.message(), response.code());
+                            callback.onErrorMessage(response.message(), response.code());
                         }
                     }
 
@@ -71,5 +73,43 @@ public class UserRemoteDataSource implements UserDataSource {
     @Override
     public void insertUserLoginInfo(DatabaseResultCallback callback, UserLoginInfo userLoginInfo) {
 
+    }
+
+    @Override
+    public void verifyUserWithThisCode(ApiResultCallback callback, String verificationCode, String phoneNumber) {
+        Log.i(TAG, "<<<<    verifyUserWithThisCode      >>>>    :   [ phoneNumber " + phoneNumber + " ] , [ verificationCode" + verificationCode + " ]");
+        mobileLoginStepTwoResponseSingle =
+                apiService.mobileLoginStepTwo(
+                        phoneNumber,
+                        DeviceUtils.getDeviceId(context),
+                        verificationCode,
+                        null
+                );
+        mobileLoginStepTwoResponseSingle
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<MobileLoginStepTwoResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Response<MobileLoginStepTwoResponse> response) {
+                        if (response.isSuccessful()) {
+                            Log.d(TAG, "onSuccess() called with: response.isSuccessful() ");
+                            callback.onSuccessMessage(response.message(), response.code(), response.body());
+                        } else {
+                            Log.d(TAG, "onSuccess() called with: NOT response.isSuccessful() ");
+                            callback.onErrorMessage(response.message(), response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onFailureMessage(e.getMessage(), ((HttpException) e).code());
+                         Log.e(TAG, "onError: ", e);
+                    }
+                });
     }
 }

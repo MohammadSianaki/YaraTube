@@ -19,7 +19,7 @@ import butterknife.Unbinder;
 public class LoginMethodFragment extends DialogFragment implements LoginMethodContract.View {
     //------------------------------------------------------------------------------------------------------
     private static final String TAG = "LoginMethodFragment";
-    @BindView(R.id.btn_mobile_login)
+    @BindView(R.id.btn_mobile_phone_number_sign_in)
     Button loginButton;
 
 

@@ -9,16 +9,16 @@ public class MobileLoginStepTwoResponse {
     private String message;
     @SerializedName("error")
     @Expose
-    private String error;
+    private int error;
     @SerializedName("user_id")
     @Expose
-    private String userId;
+    private int userId;
     @SerializedName("token")
     @Expose
     private String token;
     @SerializedName("files_added")
     @Expose
-    private String filesAdded;
+    private Object filesAdded;
     @SerializedName("nickname")
     @Expose
     private String nickName;
@@ -34,19 +34,19 @@ public class MobileLoginStepTwoResponse {
         this.message = message;
     }
 
-    public String getError() {
+    public int getError() {
         return error;
     }
 
-    public void setError(String error) {
+    public void setError(int error) {
         this.error = error;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -58,7 +58,7 @@ public class MobileLoginStepTwoResponse {
         this.token = token;
     }
 
-    public String getFilesAdded() {
+    public Object getFilesAdded() {
         return filesAdded;
     }
 

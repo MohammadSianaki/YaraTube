@@ -1,52 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="8dp"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="373.33dp"
+    android:layout_height="262.67dp"
+    android:elevation="3dp"
     android:layoutDirection="rtl"
-    android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".ui.login.phonenumberlogin.PhoneNumberLoginFragment">
+    app:cardCornerRadius="5dp">
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_phone_number_login_dialog_title"
-        android:layout_width="224.0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="@string/phone_number_login_title"
-        android:textColor="@color/phone_number_login_dialog_title_color"
-        android:textSize="21.33sp"
-        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/et_phone_number_login_dialog_input"
-        android:layout_width="330.67dp"
-        android:layout_height="74.67dp"
-        android:layout_marginBottom="21.33dp"
-        android:background="@drawable/surface"
-        android:hint="@string/phone_number_login_edit_text_hint"
-        android:inputType="phone"
-        android:paddingBottom="21.33dp"
-        android:paddingLeft="18dp"
-        android:paddingRight="17.42dp"
-        android:paddingTop="21.33dp"
-        android:textAlignment="viewStart"
-        android:textColor="#99000000"
-        android:textDirection="rtl"
-        android:textIsSelectable="false" />
+        <TextView
+            android:id="@+id/tv_phone_number_login_dialog_title"
+            android:layout_width="224.0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:layout_marginRight="21.33dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/phone_number_login_title"
+            android:textColor="@color/dark_jungle_green_color"
+            android:textSize="21.33sp"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btn_phone_number_login_dialog_submit"
-        android:layout_width="330.67dp"
-        android:layout_height="48.0dp"
-        android:background="@drawable/rectangle_13"
-        android:text="@string/phone_number_login_sumbit_button_text"
+        <EditText
+            android:id="@+id/et_phone_number_login_dialog_input"
+            android:layout_width="330.67dp"
+            android:layout_height="74.67dp"
+            android:layout_marginBottom="21.33dp"
+            android:layout_marginRight="21.33dp"
+            android:background="@drawable/surface"
+            android:hint="@string/phone_number_login_edit_text_hint"
+            android:inputType="phone"
+            android:paddingBottom="21.33dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="17.42dp"
+            android:paddingTop="21.33dp"
+            android:textAlignment="viewStart"
+            android:textColor="#99000000"
+            android:textDirection="rtl"
+            android:textIsSelectable="false" />
 
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="18.67sp" />
-</LinearLayout>
+        <Button
+            android:id="@+id/btn_phone_number_login_dialog_submit"
+            android:layout_width="330.67dp"
+            android:layout_height="48.0dp"
+            android:layout_marginBottom="21.33dp"
+            android:layout_marginRight="21.33dp"
+            android:background="@drawable/rectangle_13"
+            android:text="@string/phone_number_login_sumbit_button_text"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="18.67sp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

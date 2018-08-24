@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -65,12 +66,12 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnPhoneNumberLoginFragmentInteractionListener) {
-//            mListener = (OnPhoneNumberLoginFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnPhoneNumberLoginFragmentInteractionListener");
-//        }
+        if (context instanceof OnPhoneNumberLoginFragmentInteractionListener) {
+            mListener = (OnPhoneNumberLoginFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnPhoneNumberLoginFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -91,6 +92,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
         mPresenter = new PhoneNumberLoginPresenter(UserRepository.getINSTANCE(new UserRemoteDataSource(getContext())));
+        mPresenter.attachView(this);
         Observable observable = RxTextView.textChangeEvents(phoneNumberEditText);
         RxView.clicks(submitPhoneNumberButton)
                 .subscribe(new Consumer<Object>() {
@@ -105,12 +107,14 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     @Override
     public void onDestroyView() {
         mUnBinder.unbind();
+        mPresenter.detachView();
         super.onDestroyView();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener = null;
 //        mListener = null;
     }
 
@@ -134,7 +138,19 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
 
     }
 
-    public interface OnPhoneNumberLoginFragmentInteractionListener {
+    @Override
+    public void showVerificationCodeDialog(String phoneNumber) {
+        mListener.showVerificationCodeDialog(phoneNumber);
+        dismiss();
 
+    }
+
+    @Override
+    public void showToastError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public interface OnPhoneNumberLoginFragmentInteractionListener {
+        void showVerificationCodeDialog(String phoneNumber);
     }
 }

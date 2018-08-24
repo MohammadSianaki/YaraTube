@@ -39,4 +39,9 @@ public class UserRepository implements UserDataSource {
     public void registerUserWithThisPhoneNumber(ApiResultCallback callback, String phoneNumber) {
         userDataSource.registerUserWithThisPhoneNumber(callback, phoneNumber);
     }
+
+    @Override
+    public void verifyUserWithThisCode(ApiResultCallback callback, String code, String phoneNumber) {
+        userDataSource.verifyUserWithThisCode(callback, code, phoneNumber);
+    }
 }

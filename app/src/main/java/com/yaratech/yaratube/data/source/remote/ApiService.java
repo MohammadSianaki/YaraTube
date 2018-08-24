@@ -52,7 +52,7 @@ public interface ApiService {
 
     @POST("mobile_login_step2/" + STORE_ID)
     @FormUrlEncoded
-    Single<MobileLoginStepTwoResponse> mobileLoginStepTwo(
+    Single<Response<MobileLoginStepTwoResponse>> mobileLoginStepTwo(
             @Field("mobile") String mobile,
             @Field("device_id") String deviceId,
             @Field("verification_code") String verificationCode,

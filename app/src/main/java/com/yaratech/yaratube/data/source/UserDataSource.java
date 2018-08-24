@@ -6,6 +6,7 @@ import io.reactivex.disposables.Disposable;
 
 public interface UserDataSource {
 
+
     interface DatabaseResultCallback<T> {
         void onUserLoginInfoLoaded(T data);
 
@@ -20,12 +21,16 @@ public interface UserDataSource {
     }
 
     interface ApiResultCallback<T> {
-        void onSuccessMessage(String message, int responseCode);
+        void onSuccessMessage(String message, int responseCode, T response);
+
+        void onErrorMessage(String message, int responseCode);
 
         void onFailureMessage(String message, int responseCode);
     }
 
     void registerUserWithThisPhoneNumber(ApiResultCallback callback, String phoneNumber);
+
+    void verifyUserWithThisCode(ApiResultCallback callback, String code, String phoneNumber);
 
     void checkIfUserIsAuthorized(UserDataSource.DatabaseResultCallback callback);
 

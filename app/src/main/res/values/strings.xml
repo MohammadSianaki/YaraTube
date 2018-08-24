@@ -10,10 +10,17 @@
   <string name="bottom_nav__main_screen_item">صفحه اصلی</string>
   <string name="btn_submit_comment_text">نظر دهید</string>
   <string name="login_dialog_title">ورود</string>
-  <string name="mobile_login_button_text">از طریق شماره موبایل</string>
+  <string name="login_method_dialog_mobile_phone_number_sign_in_button_text">از طریق شماره موبایل</string>
   <string name="subtitle1">شماره موبایل خود را وارد کنید</string>
-    <string name="phone_number_login_edit_text_hint">شماره موبایل خود را وارد کنید</string>
+  <string name="phone_number_login_edit_text_hint">شماره موبایل خود را وارد کنید</string>
   <string name="phone_number_login_sumbit_button_text">ثبت</string>
   <string name="phone_number_login_title">ورود از طریق شماره موبایل</string>
+  <string name="resource">کد فعال سازی را وارد کنید</string>
+  <string name="verification_code_dialog_edit_text_hint">کد فعال سازی را وارد کنید</string>
+  <string name="verification_code_dialog_title">کد فعال سازی را وارد کنید</string>
+  <string name="btn_verification_code_dialog_corrent_phone_number_text">تصحیح شماره</string>
+  <string name="btn_verification_code_dialog_submit_text">ثبت</string>
+  <string name="tv_verification_code_dialog_not_recieved_code_link">کد را دریافت نکردید؟</string>
+    <string name="login_method_dialog_google_sign_in_button_text">از طریق حساب google</string>
 </resources>
 
