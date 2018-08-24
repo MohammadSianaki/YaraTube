@@ -5,7 +5,6 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import io.reactivex.Completable;
 import io.reactivex.Maybe;
 
 @Dao
@@ -16,9 +15,9 @@ public interface UserDao {
     Maybe<UserLoginInfo> getUserLoginInfo();
 
     @Insert
-    Completable insertUserLoginInfo(UserLoginInfo userLoginInfo);
+    void insertUserLoginInfo(UserLoginInfo userLoginInfo);
 
     @Delete
-    Completable deleteUserLoginInfo(UserLoginInfo userLoginInfo);
+    void deleteUserLoginInfo(UserLoginInfo userLoginInfo);
 
 }

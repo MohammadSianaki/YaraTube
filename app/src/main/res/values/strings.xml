@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="app_name">YaraTube</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="nav_profile">پروفایل</string>
-    <string name="nav_about_us">درباره ما</string>
-    <string name="nav_contact_us">تماس با ما</string>
-    <string name="bottom_nav_category_item">دسته بندی ها</string>
-    <string name="bottom_nav__main_screen_item">صفحه اصلی</string>
-    <string name="btn_submit_comment_text">نظر دهید</string>
-    <string name="login_dialog_title">ورود</string>
-    <string name="mobile_login_button_text">از طریق شماره موبایل</string>
+  <string name="app_name">YaraTube</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="nav_profile">پروفایل</string>
+  <string name="nav_about_us">درباره ما</string>
+  <string name="nav_contact_us">تماس با ما</string>
+  <string name="bottom_nav_category_item">دسته بندی ها</string>
+  <string name="bottom_nav__main_screen_item">صفحه اصلی</string>
+  <string name="btn_submit_comment_text">نظر دهید</string>
+  <string name="login_dialog_title">ورود</string>
+  <string name="mobile_login_button_text">از طریق شماره موبایل</string>
+  <string name="subtitle1">شماره موبایل خود را وارد کنید</string>
+    <string name="phone_number_login_edit_text_hint">شماره موبایل خود را وارد کنید</string>
+  <string name="phone_number_login_sumbit_button_text">ثبت</string>
+  <string name="phone_number_login_title">ورود از طریق شماره موبایل</string>
 </resources>
 

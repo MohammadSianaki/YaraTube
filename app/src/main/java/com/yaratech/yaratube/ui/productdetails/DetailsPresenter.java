@@ -4,22 +4,22 @@ import android.content.Context;
 
 import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.ProductDetails;
-import com.yaratech.yaratube.data.source.DataSource;
-import com.yaratech.yaratube.data.source.Repository;
-import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
+import com.yaratech.yaratube.data.source.StoreDataSource;
+import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 
 import java.util.List;
 
 public class DetailsPresenter implements DetailsContract.Presenter {
 
     //---------------------------------------------------------------------------------------------
-    private Repository repository;
+    private StoreRepository repository;
     private DetailsContract.View mView;
     //---------------------------------------------------------------------------------------------
 
 
     public DetailsPresenter(Context context) {
-        this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
+        this.repository = StoreRepository.getINSTANCE(new StoreRemoteDataSource((context)));
     }
 
     @Override
@@ -41,7 +41,7 @@ public class DetailsPresenter implements DetailsContract.Presenter {
     public void fetchProductDetails(int productId) {
         if (isAttached()) {
             mView.showProgressBarLoading();
-            repository.fetchProductDetailsByProductId(new DataSource.ApiResultCallback() {
+            repository.fetchProductDetailsByProductId(new StoreDataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
                     ProductDetails product = (ProductDetails) response;
@@ -74,7 +74,7 @@ public class DetailsPresenter implements DetailsContract.Presenter {
     public void fetchProductComments(int productId) {
         if (isAttached()) {
             mView.showCommentLoading();
-            repository.fetchCommentsOfProductByProductId(new DataSource.ApiResultCallback() {
+            repository.fetchCommentsOfProductByProductId(new StoreDataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
                     List<Comment> commentList = (List<Comment>) response;

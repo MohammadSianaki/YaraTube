@@ -2,20 +2,20 @@ package com.yaratech.yaratube.ui.category;
 
 import android.content.Context;
 
-import com.yaratech.yaratube.data.source.DataSource;
-import com.yaratech.yaratube.data.source.Repository;
-import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
+import com.yaratech.yaratube.data.source.StoreDataSource;
+import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 
 import java.util.List;
 
 public class CategoryPresenter implements CategoryContract.Presenter {
 
     private static final String TAG = "CategoryPresenter";
-    private Repository repository;
+    private StoreRepository repository;
     private CategoryContract.View mView;
 
     public CategoryPresenter(Context context) {
-        this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
+        this.repository = StoreRepository.getINSTANCE(new StoreRemoteDataSource((context)));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class CategoryPresenter implements CategoryContract.Presenter {
         if (isAttached()) {
             // show progress bar
             mView.showProgressBarLoading();
-            repository.fetchAllCategories(new DataSource.ApiResultCallback() {
+            repository.fetchAllCategories(new StoreDataSource.ApiResultCallback() {
 
                 @Override
                 public void onDataLoaded(Object response) {

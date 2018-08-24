@@ -3,20 +3,20 @@ package com.yaratech.yaratube.ui.gridcategory;
 import android.content.Context;
 
 import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.data.source.DataSource;
-import com.yaratech.yaratube.data.source.Repository;
-import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
+import com.yaratech.yaratube.data.source.StoreDataSource;
+import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 
 import java.util.List;
 
 public class GridCategoryPresenter implements GridCategoryContract.Presenter {
 
 
-    private Repository repository;
+    private StoreRepository repository;
     private GridCategoryContract.View mView;
 
     public GridCategoryPresenter(Context context) {
-        this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
+        this.repository = StoreRepository.getINSTANCE(new StoreRemoteDataSource((context)));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
     public void fetchProducts(int id) {
         if (isAttached()) {
             mView.showProgressBarLoading();
-            repository.fetchProductsByCategoryId(new DataSource.ApiResultCallback() {
+            repository.fetchProductsByCategoryId(new StoreDataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
                     List<Product> productList = null;

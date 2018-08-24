@@ -9,7 +9,7 @@ import android.content.Context;
 public abstract class AppDataBase extends RoomDatabase {
 
     private static AppDataBase INSTANCE;
-    private final static String DATABASE_NAME = "userLoginInfo.db";
+    private final static String DATABASE_NAME = "user";
 
     public abstract UserDao userDao();
 
@@ -17,7 +17,6 @@ public abstract class AppDataBase extends RoomDatabase {
         if (INSTANCE == null) {
             INSTANCE = Room.
                     databaseBuilder(context.getApplicationContext(), AppDataBase.class, DATABASE_NAME)
-                    .allowMainThreadQueries()
                     .build();
 
         }

@@ -1,6 +1,8 @@
 package com.yaratech.yaratube.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,13 +19,15 @@ import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
+import com.yaratech.yaratube.ui.login.loginmethod.LoginMethodFragment;
+import com.yaratech.yaratube.ui.login.phonenumberlogin.PhoneNumberLoginFragment;
 import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, OnRequestedProductItemClickListener, HeaderItemsFragment.OnHeaderItemsInteractionListener {
+public class BaseActivity extends AppCompatActivity implements CategoryFragment.OnCategoryFragmentInteractionListener, OnRequestedProductItemClickListener, HeaderItemsFragment.OnHeaderItemsInteractionListener, NavigationView.OnNavigationItemSelectedListener, LoginMethodFragment.OnLoginFragmentInteractionListener {
 
 
     private static final String TAG = "BaseActivity";
@@ -35,6 +39,8 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
     //------------------------------------------------------------------------------------------------
 
     @Override
@@ -46,6 +52,7 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
         ActivityUtils.checkAndSetRtl(this);
         setupToolbar();
 
+        navigationView.setNavigationItemSelectedListener(this);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
         if (fragment == null) {
@@ -178,4 +185,20 @@ public class BaseActivity extends AppCompatActivity implements CategoryFragment.
 
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.nav_profile_item) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            LoginMethodFragment loginFragment = LoginMethodFragment.newInstance();
+            loginFragment.show(getSupportFragmentManager(), LoginMethodFragment.class.getSimpleName());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void openToEnterMobilePhoneNumberDialog() {
+        PhoneNumberLoginFragment phoneNumberLoginFragment = PhoneNumberLoginFragment.newInstance();
+        phoneNumberLoginFragment.show(getSupportFragmentManager(), PhoneNumberLoginFragment.class.getSimpleName());
+    }
 }

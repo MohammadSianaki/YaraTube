@@ -3,20 +3,21 @@ package com.yaratech.yaratube.ui.home;
 import android.content.Context;
 
 import com.yaratech.yaratube.data.model.HomeResponse;
-import com.yaratech.yaratube.data.source.DataSource;
-import com.yaratech.yaratube.data.source.Repository;
-import com.yaratech.yaratube.data.source.remote.RemoteDataSource;
+import com.yaratech.yaratube.data.source.StoreDataSource;
+import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 
 public class HomePresenter implements HomeContract.Presenter {
     //------------------------------------------------------------------------------------
     private static final String TAG = "HomePresenter";
 
-    private Repository repository;
+    private StoreRepository repository;
     private HomeContract.View mView;
     //------------------------------------------------------------------------------------
 
     public HomePresenter(Context context) {
-        this.repository = Repository.getINSTANCE(new RemoteDataSource((context)));
+        this.repository = StoreRepository.getINSTANCE(new StoreRemoteDataSource((context)));
+
     }
 
     @Override
@@ -38,7 +39,7 @@ public class HomePresenter implements HomeContract.Presenter {
     public void fetchStoreItems() {
         if (isAttached()) {
             mView.showProgressBarLoading();
-            repository.fetchStoreItems(new DataSource.ApiResultCallback() {
+            repository.fetchStoreItems(new StoreDataSource.ApiResultCallback() {
 
                 @Override
                 public void onDataLoaded(Object response) {

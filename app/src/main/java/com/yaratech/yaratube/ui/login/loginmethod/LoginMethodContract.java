@@ -1,17 +1,21 @@
-package com.yaratech.yaratube.ui.login;
+package com.yaratech.yaratube.ui.login.loginmethod;
 
 import com.yaratech.yaratube.ui.base.BasePresenter;
 import com.yaratech.yaratube.ui.base.BaseView;
 
-public interface LoginContract {
+public interface LoginMethodContract {
 
 
     interface View extends BaseView {
 
 
+        void showEnterMobileNumberDialog();
     }
 
     interface Presenter extends BasePresenter<View> {
         boolean checkIfUserAuthorized();
+
+        void getMobilePhoneNumber();
+
     }
 }

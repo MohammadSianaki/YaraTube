@@ -8,7 +8,7 @@ import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.model.ProductDetails;
-import com.yaratech.yaratube.data.source.DataSource;
+import com.yaratech.yaratube.data.source.StoreDataSource;
 import com.yaratech.yaratube.utils.NetworkUtils;
 
 import java.util.List;
@@ -17,9 +17,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RemoteDataSource implements DataSource.Remote {
+public class StoreRemoteDataSource implements StoreDataSource {
 
-    private static final String TAG = "RemoteDataSource";
+    private static final String TAG = "StoreRemoteDataSource";
     private Context context;
     private ApiService apiService;
     private Call<HomeResponse> homeResponseCall;
@@ -28,13 +28,13 @@ public class RemoteDataSource implements DataSource.Remote {
     private Call<ProductDetails> productDetailsByProductIdCall;
     private Call<List<Comment>> commentOfProductsByProductId;
 
-    public RemoteDataSource(Context context) {
+    public StoreRemoteDataSource(Context context) {
         this.context = context;
         apiService = ApiClient.getClient().create(ApiService.class);
     }
 
     @Override
-    public void fetchAllCategories(final DataSource.ApiResultCallback callback) {
+    public void fetchAllCategories(final StoreDataSource.ApiResultCallback callback) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchAllCategories: network available");
             categoryCall = apiService.fetchAllCategories();
@@ -65,7 +65,7 @@ public class RemoteDataSource implements DataSource.Remote {
     }
 
     @Override
-    public void fetchProductsByCategoryId(DataSource.ApiResultCallback callback, int categoryId) {
+    public void fetchProductsByCategoryId(StoreDataSource.ApiResultCallback callback, int categoryId) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             productsByCategoryCall = apiService.fetchProductsByCategoryId(categoryId);
             productsByCategoryCall.enqueue(new Callback<List<Product>>() {
@@ -93,7 +93,7 @@ public class RemoteDataSource implements DataSource.Remote {
     }
 
     @Override
-    public void fetchCommentsOfProductByProductId(DataSource.ApiResultCallback callback, int productId) {
+    public void fetchCommentsOfProductByProductId(StoreDataSource.ApiResultCallback callback, int productId) {
         commentOfProductsByProductId = apiService.fetchCommentOfProductsByProductId(productId);
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchCommentsOfProductByProductId: network available");
@@ -130,7 +130,7 @@ public class RemoteDataSource implements DataSource.Remote {
     }
 
     @Override
-    public void fetchProductDetailsByProductId(DataSource.ApiResultCallback callback, int productId) {
+    public void fetchProductDetailsByProductId(StoreDataSource.ApiResultCallback callback, int productId) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchProductDetailsByProductId: network available");
 
@@ -174,7 +174,7 @@ public class RemoteDataSource implements DataSource.Remote {
     }
 
     @Override
-    public void fetchStoreItems(DataSource.ApiResultCallback callback) {
+    public void fetchStoreItems(StoreDataSource.ApiResultCallback callback) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchStoreItems: network available");
             homeResponseCall = apiService.fetchStoreItems();

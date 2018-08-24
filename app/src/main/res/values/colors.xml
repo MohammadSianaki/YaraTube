@@ -11,5 +11,6 @@
     <color name="electricindigo">#6202ee</color>
     <color name="darkjunglegreen">#212121</color>
     <color name="manatee">#979797</color>
+    <color name="phone_number_login_dialog_title_color">#212121</color>
 </resources>
 

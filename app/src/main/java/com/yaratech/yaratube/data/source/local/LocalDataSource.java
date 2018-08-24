@@ -3,15 +3,17 @@ package com.yaratech.yaratube.data.source.local;
 import android.content.Context;
 import android.util.Log;
 
-import com.yaratech.yaratube.data.source.DataSource;
+import com.yaratech.yaratube.data.source.UserDataSource;
 
+import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.MaybeObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
-public class LocalDataSource implements DataSource.Local {
+public class LocalDataSource implements UserDataSource {
 
     private static final String TAG = "LocalDataSource";
     private AppDataBase appDataBase;
@@ -23,7 +25,12 @@ public class LocalDataSource implements DataSource.Local {
     }
 
     @Override
-    public void checkIfUserIsAuthorized(DataSource.DatabaseResultCallback callback) {
+    public void registerUserWithThisPhoneNumber(ApiResultCallback callback, String phoneNumber) {
+
+    }
+
+    @Override
+    public void checkIfUserIsAuthorized(UserDataSource.DatabaseResultCallback callback) {
 
 
         userDao.getUserLoginInfo()
@@ -60,26 +67,30 @@ public class LocalDataSource implements DataSource.Local {
     }
 
     @Override
-    public void insertUserLoginInfo(DataSource.DatabaseResultCallback callback, UserLoginInfo userLoginInfo) {
-        userDao
-                .insertUserLoginInfo(userLoginInfo)
-                .subscribeOn(Schedulers.io())
+    public void insertUserLoginInfo(UserDataSource.DatabaseResultCallback callback, UserLoginInfo userLoginInfo) {
+
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                userDao.insertUserLoginInfo(userLoginInfo);
+            }
+        }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        callback.onAddedToCompositeDisposable(d);
+                    public void onSubscribe(Disposable disposable) {
+                        callback.onAddedToCompositeDisposable(disposable);
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.d(TAG, "onComplete() called");
+                        Log.d(TAG, "<<<<    insertUserLoginInfo     >>>>    onComplete() called");
                         callback.onUserLoginInserted();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "<<<<    LocalDataSource     >>>>        onError: ", e);
+                        Log.e(TAG, "<<<<    insertUserLoginInfo     >>>>    onError: ", e);
                         callback.onFailureMessage(e.getMessage());
                     }
                 });
