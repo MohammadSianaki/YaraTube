@@ -277,6 +277,8 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     public void openToEnterMobilePhoneNumberDialog() {
         PhoneNumberLoginFragment phoneNumberLoginFragment = PhoneNumberLoginFragment.newInstance();
+        phoneNumberLoginFragment.setCompositeDisposable(compositeDisposable);
+        phoneNumberLoginFragment.setUserRepository(userRepository);
         phoneNumberLoginFragment.show(getSupportFragmentManager(), PhoneNumberLoginFragment.class.getSimpleName());
     }
 

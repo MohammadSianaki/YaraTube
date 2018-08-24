@@ -25,9 +25,9 @@ public class VerificationPresenter implements VerificationContract.Presenter {
     private final CompositeDisposable compositeDisposable;
     private VerificationContract.View mView;
 
-    public VerificationPresenter(UserRepository repository) {
+    public VerificationPresenter(UserRepository repository, CompositeDisposable compositeDisposable) {
         this.repository = repository;
-        this.compositeDisposable = new CompositeDisposable();
+        this.compositeDisposable = compositeDisposable;
     }
 
     @Override

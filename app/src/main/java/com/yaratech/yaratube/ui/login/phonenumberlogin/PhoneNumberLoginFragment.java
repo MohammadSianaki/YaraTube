@@ -18,13 +18,12 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.source.UserRepository;
-import com.yaratech.yaratube.data.source.local.LocalDataSource;
-import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -46,6 +45,8 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
 
     private Unbinder mUnBinder;
     private PhoneNumberLoginContract.Presenter mPresenter;
+    private UserRepository userRepository;
+    private CompositeDisposable compositeDisposable;
     //----------------------------------------------------------------------------------------------------------------------
 
     private OnPhoneNumberLoginFragmentInteractionListener mListener;
@@ -92,7 +93,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mPresenter = new PhoneNumberLoginPresenter(UserRepository.getINSTANCE(new UserRemoteDataSource(getContext()), LocalDataSource.getINSTANCE(getContext())));
+        mPresenter = new PhoneNumberLoginPresenter(userRepository, compositeDisposable);
         mPresenter.attachView(this);
         Observable observable = RxTextView.textChangeEvents(phoneNumberEditText);
         RxView.clicks(submitPhoneNumberButton)
@@ -149,6 +150,14 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     @Override
     public void showToastError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
+        this.compositeDisposable = compositeDisposable;
     }
 
     public interface OnPhoneNumberLoginFragmentInteractionListener {

@@ -21,9 +21,9 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
     private UserRepository repository;
     private CompositeDisposable compositeDisposable;
 
-    public PhoneNumberLoginPresenter(UserRepository repository) {
+    public PhoneNumberLoginPresenter(UserRepository repository, CompositeDisposable compositeDisposable) {
         this.repository = repository;
-        this.compositeDisposable = new CompositeDisposable();
+        this.compositeDisposable = compositeDisposable;
     }
 
     @Override

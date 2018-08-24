@@ -16,8 +16,6 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.source.UserRepository;
-import com.yaratech.yaratube.data.source.local.LocalDataSource;
-import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.utils.TextUtils;
 
@@ -25,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
 public class VerificationDialogFragment extends DialogFragment implements VerificationContract.View {
@@ -46,6 +45,8 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     private VerificationContract.Presenter mPresenter;
     private boolean autoReadOtp = false;
     private Unbinder mUnBinder;
+    private UserRepository userRepository;
+    private CompositeDisposable compositeDisposable;
     //------------------------------------------------------------------------------------------
 
     public static VerificationDialogFragment newInstance(String phoneNumber) {
@@ -73,7 +74,7 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mPresenter = new VerificationPresenter(UserRepository.getINSTANCE(new UserRemoteDataSource(getContext()), LocalDataSource.getINSTANCE(getContext())));
+        mPresenter = new VerificationPresenter(userRepository, compositeDisposable);
         mPresenter.attachView(this);
 
     }
@@ -167,5 +168,13 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     @Override
     public void closeDialog() {
         dismiss();
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
+        this.compositeDisposable = compositeDisposable;
     }
 }
