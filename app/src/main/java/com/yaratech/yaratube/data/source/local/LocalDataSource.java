@@ -15,13 +15,21 @@ import io.reactivex.schedulers.Schedulers;
 
 public class LocalDataSource implements UserDataSource {
 
+    private static LocalDataSource INSTANCE = null;
     private static final String TAG = "LocalDataSource";
     private AppDataBase appDataBase;
     private UserDao userDao;
 
-    public LocalDataSource(Context context) {
+    private LocalDataSource(Context context) {
         this.appDataBase = AppDataBase.getINSTANCE(context);
         this.userDao = appDataBase.userDao();
+    }
+
+    public static LocalDataSource getINSTANCE(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE = new LocalDataSource(context);
+        }
+        return INSTANCE;
     }
 
     @Override
@@ -35,7 +43,7 @@ public class LocalDataSource implements UserDataSource {
     }
 
     @Override
-    public void checkIfUserIsAuthorized(UserDataSource.DatabaseResultCallback callback) {
+    public void checkIfUserIsAuthorized(ReadFromDatabaseCallback callback) {
 
 
         userDao.getUserLoginInfo()
@@ -49,11 +57,7 @@ public class LocalDataSource implements UserDataSource {
 
                     @Override
                     public void onSuccess(UserLoginInfo userLoginInfo) {
-                        if (userLoginInfo.getIsAuthorized() == 1) {
-                            callback.onUserIsAuthorized(true);
-                        } else {
-                            callback.onUserIsAuthorized(false);
-                        }
+                        callback.onUserLoginInfoLoaded(userLoginInfo);
                     }
 
                     @Override
@@ -72,7 +76,7 @@ public class LocalDataSource implements UserDataSource {
     }
 
     @Override
-    public void insertUserLoginInfo(UserDataSource.DatabaseResultCallback callback, UserLoginInfo userLoginInfo) {
+    public void insertUserLoginInfo(InsertIntoDatabaseCallback callback, UserLoginInfo userLoginInfo) {
 
         Completable.fromAction(new Action() {
             @Override

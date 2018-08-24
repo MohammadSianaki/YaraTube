@@ -65,13 +65,9 @@ public class UserRemoteDataSource implements UserDataSource {
                 });
     }
 
-    @Override
-    public void checkIfUserIsAuthorized(DatabaseResultCallback callback) {
-
-    }
 
     @Override
-    public void insertUserLoginInfo(DatabaseResultCallback callback, UserLoginInfo userLoginInfo) {
+    public void insertUserLoginInfo(InsertIntoDatabaseCallback callback, UserLoginInfo userLoginInfo) {
 
     }
 
@@ -108,8 +104,13 @@ public class UserRemoteDataSource implements UserDataSource {
                     @Override
                     public void onError(Throwable e) {
                         callback.onFailureMessage(e.getMessage(), ((HttpException) e).code());
-                         Log.e(TAG, "onError: ", e);
+                        Log.e(TAG, "onError: ", e);
                     }
                 });
+    }
+
+    @Override
+    public void checkIfUserIsAuthorized(ReadFromDatabaseCallback callback) {
+
     }
 }

@@ -9,12 +9,15 @@ public interface VerificationContract {
 
     interface View extends BaseView {
 
+        void closeDialog();
     }
 
 
     interface Presenter extends BasePresenter<View> {
 
-        void observeVerificationCodeInput(Observable observable, String string);
+        void observeVerificationCodeInput(Observable observable, String phoneNumber);
+
+        void observeAutoReadVerificationCode(String phoneNumber, String verificationCode);
     }
 
 }

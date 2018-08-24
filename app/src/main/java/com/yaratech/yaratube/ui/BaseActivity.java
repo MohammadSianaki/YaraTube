@@ -14,11 +14,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.data.model.HeaderItem;
 import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.UserDataSource;
+import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.source.local.LocalDataSource;
+import com.yaratech.yaratube.data.source.local.UserLoginInfo;
+import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
+import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
@@ -31,6 +39,7 @@ import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
 
 public class BaseActivity extends AppCompatActivity implements
         CategoryFragment.OnCategoryFragmentInteractionListener,
@@ -52,6 +61,14 @@ public class BaseActivity extends AppCompatActivity implements
 
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+
+
+    private UserRepository userRepository;
+    private StoreRepository storeRepository;
+    private LocalDataSource localDataSource;
+    private StoreRemoteDataSource storeRemoteDataSource;
+    private UserRemoteDataSource userRemoteDataSource;
+
     //------------------------------------------------------------------------------------------------
 
     @Override
@@ -62,9 +79,8 @@ public class BaseActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
         ActivityUtils.checkAndSetRtl(this);
         setupToolbar();
-
         requestPermissions();
-
+        initDependencies();
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -74,6 +90,14 @@ public class BaseActivity extends AppCompatActivity implements
             fragment = BaseFragment.newInstance();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.fl_base_activity_content);
         }
+    }
+
+    private void initDependencies() {
+        this.userRemoteDataSource = new UserRemoteDataSource(this);
+        this.storeRemoteDataSource = new StoreRemoteDataSource(this);
+        this.localDataSource = LocalDataSource.getINSTANCE(this);
+        this.userRepository = UserRepository.getINSTANCE(userRemoteDataSource, localDataSource);
+        this.storeRepository = StoreRepository.getINSTANCE(storeRemoteDataSource);
     }
 
     private void requestPermissions() {
@@ -212,8 +236,29 @@ public class BaseActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_profile_item) {
             drawerLayout.closeDrawer(GravityCompat.START);
-            LoginMethodFragment loginFragment = LoginMethodFragment.newInstance();
-            loginFragment.show(getSupportFragmentManager(), LoginMethodFragment.class.getSimpleName());
+            userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
+                @Override
+                public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
+                    if (userLoginInfo.getIsAuthorized() == 1) {
+                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
+                        Toast.makeText(BaseActivity.this, "You Are Just  Logged In", Toast.LENGTH_SHORT).show();
+                    } else {
+                        LoginMethodFragment loginFragment = LoginMethodFragment.newInstance();
+                        loginFragment.show(getSupportFragmentManager(), LoginMethodFragment.class.getSimpleName());
+                    }
+                }
+
+                @Override
+                public void onAddedToCompositeDisposable(Disposable disposable) {
+
+                }
+
+                @Override
+                public void onFailureMessage(String message) {
+
+                }
+            });
+
             return true;
         }
         return false;

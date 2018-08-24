@@ -18,6 +18,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.source.local.LocalDataSource;
 import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
 
 import butterknife.BindView;
@@ -91,7 +92,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mPresenter = new PhoneNumberLoginPresenter(UserRepository.getINSTANCE(new UserRemoteDataSource(getContext())));
+        mPresenter = new PhoneNumberLoginPresenter(UserRepository.getINSTANCE(new UserRemoteDataSource(getContext()), LocalDataSource.getINSTANCE(getContext())));
         mPresenter.attachView(this);
         Observable observable = RxTextView.textChangeEvents(phoneNumberEditText);
         RxView.clicks(submitPhoneNumberButton)

@@ -10,11 +10,12 @@ public class UserLoginInfo {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int id;
+
     @ColumnInfo(name = "isAuthorized")
     private int isAuthorized;
 
-    @ColumnInfo(name = "token")
-    private String token;
+    @ColumnInfo(name = "user")
+    private User user;
 
     public int getId() {
         return id;
@@ -32,11 +33,11 @@ public class UserLoginInfo {
         this.isAuthorized = isAuthorized;
     }
 
-    public String getToken() {
-        return token;
+    public User getUser() {
+        return user;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

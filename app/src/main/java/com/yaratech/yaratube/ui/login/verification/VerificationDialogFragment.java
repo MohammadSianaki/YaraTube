@@ -16,6 +16,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.source.local.LocalDataSource;
 import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.utils.TextUtils;
@@ -72,7 +73,7 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mPresenter = new VerificationPresenter(UserRepository.getINSTANCE(new UserRemoteDataSource(getContext())));
+        mPresenter = new VerificationPresenter(UserRepository.getINSTANCE(new UserRemoteDataSource(getContext()), LocalDataSource.getINSTANCE(getContext())));
         mPresenter.attachView(this);
 
     }
@@ -89,6 +90,7 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
                         getArguments().putString(KEY_MESSAGE, message);
                         String OTP = TextUtils.removeNonDigits(getArguments().getString(KEY_MESSAGE));
                         Log.d(TAG, "onReceivedMessage(): removeNonDigits Returned : " + OTP);
+                        mPresenter.observeAutoReadVerificationCode(getArguments().getString(KEY_MOBILE_PHONE_NUMBER), OTP);
                     }
                 }
             });
@@ -160,5 +162,10 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     @Override
     public void finishProgressBarLoading() {
 
+    }
+
+    @Override
+    public void closeDialog() {
+        dismiss();
     }
 }

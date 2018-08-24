@@ -3,8 +3,11 @@ package com.yaratech.yaratube.ui.login.verification;
 import android.util.Log;
 
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
+import com.yaratech.yaratube.data.model.MobileLoginStepTwoResponse;
 import com.yaratech.yaratube.data.source.UserDataSource;
 import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.source.local.User;
+import com.yaratech.yaratube.data.source.local.UserLoginInfo;
 import com.yaratech.yaratube.utils.TextUtils;
 
 import io.reactivex.Observable;
@@ -44,6 +47,26 @@ public class VerificationPresenter implements VerificationContract.Presenter {
     }
 
     @Override
+    public void observeAutoReadVerificationCode(String phoneNumber, String verificationCode) {
+        repository.verifyUserWithThisCode(new UserDataSource.ApiResultCallback() {
+            @Override
+            public void onSuccessMessage(String message, int responseCode, Object response) {
+                Log.d(TAG, "<<<<    AutoReadOTP     >>>>    onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "], response = [" + response + "]");
+            }
+
+            @Override
+            public void onErrorMessage(String message, int responseCode) {
+                Log.d(TAG, "<<<<    AutoReadOTP     >>>>    onErrorMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
+            }
+
+            @Override
+            public void onFailureMessage(String message, int responseCode) {
+                Log.d(TAG, "<<<<    AutoReadOTP     >>>>    onFailureMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
+            }
+        }, verificationCode, phoneNumber);
+    }
+
+    @Override
     public void observeVerificationCodeInput(Observable observable, String phoneNumber) {
         Observable o = observable
                 .map(new Function<TextViewTextChangeEvent, String>() {
@@ -70,7 +93,19 @@ public class VerificationPresenter implements VerificationContract.Presenter {
 
                     @Override
                     public void onSuccessMessage(String message, int responseCode, Object response) {
+                        MobileLoginStepTwoResponse mobileLoginStepTwoResponse = (MobileLoginStepTwoResponse) response;
+                        UserLoginInfo userLoginInfo = new UserLoginInfo();
+                        User user = new User();
+                        user.setUserId(mobileLoginStepTwoResponse.getUserId());
+                        user.setNickName(mobileLoginStepTwoResponse.getNickName());
+                        user.setToken(mobileLoginStepTwoResponse.getToken());
+
+                        userLoginInfo.setIsAuthorized(1);
+                        userLoginInfo.setUser(user);
+
+                        saveUserLoginInfoIntoDatabase(userLoginInfo);
                         Log.d(TAG, "onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "], response = [" + response + "]");
+                        mView.closeDialog();
                     }
 
                     @Override
@@ -96,5 +131,24 @@ public class VerificationPresenter implements VerificationContract.Presenter {
             }
         });
         compositeDisposable.add(disposable);
+    }
+
+    private void saveUserLoginInfoIntoDatabase(UserLoginInfo userLoginInfo) {
+        repository.insertUserLoginInfo(new UserDataSource.InsertIntoDatabaseCallback() {
+            @Override
+            public void onUserLoginInserted() {
+                Log.d(TAG, "onUserLoginInserted() called");
+            }
+
+            @Override
+            public void onAddedToCompositeDisposable(Disposable disposable) {
+                compositeDisposable.add(disposable);
+            }
+
+            @Override
+            public void onFailureMessage(String message) {
+                Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
+            }
+        }, userLoginInfo);
     }
 }

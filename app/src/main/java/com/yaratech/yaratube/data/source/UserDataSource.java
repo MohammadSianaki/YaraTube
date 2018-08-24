@@ -7,17 +7,22 @@ import io.reactivex.disposables.Disposable;
 public interface UserDataSource {
 
 
-    interface DatabaseResultCallback<T> {
-        void onUserLoginInfoLoaded(T data);
+    interface InsertIntoDatabaseCallback {
 
         void onUserLoginInserted();
-
-        void onUserIsAuthorized(boolean isAuthorized);
 
         void onAddedToCompositeDisposable(Disposable disposable);
 
         void onFailureMessage(String message);
 
+    }
+
+    interface ReadFromDatabaseCallback {
+        void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo);
+
+        void onAddedToCompositeDisposable(Disposable disposable);
+
+        void onFailureMessage(String message);
     }
 
     interface ApiResultCallback<T> {
@@ -32,7 +37,7 @@ public interface UserDataSource {
 
     void verifyUserWithThisCode(ApiResultCallback callback, String code, String phoneNumber);
 
-    void checkIfUserIsAuthorized(UserDataSource.DatabaseResultCallback callback);
+    void checkIfUserIsAuthorized(ReadFromDatabaseCallback callback);
 
-    void insertUserLoginInfo(UserDataSource.DatabaseResultCallback callback, UserLoginInfo userLoginInfo);
+    void insertUserLoginInfo(InsertIntoDatabaseCallback callback, UserLoginInfo userLoginInfo);
 }
