@@ -11,12 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.ui.login.loginmethod.LoginMethodFragment;
 import com.yaratech.yaratube.ui.login.phonenumberlogin.PhoneNumberLoginFragment;
 import com.yaratech.yaratube.ui.login.verification.VerificationDialogFragment;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +30,10 @@ public class LoginFragment extends DialogFragment implements LoginContract.View 
     private LoginMethodFragment loginMethodFragment;
     private VerificationDialogFragment verificationDialogFragment;
     private PhoneNumberLoginFragment phoneNumberLoginFragment;
+
+    private UserRepository userRepository;
+    private CompositeDisposable compositeDisposable;
+
     //---------------------------------------------------------------------------------------
 
     public LoginFragment() {
@@ -82,5 +88,14 @@ public class LoginFragment extends DialogFragment implements LoginContract.View 
 
     private void addFragment(Fragment fragment) {
 
+    }
+
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
+        this.compositeDisposable = compositeDisposable;
     }
 }

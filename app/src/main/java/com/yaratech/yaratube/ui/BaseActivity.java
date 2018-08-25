@@ -24,12 +24,14 @@ import com.yaratech.yaratube.data.source.UserDataSource;
 import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.data.source.local.LocalDataSource;
 import com.yaratech.yaratube.data.source.local.UserLoginInfo;
+import com.yaratech.yaratube.data.source.prefs.AppPreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
+import com.yaratech.yaratube.ui.login.LoginFragment;
 import com.yaratech.yaratube.ui.login.loginmethod.LoginMethodFragment;
 import com.yaratech.yaratube.ui.login.phonenumberlogin.PhoneNumberLoginFragment;
 import com.yaratech.yaratube.ui.login.verification.VerificationDialogFragment;
@@ -68,6 +70,7 @@ public class BaseActivity extends AppCompatActivity implements
     private LocalDataSource localDataSource;
     private StoreRemoteDataSource storeRemoteDataSource;
     private UserRemoteDataSource userRemoteDataSource;
+    private AppPreferencesHelper appPreferencesHelper;
     private CompositeDisposable compositeDisposable;
     //------------------------------------------------------------------------------------------------
 
@@ -96,10 +99,11 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
     private void initDependencies() {
+        this.appPreferencesHelper = new AppPreferencesHelper(getApplicationContext());
         this.userRemoteDataSource = new UserRemoteDataSource(this);
         this.storeRemoteDataSource = new StoreRemoteDataSource(this);
         this.localDataSource = LocalDataSource.getINSTANCE(this);
-        this.userRepository = UserRepository.getINSTANCE(userRemoteDataSource, localDataSource);
+        this.userRepository = UserRepository.getINSTANCE(userRemoteDataSource, localDataSource, appPreferencesHelper);
         this.storeRepository = StoreRepository.getINSTANCE(storeRemoteDataSource);
         this.compositeDisposable = new CompositeDisposable();
     }
@@ -254,8 +258,13 @@ public class BaseActivity extends AppCompatActivity implements
                         Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
                         Toast.makeText(BaseActivity.this, "You Are Just  Logged In", Toast.LENGTH_SHORT).show();
                     } else {
-                        LoginMethodFragment loginFragment = LoginMethodFragment.newInstance();
-                        loginFragment.show(getSupportFragmentManager(), LoginMethodFragment.class.getSimpleName());
+                        LoginFragment loginFragment = LoginFragment.newInstance();
+                        loginFragment.setCompositeDisposable(compositeDisposable);
+                        loginFragment.setUserRepository(userRepository);
+                        loginFragment.show(getSupportFragmentManager(), LoginFragment.class.getSimpleName());
+
+//                        LoginMethodFragment loginFragment = LoginMethodFragment.newInstance();
+//                        loginFragment.show(getSupportFragmentManager(), LoginMethodFragment.class.getSimpleName());
                     }
                 }
 

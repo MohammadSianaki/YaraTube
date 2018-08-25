@@ -40,4 +40,12 @@ public interface UserDataSource {
     void checkIfUserIsAuthorized(ReadFromDatabaseCallback callback);
 
     void insertUserLoginInfo(InsertIntoDatabaseCallback callback, UserLoginInfo userLoginInfo);
+
+    void setUserMobilePhoneNumber(String mobilePhoneNumber);
+
+    String getUserMobilePhoneNumber();
+
+    void setUserLoginStep(int loginStep);
+
+    int getUserLoginStep();
 }
