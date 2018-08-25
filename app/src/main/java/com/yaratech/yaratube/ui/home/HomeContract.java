@@ -9,6 +9,14 @@ public interface HomeContract {
 
     interface View extends BaseView {
         void showLoadedData(HomeResponse response);
+
+        void showDataNotAvailableToast();
+
+        void showNetworkNotAvailableToast();
+
+        void showProgressBarLoading();
+
+        void finishProgressBarLoading();
     }
 
 

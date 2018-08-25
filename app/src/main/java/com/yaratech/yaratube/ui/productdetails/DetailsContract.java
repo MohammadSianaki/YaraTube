@@ -17,6 +17,14 @@ public interface DetailsContract {
         void showCommentLoading();
 
         void hideCommentLoading();
+
+        void showDataNotAvailableToast();
+
+        void showNetworkNotAvailableToast();
+
+        void showProgressBarLoading();
+
+        void finishProgressBarLoading();
     }
 
     interface Presenter extends BasePresenter<View> {

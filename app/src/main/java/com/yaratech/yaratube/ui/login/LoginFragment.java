@@ -80,27 +80,6 @@ public class LoginFragment extends DialogFragment implements LoginContract.View 
         super.onDestroyView();
     }
 
-    @Override
-    public void showDataNotAvailableToast() {
-
-    }
-
-    @Override
-    public void showNetworkNotAvailableToast() {
-
-    }
-
-    @Override
-    public void showProgressBarLoading() {
-
-    }
-
-    @Override
-    public void finishProgressBarLoading() {
-
-    }
-
-
     private void addFragment(Fragment fragment) {
 
     }

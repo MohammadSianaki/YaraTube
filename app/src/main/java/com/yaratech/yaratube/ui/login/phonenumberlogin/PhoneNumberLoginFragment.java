@@ -120,25 +120,6 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
 //        mListener = null;
     }
 
-    @Override
-    public void showDataNotAvailableToast() {
-
-    }
-
-    @Override
-    public void showNetworkNotAvailableToast() {
-
-    }
-
-    @Override
-    public void showProgressBarLoading() {
-
-    }
-
-    @Override
-    public void finishProgressBarLoading() {
-
-    }
 
     @Override
     public void showVerificationCodeDialog(String phoneNumber) {

@@ -98,27 +98,8 @@ public class LoginMethodFragment extends DialogFragment implements LoginMethodCo
         mListener = null;
     }
 
-    @Override
-    public void showDataNotAvailableToast() {
-
-    }
-
-    @Override
-    public void showNetworkNotAvailableToast() {
-
-    }
-
-    @Override
-    public void showProgressBarLoading() {
-
-    }
-
-    @Override
-    public void finishProgressBarLoading() {
-
-    }
 
     public interface OnLoginFragmentInteractionListener {
-        public void openToEnterMobilePhoneNumberDialog();
+        void openToEnterMobilePhoneNumberDialog();
     }
 }
