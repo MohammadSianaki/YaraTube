@@ -152,6 +152,7 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public HeaderPagerViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            viewPager.setRotationY(180);
         }
 
         public void onBindHeaderPager(FragmentManager fragmentManager) {
