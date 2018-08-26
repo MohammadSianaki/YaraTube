@@ -227,9 +227,11 @@ public class BaseActivity extends AppCompatActivity implements
     public void showProductDetailsOfRequestedProductItem(Product item) {
         int productId = item.getId();
         Log.i(TAG, "onProductItemClicked: <<<<  " + item.getName() + "\t" + item.getId() + "  >>>>");
+        ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(productId);
+        detailsFragment.setStoreRepository(storeRepository);
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
-                ProductDetailsFragment.newInstance(productId),
+                detailsFragment,
                 R.id.fl_base_activity_content,
                 true, null);
 
