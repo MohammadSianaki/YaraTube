@@ -91,8 +91,8 @@ public class BaseActivity extends AppCompatActivity implements
 
     private void initDependencies() {
         this.appPreferencesHelper = new AppPreferencesHelper(getApplicationContext());
-        this.userRemoteDataSource = new UserRemoteDataSource(this);
-        this.storeRemoteDataSource = new StoreRemoteDataSource(this);
+        this.userRemoteDataSource = new UserRemoteDataSource(getApplicationContext());
+        this.storeRemoteDataSource = new StoreRemoteDataSource(getApplicationContext());
         this.localDataSource = LocalDataSource.getINSTANCE(this);
         this.userRepository = UserRepository.getINSTANCE(userRemoteDataSource, localDataSource, appPreferencesHelper);
         this.storeRepository = StoreRepository.getINSTANCE(storeRemoteDataSource);
