@@ -11,7 +11,9 @@ public interface LoginContract {
 
 
     interface Presenter extends BasePresenter<View> {
+        void saveLoginStep(int loginStep);
 
+        void saveUserMobilePhoneNumber(String phoneNumber);
     }
 
 

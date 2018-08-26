@@ -67,11 +67,6 @@ public class UserRemoteDataSource implements UserDataSource {
 
 
     @Override
-    public void insertUserLoginInfo(InsertIntoDatabaseCallback callback, UserLoginInfo userLoginInfo) {
-
-    }
-
-    @Override
     public void verifyUserWithThisCode(ApiResultCallback callback, String verificationCode, String phoneNumber) {
         Log.i(TAG, "<<<<    verifyUserWithThisCode      >>>>    :   [ phoneNumber " + phoneNumber + " ] , [ verificationCode" + verificationCode + " ]");
         mobileLoginStepTwoResponseSingle =
@@ -109,8 +104,37 @@ public class UserRemoteDataSource implements UserDataSource {
                 });
     }
 
+    // TODO: 8/25/2018  Below Methods Must Be  Removed
+
+    @Override
+    public void insertUserLoginInfo(InsertIntoDatabaseCallback callback, UserLoginInfo userLoginInfo) {
+
+    }
+
+    @Override
+    public void setUserMobilePhoneNumber(String mobilePhoneNumber) {
+
+    }
+
+    @Override
+    public String getUserMobilePhoneNumber() {
+        return null;
+    }
+
+    @Override
+    public void setUserLoginStep(int loginStep) {
+
+    }
+
+    @Override
+    public int getUserLoginStep() {
+        return 0;
+    }
+
+
     @Override
     public void checkIfUserIsAuthorized(ReadFromDatabaseCallback callback) {
 
     }
+
 }

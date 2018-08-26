@@ -55,7 +55,8 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
                     @Override
                     public void onSuccessMessage(String message, int responseCode, Object response) {
                         Log.d(TAG, "onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
-                        mView.showVerificationCodeDialog(phoneNumber);
+                        mView.showVerificationCodeDialog();
+                        saveMobilePhoneNumber(phoneNumber);
                     }
 
                     @Override
@@ -83,6 +84,10 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
         });
 
         compositeDisposable.add(disposable);
+    }
+
+    private void saveMobilePhoneNumber(String phoneNumber) {
+        repository.setUserMobilePhoneNumber(phoneNumber);
     }
 
     @Override

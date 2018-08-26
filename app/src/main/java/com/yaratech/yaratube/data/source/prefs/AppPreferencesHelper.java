@@ -3,6 +3,8 @@ package com.yaratech.yaratube.data.source.prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.yaratech.yaratube.data.model.Event;
+
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class AppPreferencesHelper implements PreferencesHelper {
@@ -41,6 +43,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
 
     @Override
     public int getUserLoginStep() {
-        return mPrefs.getInt(PREF_KEY_CURRENT_USER_LOGIN_STEP, 1);
+        return mPrefs.getInt(PREF_KEY_CURRENT_USER_LOGIN_STEP, Event.LOGIN_STEP_ONE);
     }
 }

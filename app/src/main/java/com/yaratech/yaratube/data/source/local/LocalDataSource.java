@@ -32,15 +32,6 @@ public class LocalDataSource implements UserDataSource {
         return INSTANCE;
     }
 
-    @Override
-    public void registerUserWithThisPhoneNumber(ApiResultCallback callback, String phoneNumber) {
-
-    }
-
-    @Override
-    public void verifyUserWithThisCode(ApiResultCallback callback, String code, String phoneNumber) {
-
-    }
 
     @Override
     public void checkIfUserIsAuthorized(ReadFromDatabaseCallback callback) {
@@ -104,4 +95,37 @@ public class LocalDataSource implements UserDataSource {
                     }
                 });
     }
+
+    // TODO: 8/25/2018  Below Methods Must Be  Removed
+
+    @Override
+    public void setUserMobilePhoneNumber(String mobilePhoneNumber) {
+
+    }
+
+    @Override
+    public String getUserMobilePhoneNumber() {
+        return null;
+    }
+
+    @Override
+    public void setUserLoginStep(int loginStep) {
+
+    }
+
+    @Override
+    public int getUserLoginStep() {
+        return 0;
+    }
+
+    @Override
+    public void registerUserWithThisPhoneNumber(ApiResultCallback callback, String phoneNumber) {
+
+    }
+
+    @Override
+    public void verifyUserWithThisCode(ApiResultCallback callback, String code, String phoneNumber) {
+
+    }
+
 }

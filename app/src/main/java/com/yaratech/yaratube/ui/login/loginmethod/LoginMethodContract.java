@@ -8,12 +8,10 @@ public interface LoginMethodContract {
 
     interface View extends BaseView {
 
-
         void showEnterMobileNumberDialog();
     }
 
     interface Presenter extends BasePresenter<View> {
-        boolean checkIfUserAuthorized();
 
         void getMobilePhoneNumber();
 

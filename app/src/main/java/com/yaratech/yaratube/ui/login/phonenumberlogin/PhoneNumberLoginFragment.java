@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,11 @@ import android.widget.Toast;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.model.Event;
+import com.yaratech.yaratube.data.source.GlobalBus;
 import com.yaratech.yaratube.data.source.UserRepository;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,12 +29,6 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnPhoneNumberLoginFragmentInteractionListener} interface
- * to handle interaction events.
- */
 public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNumberLoginContract.View {
     //----------------------------------------------------------------------------------------------------------------------
     private static final String TAG = "PhoneNumberLoginFragment";
@@ -49,7 +46,6 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     private CompositeDisposable compositeDisposable;
     //----------------------------------------------------------------------------------------------------------------------
 
-    private OnPhoneNumberLoginFragmentInteractionListener mListener;
 
     public PhoneNumberLoginFragment() {
         // Required empty public constructor
@@ -68,12 +64,6 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnPhoneNumberLoginFragmentInteractionListener) {
-            mListener = (OnPhoneNumberLoginFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnPhoneNumberLoginFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -85,6 +75,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        GlobalBus.getINSTANCE().register(this);
         return inflater.inflate(R.layout.fragment_phone_number_login, container, false);
     }
 
@@ -111,26 +102,39 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
+        GlobalBus.getINSTANCE().unregister(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("onDestroy()", "PhoneNumberLoginFragmentDestroyed: ");
+        super.onDestroy();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-//        mListener = null;
     }
 
 
     @Override
-    public void showVerificationCodeDialog(String phoneNumber) {
-        mListener.showVerificationCodeDialog(phoneNumber);
+    public void showVerificationCodeDialog() {
         dismiss();
-
+        sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_SUBMIT_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_THREE));
     }
 
     @Override
     public void showToastError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe
+    public void getMessageFromParentFragment(Event.ParentChildMessage event) {
+
+    }
+
+    public void sendMessageToParentFragment(Event.ChildParentMessage event) {
+        GlobalBus.getINSTANCE().post(event);
     }
 
     public void setUserRepository(UserRepository userRepository) {
@@ -139,9 +143,5 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
 
     public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
         this.compositeDisposable = compositeDisposable;
-    }
-
-    public interface OnPhoneNumberLoginFragmentInteractionListener {
-        void showVerificationCodeDialog(String phoneNumber);
     }
 }

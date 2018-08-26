@@ -13,17 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.data.model.HeaderItem;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.UserDataSource;
 import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.data.source.local.LocalDataSource;
-import com.yaratech.yaratube.data.source.local.UserLoginInfo;
 import com.yaratech.yaratube.data.source.prefs.AppPreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
@@ -32,24 +29,18 @@ import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
 import com.yaratech.yaratube.ui.login.LoginFragment;
-import com.yaratech.yaratube.ui.login.loginmethod.LoginMethodFragment;
-import com.yaratech.yaratube.ui.login.phonenumberlogin.PhoneNumberLoginFragment;
-import com.yaratech.yaratube.ui.login.verification.VerificationDialogFragment;
 import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 public class BaseActivity extends AppCompatActivity implements
         CategoryFragment.OnCategoryFragmentInteractionListener,
         OnRequestedProductItemClickListener,
         HeaderItemsFragment.OnHeaderItemsInteractionListener,
-        NavigationView.OnNavigationItemSelectedListener,
-        LoginMethodFragment.OnLoginFragmentInteractionListener,
-        PhoneNumberLoginFragment.OnPhoneNumberLoginFragmentInteractionListener {
+        NavigationView.OnNavigationItemSelectedListener {
 
     public static final int PERMISSION_REQUEST_CODE = 1234;
     private static final String TAG = "BaseActivity";
@@ -248,53 +239,35 @@ public class BaseActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_profile_item) {
             drawerLayout.closeDrawer(GravityCompat.START);
-            userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
-                @Override
-                public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
-                    if (userLoginInfo.getIsAuthorized() == 1) {
-                        if (userLoginInfo == null) {
-                            Log.d(TAG, "onUserLoginInfoLoaded: null");
-                        }
-                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
-                        Toast.makeText(BaseActivity.this, "You Are Just  Logged In", Toast.LENGTH_SHORT).show();
-                    } else {
-                        LoginFragment loginFragment = LoginFragment.newInstance();
-                        loginFragment.setCompositeDisposable(compositeDisposable);
-                        loginFragment.setUserRepository(userRepository);
-                        loginFragment.show(getSupportFragmentManager(), LoginFragment.class.getSimpleName());
-
-//                        LoginMethodFragment loginFragment = LoginMethodFragment.newInstance();
-//                        loginFragment.show(getSupportFragmentManager(), LoginMethodFragment.class.getSimpleName());
-                    }
-                }
-
-                @Override
-                public void onAddedToCompositeDisposable(Disposable disposable) {
-                    compositeDisposable.add(disposable);
-                }
-
-                @Override
-                public void onFailureMessage(String message) {
-                    Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
-                }
-            });
-
+//            userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
+//                @Override
+//                public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
+//                    if (userLoginInfo.getIsAuthorized() == 1) {
+//                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
+//                        Toast.makeText(BaseActivity.this, "You Are Just  Logged In", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        // // TODO: 8/26/2018 Show Login Dialogs Based On Saved StepsLogin
+//                    }
+//                }
+//
+//                @Override
+//                public void onAddedToCompositeDisposable(Disposable disposable) {
+//                    compositeDisposable.add(disposable);
+//                }
+//
+//                @Override
+//                public void onFailureMessage(String message) {
+//                    Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
+//                }
+//            });
+            LoginFragment loginFragment = LoginFragment.newInstance();
+            loginFragment.setCompositeDisposable(compositeDisposable);
+            loginFragment.setUserRepository(userRepository);
+            loginFragment.show(getSupportFragmentManager(), LoginFragment.class.getSimpleName());
+            return true;
         }
         return false;
     }
 
-    @Override
-    public void openToEnterMobilePhoneNumberDialog() {
-        PhoneNumberLoginFragment phoneNumberLoginFragment = PhoneNumberLoginFragment.newInstance();
-        phoneNumberLoginFragment.setCompositeDisposable(compositeDisposable);
-        phoneNumberLoginFragment.setUserRepository(userRepository);
-        phoneNumberLoginFragment.show(getSupportFragmentManager(), PhoneNumberLoginFragment.class.getSimpleName());
-    }
-
-    @Override
-    public void showVerificationCodeDialog(String phoneNumber) {
-        VerificationDialogFragment dialogFragment = VerificationDialogFragment.newInstance(phoneNumber);
-        dialogFragment.show(getSupportFragmentManager(), VerificationDialogFragment.class.getSimpleName());
-    }
 
 }

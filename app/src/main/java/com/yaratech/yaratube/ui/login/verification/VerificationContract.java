@@ -18,6 +18,8 @@ public interface VerificationContract {
         void observeVerificationCodeInput(Observable observable, String phoneNumber);
 
         void observeAutoReadVerificationCode(String phoneNumber, String verificationCode);
+
+        String getUserMobilePhoneNumber();
     }
 
 }

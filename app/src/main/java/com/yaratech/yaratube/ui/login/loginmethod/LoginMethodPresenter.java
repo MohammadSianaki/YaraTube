@@ -24,9 +24,4 @@ public class LoginMethodPresenter implements LoginMethodContract.Presenter {
     public boolean isAttached() {
         return mView != null;
     }
-
-    @Override
-    public boolean checkIfUserAuthorized() {
-        return false;
-    }
 }

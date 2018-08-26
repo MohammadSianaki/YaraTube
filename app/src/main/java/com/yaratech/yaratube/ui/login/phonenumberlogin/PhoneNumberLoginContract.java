@@ -8,7 +8,7 @@ import io.reactivex.Observable;
 public class PhoneNumberLoginContract {
 
     interface View extends BaseView {
-        void showVerificationCodeDialog(String phoneNumber);
+        void showVerificationCodeDialog();
 
         void showToastError(String message);
     }

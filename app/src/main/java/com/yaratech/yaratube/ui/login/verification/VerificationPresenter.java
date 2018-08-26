@@ -3,6 +3,7 @@ package com.yaratech.yaratube.ui.login.verification;
 import android.util.Log;
 
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
+import com.yaratech.yaratube.data.model.Event;
 import com.yaratech.yaratube.data.model.MobileLoginStepTwoResponse;
 import com.yaratech.yaratube.data.source.UserDataSource;
 import com.yaratech.yaratube.data.source.UserRepository;
@@ -89,6 +90,7 @@ public class VerificationPresenter implements VerificationContract.Presenter {
         Disposable disposable = (Disposable) o.subscribeWith(new DisposableObserver<String>() {
             @Override
             public void onNext(String code) {
+                ((VerificationDialogFragment) mView).sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_VERIFY_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_FINISH));
                 repository.verifyUserWithThisCode(new UserDataSource.ApiResultCallback() {
 
                     @Override
@@ -150,5 +152,10 @@ public class VerificationPresenter implements VerificationContract.Presenter {
                 Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
             }
         }, userLoginInfo);
+    }
+
+    @Override
+    public String getUserMobilePhoneNumber() {
+        return repository.getUserMobilePhoneNumber();
     }
 }
