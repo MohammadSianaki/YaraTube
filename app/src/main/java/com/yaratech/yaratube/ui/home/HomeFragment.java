@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -174,6 +176,7 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
 
     private void setupRecyclerView() {
         recyclerViewStoreItems.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerViewStoreItems.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(getContext(), R.anim.layout_animation_slide_right));
         recyclerViewStoreItems.setAdapter(mStoreItemsAdapter);
     }
 
@@ -230,5 +233,15 @@ public class HomeFragment extends Fragment implements HomeContract.View, HomeIte
 
     public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
         this.compositeDisposable = compositeDisposable;
+    }
+
+    public void runLayoutAnimation() {
+        final Context context = recyclerViewStoreItems.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_slide_right);
+
+        recyclerViewStoreItems.setLayoutAnimation(controller);
+        recyclerViewStoreItems.getAdapter().notifyDataSetChanged();
+        recyclerViewStoreItems.scheduleLayoutAnimation();
     }
 }

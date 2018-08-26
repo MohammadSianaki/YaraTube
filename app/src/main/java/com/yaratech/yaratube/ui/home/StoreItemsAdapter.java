@@ -1,5 +1,6 @@
 package com.yaratech.yaratube.ui.home;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -8,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import com.yaratech.yaratube.R;
@@ -136,6 +139,7 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public void onBindHomeView(HomeItem homeItem) {
             HomeItemsAdapter homeItemsAdapter = new HomeItemsAdapter(mListener);
             homeRecyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
+            homeRecyclerView.setLayoutAnimation(AnimationUtils.loadLayoutAnimation(itemView.getContext(), R.anim.layout_animation_slide_right));
             homeRecyclerView.setAdapter(homeItemsAdapter);
             homeItemsAdapter.setProducts(homeItem.getProducts());
             homeItemsName.setText(homeItem.getTitle());
@@ -162,5 +166,14 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
+    }
 }
 

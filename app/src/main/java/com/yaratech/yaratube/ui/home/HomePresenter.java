@@ -43,6 +43,7 @@ public class HomePresenter implements HomeContract.Presenter {
                     HomeResponse homeResponse = (HomeResponse) response;
                     if (mView != null) {
                         mView.finishProgressBarLoading();
+                        ((HomeFragment) mView).runLayoutAnimation();
                         mView.showLoadedData(homeResponse);
                     }
                 }
