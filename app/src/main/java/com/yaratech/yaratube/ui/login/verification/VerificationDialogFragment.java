@@ -16,11 +16,11 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Event;
-import com.yaratech.yaratube.data.source.GlobalBus;
 import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.utils.TextUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
@@ -70,6 +70,7 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.fragment_verification_dialog, container, false);
     }
 
@@ -152,6 +153,7 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -177,7 +179,7 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     }
 
     public void sendMessageToParentFragment(Event.ChildParentMessage event) {
-        GlobalBus.getINSTANCE().post(event);
+        EventBus.getDefault().post(event);
     }
 
     public void setUserRepository(UserRepository userRepository) {

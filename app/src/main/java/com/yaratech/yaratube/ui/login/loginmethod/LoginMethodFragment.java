@@ -13,8 +13,8 @@ import android.widget.Button;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Event;
-import com.yaratech.yaratube.data.source.GlobalBus;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
@@ -58,7 +58,7 @@ public class LoginMethodFragment extends DialogFragment implements LoginMethodCo
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GlobalBus.getINSTANCE().register(this);
+        EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.fragment_login_method, container, false);
     }
 
@@ -95,7 +95,7 @@ public class LoginMethodFragment extends DialogFragment implements LoginMethodCo
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
-        GlobalBus.getINSTANCE().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
 
@@ -116,6 +116,6 @@ public class LoginMethodFragment extends DialogFragment implements LoginMethodCo
     }
 
     public void sendMessageToParentFragment(Event.ChildParentMessage event) {
-        GlobalBus.getINSTANCE().post(event);
+        EventBus.getDefault().post(event);
     }
 }

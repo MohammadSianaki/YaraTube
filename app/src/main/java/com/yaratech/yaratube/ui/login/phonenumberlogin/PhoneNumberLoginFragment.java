@@ -17,9 +17,9 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Event;
-import com.yaratech.yaratube.data.source.GlobalBus;
 import com.yaratech.yaratube.data.source.UserRepository;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
@@ -75,7 +75,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        GlobalBus.getINSTANCE().register(this);
+        EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.fragment_phone_number_login, container, false);
     }
 
@@ -102,7 +102,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
-        GlobalBus.getINSTANCE().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     }
 
     public void sendMessageToParentFragment(Event.ChildParentMessage event) {
-        GlobalBus.getINSTANCE().post(event);
+        EventBus.getDefault().post(event);
     }
 
     public void setUserRepository(UserRepository userRepository) {
