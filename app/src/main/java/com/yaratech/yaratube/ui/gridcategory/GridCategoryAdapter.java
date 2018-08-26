@@ -38,7 +38,7 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View rootView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.category_prodcut_item, parent, false);
+                .inflate(R.layout.product_item, parent, false);
         return new ViewHolder(rootView);
     }
 
@@ -59,14 +59,14 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        @BindView(R.id.iv_category_card_product)
+        @BindView(R.id.iv_product_item)
         ImageView imageView;
 
 
-        @BindView(R.id.tv_category_card_title)
+        @BindView(R.id.tv_product_item_title)
         TextView title;
 
-        @BindView(R.id.tv_category_card_description)
+        @BindView(R.id.tv_product_item_description)
         TextView description;
 
 

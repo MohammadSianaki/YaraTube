@@ -36,7 +36,7 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
     @Override
     public HomeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View rootView = LayoutInflater.
-                from(parent.getContext()).inflate(R.layout.home_item, parent, false);
+                from(parent.getContext()).inflate(R.layout.product_item, parent, false);
         return new HomeViewHolder(rootView);
     }
 
@@ -57,13 +57,13 @@ public class HomeItemsAdapter extends RecyclerView.Adapter<HomeItemsAdapter.Home
 
     public class HomeViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.iv_category_card_product)
+        @BindView(R.id.iv_product_item)
         ImageView imageView;
 
-        @BindView(R.id.tv_category_card_title)
+        @BindView(R.id.tv_product_item_title)
         TextView title;
 
-        @BindView(R.id.tv_category_card_description)
+        @BindView(R.id.tv_product_item_description)
         TextView description;
 
         public HomeViewHolder(View itemView) {
