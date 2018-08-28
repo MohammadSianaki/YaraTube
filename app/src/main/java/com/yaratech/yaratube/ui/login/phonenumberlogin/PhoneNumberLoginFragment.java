@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +30,9 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
-public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNumberLoginContract.View {
+public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLoginContract.View {
     //----------------------------------------------------------------------------------------------------------------------
-    private static final String TAG = "PhoneNumberLoginFragment";
+    private static final String TAG = "PhoneLoginFragment";
 
     @BindView(R.id.btn_phone_number_login_dialog_submit)
     Button submitPhoneNumberButton;
@@ -68,6 +69,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onCreate: PhoneLoginFragment");
         super.onCreate(savedInstanceState);
     }
 
@@ -75,6 +77,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onCreateView: PhoneLoginFragment");
         EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.fragment_phone_number_login, container, false);
     }
@@ -82,6 +85,8 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onViewCreated: PhoneLoginFragment");
+
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
         mPresenter = new PhoneNumberLoginPresenter(userRepository, compositeDisposable);
@@ -99,6 +104,7 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
 
     @Override
     public void onDestroyView() {
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroyView: PhoneLoginFragment");
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
@@ -107,19 +113,19 @@ public class PhoneNumberLoginFragment extends DialogFragment implements PhoneNum
 
     @Override
     public void onDestroy() {
-        Log.d("onDestroy()", "PhoneNumberLoginFragmentDestroyed: ");
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroy: PhoneLoginFragment");
         super.onDestroy();
     }
 
     @Override
     public void onDetach() {
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onDetach: PhoneLoginFragment");
         super.onDetach();
     }
 
 
     @Override
     public void showVerificationCodeDialog() {
-        dismiss();
         sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_SUBMIT_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_THREE));
     }
 

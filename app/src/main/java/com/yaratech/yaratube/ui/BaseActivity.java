@@ -28,7 +28,7 @@ import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
-import com.yaratech.yaratube.ui.login.LoginFragment;
+import com.yaratech.yaratube.ui.login.LoginDialogFragment;
 import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
@@ -262,10 +262,10 @@ public class BaseActivity extends AppCompatActivity implements
 //                    Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
 //                }
 //            });
-            LoginFragment loginFragment = LoginFragment.newInstance();
+            LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
             loginFragment.setCompositeDisposable(compositeDisposable);
             loginFragment.setUserRepository(userRepository);
-            loginFragment.show(getSupportFragmentManager(), LoginFragment.class.getSimpleName());
+            loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
             return true;
         }
         return false;

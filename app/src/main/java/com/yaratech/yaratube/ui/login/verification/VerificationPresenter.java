@@ -89,11 +89,11 @@ public class VerificationPresenter implements VerificationContract.Presenter {
         Disposable disposable = (Disposable) o.subscribeWith(new DisposableObserver<String>() {
             @Override
             public void onNext(String code) {
-                ((VerificationDialogFragment) mView).sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_VERIFY_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_FINISH));
                 repository.verifyUserWithThisCode(new UserDataSource.ApiResultCallback() {
 
                     @Override
                     public void onSuccessMessage(String message, int responseCode, Object response) {
+                        ((VerificationCodeFragment) mView).sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_VERIFY_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_FINISH));
                         MobileLoginStepTwoResponse mobileLoginStepTwoResponse = (MobileLoginStepTwoResponse) response;
                         UserLoginInfo userLoginInfo = new UserLoginInfo();
                         User user = new User();

@@ -4,7 +4,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +18,10 @@ import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Event;
 import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.ui.BaseActivity;
+import com.yaratech.yaratube.ui.login.LoginDialogFragment;
 import com.yaratech.yaratube.utils.TextUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +30,7 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
-public class VerificationDialogFragment extends DialogFragment implements VerificationContract.View {
+public class VerificationCodeFragment extends Fragment implements VerificationContract.View {
     //------------------------------------------------------------------------------------------
     private static final String TAG = "VerificationDialogFragm";
     private static final String KEY_MESSAGE = "KEY_MESSAGE";
@@ -53,16 +53,17 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     private CompositeDisposable compositeDisposable;
     //------------------------------------------------------------------------------------------
 
-    public static VerificationDialogFragment newInstance() {
+    public static VerificationCodeFragment newInstance() {
 
         Bundle args = new Bundle();
-        VerificationDialogFragment fragment = new VerificationDialogFragment();
+        VerificationCodeFragment fragment = new VerificationCodeFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onCreate: VerificationCodeFragment");
         super.onCreate(savedInstanceState);
 
     }
@@ -70,12 +71,13 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onCreateView: VerificationCodeFragment");
         return inflater.inflate(R.layout.fragment_verification_dialog, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onViewCreated: VerificationCodeFragment");
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
         mPresenter = new VerificationPresenter(userRepository, compositeDisposable);
@@ -89,7 +91,7 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (autoReadOtp) {
-            Log.d(TAG, "onResume() called : autoReadOtp is allowed");
+            Log.d(TAG, "onActivityCreated() called : autoReadOtp is allowed");
             SmsReceiver.bindListener(new SmsListener() {
                 @Override
                 public void onReceivedMessage(String message) {
@@ -102,11 +104,10 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
                 }
             });
         } else {
-            Log.d(TAG, "onResume() called : autoReadOtp is not allowed");
+            Log.d(TAG, "onActivityCreated() called : autoReadOtp is not allowed");
             Observable observable = RxTextView.textChangeEvents(verificationCodeEditText);
             RxView
                     .clicks(verificationCodeSubmitButton)
-                    .first("")
                     .subscribe(new Consumer<Object>() {
                         @Override
                         public void accept(Object o) throws Exception {
@@ -116,10 +117,10 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
 
             RxView
                     .clicks(verificationCodeCorrectButton)
-                    .first("")
                     .subscribe(new Consumer<Object>() {
                         @Override
                         public void accept(Object o) throws Exception {
+                            Log.d("Correct Button", "accept: ");
                             showLoginStepTwoDialog();
                         }
                     });
@@ -127,7 +128,6 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
     }
 
     private void showLoginStepTwoDialog() {
-        dismiss();
         sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_CORRECT_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_TWO));
     }
 
@@ -150,33 +150,25 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
 
     @Override
     public void onDestroyView() {
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroyView: VerificationCodeFragment");
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onDestroy() {
-        Log.d("onDestroy()", "VerificationDialogFragment: ");
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroy: VerificationCodeFragment");
         super.onDestroy();
         SmsReceiver.unBindListener();
     }
 
     @Override
     public void onDetach() {
+        Log.d(TAG, "<<<<    lifecycle   >>>>    onDetach: VerificationCodeFragment");
         super.onDetach();
     }
 
-    @Override
-    public void closeDialog() {
-        dismiss();
-    }
-
-    @Subscribe
-    public void getMessageFromParentFragment(Event.ParentChildMessage event) {
-
-    }
 
     public void sendMessageToParentFragment(Event.ChildParentMessage event) {
         EventBus.getDefault().post(event);
@@ -188,5 +180,10 @@ public class VerificationDialogFragment extends DialogFragment implements Verifi
 
     public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
         this.compositeDisposable = compositeDisposable;
+    }
+
+    @Override
+    public void closeDialog() {
+        ((LoginDialogFragment) getParentFragment()).closeDialog();
     }
 }

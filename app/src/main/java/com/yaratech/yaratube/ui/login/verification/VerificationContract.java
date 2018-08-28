@@ -8,7 +8,6 @@ import io.reactivex.Observable;
 public interface VerificationContract {
 
     interface View extends BaseView {
-
         void closeDialog();
     }
 

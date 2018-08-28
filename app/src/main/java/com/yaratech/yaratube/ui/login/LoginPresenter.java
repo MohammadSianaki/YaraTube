@@ -1,5 +1,6 @@
 package com.yaratech.yaratube.ui.login;
 
+import com.yaratech.yaratube.data.model.Event;
 import com.yaratech.yaratube.data.source.UserRepository;
 
 public class LoginPresenter implements LoginContract.Presenter {
@@ -29,6 +30,18 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void saveLoginStep(int loginStep) {
         userRepository.setUserLoginStep(loginStep);
+    }
+
+    @Override
+    public void checkUserStepLogin() {
+        int step = userRepository.getUserLoginStep();
+        if (step == Event.LOGIN_STEP_FINISH) {
+            mView.showUserHasBeenLoginToast();
+        } else if (userRepository.getUserLoginStep() == Event.LOGIN_STEP_THREE) {
+            mView.showVerificationDialog();
+        } else {
+            mView.showLoginMethodDialog();
+        }
     }
 
     @Override
