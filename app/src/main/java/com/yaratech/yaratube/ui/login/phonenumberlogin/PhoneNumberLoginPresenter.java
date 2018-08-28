@@ -42,7 +42,7 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
                     }
                 })
 
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread());
         Disposable disposable = (Disposable) o.subscribeWith(new DisposableObserver<String>() {
 

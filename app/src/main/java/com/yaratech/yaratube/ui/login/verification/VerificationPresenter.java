@@ -18,7 +18,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 public class VerificationPresenter implements VerificationContract.Presenter {
     private static final String TAG = "VerificationPresenter";
@@ -84,7 +83,7 @@ public class VerificationPresenter implements VerificationContract.Presenter {
                         return TextUtils.isAllDigits(s);
                     }
                 })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread());
 
         Disposable disposable = (Disposable) o.subscribeWith(new DisposableObserver<String>() {
