@@ -80,7 +80,7 @@ public class VerificationPresenter implements VerificationContract.Presenter {
                     @Override
                     public boolean test(String s) throws Exception {
                         Log.d(TAG, "test() called with: s = [" + s + "]");
-                        return TextUtils.isAllDigits(s);
+                        return !android.text.TextUtils.isEmpty(s) && TextUtils.isAllDigits(s) && s.length() >= 4;
                     }
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())

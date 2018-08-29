@@ -23,6 +23,8 @@ public interface UserDataSource {
         void onAddedToCompositeDisposable(Disposable disposable);
 
         void onFailureMessage(String message);
+
+        void onNotFoundUserInDatabase();
     }
 
     interface ApiResultCallback<T> {

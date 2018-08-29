@@ -60,6 +60,7 @@ public class LocalDataSource implements UserDataSource {
                     @Override
                     public void onComplete() {
                         Log.d(TAG, "onComplete() called");
+                        callback.onNotFoundUserInDatabase();
                     }
                 });
 

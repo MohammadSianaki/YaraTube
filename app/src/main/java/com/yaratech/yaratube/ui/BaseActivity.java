@@ -13,14 +13,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.data.model.HeaderItem;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.UserDataSource;
 import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.data.source.local.LocalDataSource;
+import com.yaratech.yaratube.data.source.local.UserLoginInfo;
 import com.yaratech.yaratube.data.source.prefs.AppPreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
@@ -35,6 +38,7 @@ import com.yaratech.yaratube.utils.ActivityUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class BaseActivity extends AppCompatActivity implements
         CategoryFragment.OnCategoryFragmentInteractionListener,
@@ -240,35 +244,42 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_profile_item) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-//            userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
-//                @Override
-//                public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
-//                    if (userLoginInfo.getIsAuthorized() == 1) {
-//                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
-//                        Toast.makeText(BaseActivity.this, "You Are Just  Logged In", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        // // TODO: 8/26/2018 Show Login Dialogs Based On Saved StepsLogin
-//                    }
-//                }
-//
-//                @Override
-//                public void onAddedToCompositeDisposable(Disposable disposable) {
-//                    compositeDisposable.add(disposable);
-//                }
-//
-//                @Override
-//                public void onFailureMessage(String message) {
-//                    Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
-//                }
-//            });
-            LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
-            loginFragment.setCompositeDisposable(compositeDisposable);
-            loginFragment.setUserRepository(userRepository);
-            loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
-            return true;
+            userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
+                @Override
+                public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
+                    if (userLoginInfo.getIsAuthorized() == 1) {
+                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
+                        Toast.makeText(BaseActivity.this, "You Are Just  Logged In", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // TODO: 8/26/2018 Show Login Dialogs Based On Saved StepsLogin
+                        LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
+                        loginFragment.setCompositeDisposable(compositeDisposable);
+                        loginFragment.setUserRepository(userRepository);
+                        loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
+                    }
+                }
+
+                @Override
+                public void onAddedToCompositeDisposable(Disposable disposable) {
+                    compositeDisposable.add(disposable);
+                }
+
+                @Override
+                public void onFailureMessage(String message) {
+                    Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
+                }
+
+                @Override
+                public void onNotFoundUserInDatabase() {
+                    LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
+                    loginFragment.setCompositeDisposable(compositeDisposable);
+                    loginFragment.setUserRepository(userRepository);
+                    loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
+                }
+            });
         }
-        return false;
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 
