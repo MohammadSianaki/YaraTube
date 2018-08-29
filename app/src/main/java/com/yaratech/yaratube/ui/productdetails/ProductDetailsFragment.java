@@ -26,6 +26,7 @@ import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreRepository;
 import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.ui.player.PlayerActivity;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ import io.reactivex.disposables.CompositeDisposable;
 public class ProductDetailsFragment extends Fragment implements DetailsContract.View {
     private final static String KEY_ID = "KEY_ID";
     private static final String TAG = "ProductDetailsFragment";
+    private static final String KEY_PRODUCT = "KEY_PRODUCT";
+    private static final String KEY_PRODUCT_FILE = "KEY_PRODUCT_FILE";
     //------------------------------------------------------------------------------------------------------
 
     private DetailsContract.Presenter mPresenter;
@@ -82,9 +85,9 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     }
 
     public static ProductDetailsFragment newInstance(Product product) {
-
         Bundle args = new Bundle();
         args.putInt(KEY_ID, product.getId());
+        args.putParcelable(KEY_PRODUCT, product);
         ProductDetailsFragment fragment = new ProductDetailsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -116,7 +119,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
         mUnBinder = ButterKnife.bind(this, view);
         Log.i(TAG, "onViewCreated: ProductDetailsFragment");
-        mPresenter = new DetailsPresenter(storeRepository, userRepository, compositeDisposable);
+        mPresenter = new ProductDetailsPresenter(storeRepository, userRepository, compositeDisposable);
         mPresenter.attachView(this);
         commentAdapter = new CommentAdapter();
         setRecyclerView();
@@ -143,10 +146,11 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
 
     @Override
-    public void showLoadedData(Product productDetails) {
-        Glide.with(this).load(productDetails.getFeatureAvatar().getXxxDpiUrl()).into(productDetailsMedia);
-        productDetailsTitle.setText(productDetails.getName());
-        productDetailsDescription.setText(productDetails.getDescription());
+    public void showLoadedData(Product product) {
+        getArguments().putString(KEY_PRODUCT_FILE, product.getFiles().get(0).getFile());
+        Glide.with(this).load(product.getFeatureAvatar().getXxxDpiUrl()).into(productDetailsMedia);
+        productDetailsTitle.setText(product.getName());
+        productDetailsDescription.setText(product.getDescription());
     }
 
     @Override
@@ -242,6 +246,10 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     @Override
     public void goToPlayerActivity() {
-        Intent intent = new Intent();
+        Intent intent = new Intent(getActivity(), PlayerActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_PRODUCT_FILE, getArguments().getString(KEY_PRODUCT_FILE));
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

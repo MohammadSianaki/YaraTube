@@ -15,10 +15,10 @@ import java.util.List;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class DetailsPresenter implements DetailsContract.Presenter {
+public class ProductDetailsPresenter implements DetailsContract.Presenter {
 
     //---------------------------------------------------------------------------------------------
-    private static final String TAG = "DetailsPresenter";
+    private static final String TAG = "ProductDetailsPresenter";
     private StoreRepository repository;
     private UserRepository userRepository;
     private CompositeDisposable compositeDisposable;
@@ -26,7 +26,7 @@ public class DetailsPresenter implements DetailsContract.Presenter {
     //---------------------------------------------------------------------------------------------
 
 
-    public DetailsPresenter(StoreRepository storeRepository, UserRepository userRepository, CompositeDisposable compositeDisposable) {
+    public ProductDetailsPresenter(StoreRepository storeRepository, UserRepository userRepository, CompositeDisposable compositeDisposable) {
         this.repository = storeRepository;
         this.userRepository = userRepository;
         this.compositeDisposable = compositeDisposable;
@@ -55,6 +55,12 @@ public class DetailsPresenter implements DetailsContract.Presenter {
                 @Override
                 public void onDataLoaded(Object response) {
                     Product product = (Product) response;
+                    if (product.getFiles() == null) {
+                        Log.d(TAG, "onDataLoaded: in presenter is null");
+                    } else {
+                        Log.d(TAG, "onDataLoaded: in presenter is not null");
+                    }
+
                     if (mView != null) {
                         mView.finishProgressBarLoading();
                         mView.showLoadedData(product);

@@ -138,6 +138,11 @@ public class StoreRemoteDataSource implements StoreDataSource {
                 @Override
                 public void onResponse(Call<Product> call, Response<Product> response) {
                     if (response.isSuccessful()) {
+                        if (response.body().getFiles() == null) {
+                            Log.d(TAG, "onResponse: returned file is null");
+                        } else {
+                            Log.d(TAG, "onResponse: returned file is not null");
+                        }
                         callback.onDataLoaded(response.body());
                         Log.i(TAG, "onResponse: successful");
                     } else {

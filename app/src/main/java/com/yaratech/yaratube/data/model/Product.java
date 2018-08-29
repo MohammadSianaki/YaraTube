@@ -4,9 +4,10 @@ package com.yaratech.yaratube.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Product implements Parcelable {
 
@@ -75,16 +76,16 @@ public class Product implements Parcelable {
     private String sku;
     @SerializedName("files")
     @Expose
-    private List<Object> files = null;
+    private List<File> files;
     @SerializedName("tags")
     @Expose
-    private List<Object> tags = null;
+    private List<Object> tags;
     @SerializedName("category_model")
     @Expose
-    private List<Object> categoryModel = null;
+    private List<Object> categoryModel;
     @SerializedName("comments_summery")
     @Expose
-    private List<CommentsSummery> commentsSummery = null;
+    private List<CommentsSummery> commentsSummery;
     @SerializedName("price_unit")
     @Expose
     private String priceUnit;
@@ -96,7 +97,7 @@ public class Product implements Parcelable {
     private Object customJson;
     @SerializedName("polls")
     @Expose
-    private List<Object> polls = null;
+    private List<Object> polls;
     @SerializedName("date_added")
     @Expose
     private String dateAdded;
@@ -105,7 +106,7 @@ public class Product implements Parcelable {
     private Object investGoal;
     @SerializedName("product_staff")
     @Expose
-    private List<Object> productStaff = null;
+    private List<Object> productStaff;
     @SerializedName("support")
     @Expose
     private Support support;
@@ -114,7 +115,7 @@ public class Product implements Parcelable {
     private boolean isSpecial;
     @SerializedName("additional_attributes")
     @Expose
-    private List<Object> additionalAttributes = null;
+    private List<Object> additionalAttributes;
     @SerializedName("date_published")
     @Expose
     private String datePublished;
@@ -124,6 +125,41 @@ public class Product implements Parcelable {
     @SerializedName("last_checked_file")
     @Expose
     private Object lastCheckedFile;
+
+    protected Product(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        nameEnglish = in.readString();
+        productType = in.readInt();
+        producerName = in.readString();
+        price = in.readInt();
+        rank = in.readDouble();
+        isEnable = in.readByte() != 0;
+        totalInstalled = in.readInt();
+        shortDescription = in.readString();
+        description = in.readString();
+        isPurchased = in.readByte() != 0;
+        comments = in.readInt();
+        isBookmarked = in.readByte() != 0;
+        sku = in.readString();
+        priceUnit = in.readString();
+        totalView = in.readInt();
+        dateAdded = in.readString();
+        isSpecial = in.readByte() != 0;
+        datePublished = in.readString();
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -293,11 +329,11 @@ public class Product implements Parcelable {
         this.sku = sku;
     }
 
-    public List<Object> getFiles() {
+    public List<File> getFiles() {
         return files;
     }
 
-    public void setFiles(List<Object> files) {
+    public void setFiles(List<File> files) {
         this.files = files;
     }
 
@@ -436,6 +472,25 @@ public class Product implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(nameEnglish);
+        dest.writeInt(productType);
+        dest.writeString(producerName);
+        dest.writeInt(price);
+        dest.writeDouble(rank);
+        dest.writeByte((byte) (isEnable ? 1 : 0));
+        dest.writeInt(totalInstalled);
+        dest.writeString(shortDescription);
+        dest.writeString(description);
+        dest.writeByte((byte) (isPurchased ? 1 : 0));
+        dest.writeInt(comments);
+        dest.writeByte((byte) (isBookmarked ? 1 : 0));
+        dest.writeString(sku);
+        dest.writeString(priceUnit);
+        dest.writeInt(totalView);
+        dest.writeString(dateAdded);
+        dest.writeByte((byte) (isSpecial ? 1 : 0));
+        dest.writeString(datePublished);
     }
 }

@@ -1,15 +1,14 @@
 package com.yaratech.yaratube.ui.player;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.yaratech.yaratube.R;
 
 public class PlayerActivity extends AppCompatActivity {
+
+    private static final String KEY_PRODUCT_FILE = "KEY_PRODUCT_FILE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,15 +16,17 @@ public class PlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_player);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setFragment();
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+    private void setFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(
+                        R.id.player_activity_main_content,
+                        PlayerFragment.newInstance(getIntent().getExtras().getString(KEY_PRODUCT_FILE)),
+                        PlayerFragment.class.getSimpleName())
+                .commit();
     }
 
 }

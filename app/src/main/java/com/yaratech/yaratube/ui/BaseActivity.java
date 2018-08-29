@@ -218,7 +218,11 @@ public class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void showRequestedHeaderItemDetails(Product item) {
-        int headerId = item.getId();
+        if (item.getFiles() == null) {
+            Log.d(TAG, "showRequestedHeaderItemDetails: file is null");
+        } else {
+            Log.d(TAG, "showRequestedHeaderItemDetails: else : file size is : " + item.getFiles().size());
+        }
         ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(item);
         detailsFragment.setStoreRepository(storeRepository);
         detailsFragment.setUserRepository(userRepository);

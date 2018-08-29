@@ -1,10 +1,13 @@
 
 package com.yaratech.yaratube.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class File {
+public class File implements Parcelable{
 
     @SerializedName("id")
     @Expose
@@ -60,6 +63,36 @@ public class File {
     @SerializedName("file_redirect")
     @Expose
     private String fileRedirect;
+
+    protected File(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        file = in.readString();
+        sku = in.readString();
+        skuRegistered = in.readByte() != 0;
+        skuRegDate = in.readString();
+        price = in.readInt();
+        isPurchased = in.readByte() != 0;
+        length = in.readInt();
+        description = in.readString();
+        isDownloadable = in.readByte() != 0;
+        priceUnit = in.readString();
+        isEnable = in.readByte() != 0;
+        fileType = in.readInt();
+        fileRedirect = in.readString();
+    }
+
+    public static final Creator<File> CREATOR = new Creator<File>() {
+        @Override
+        public File createFromParcel(Parcel in) {
+            return new File(in);
+        }
+
+        @Override
+        public File[] newArray(int size) {
+            return new File[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -205,4 +238,27 @@ public class File {
         this.fileRedirect = fileRedirect;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(file);
+        dest.writeString(sku);
+        dest.writeByte((byte) (skuRegistered ? 1 : 0));
+        dest.writeString(skuRegDate);
+        dest.writeInt(price);
+        dest.writeByte((byte) (isPurchased ? 1 : 0));
+        dest.writeInt(length);
+        dest.writeString(description);
+        dest.writeByte((byte) (isDownloadable ? 1 : 0));
+        dest.writeString(priceUnit);
+        dest.writeByte((byte) (isEnable ? 1 : 0));
+        dest.writeInt(fileType);
+        dest.writeString(fileRedirect);
+    }
 }
