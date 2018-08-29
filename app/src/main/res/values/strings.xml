@@ -24,5 +24,7 @@
     <string name="login_method_dialog_google_sign_in_button_text">از طریق حساب google</string>
     <string name="dialog_fragment_edit_text_hint">نظر</string>
     <string name="comment_dialog_fragment_submit_button_text">ثبت</string>
+    <string name="title_activity_player">YaraTube</string>
+    <string name="action_settings">Settings</string>
 </resources>
 

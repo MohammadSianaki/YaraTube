@@ -38,6 +38,7 @@ dependencies {
     // Butter Knife
     implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
     implementation "com.android.support:support-v4:27.1.1"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
 
     // Glide
@@ -75,7 +76,4 @@ dependencies {
 
     // ExoPlayer
     implementation "com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-core:$rootProject.exoPlayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-dash:$rootProject.exoPlayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-ui:$rootProject.exoPlayerVersion"
 }
