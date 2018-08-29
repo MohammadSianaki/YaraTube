@@ -23,11 +23,14 @@ import com.yaratech.yaratube.utils.TextUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 public class VerificationCodeFragment extends Fragment implements VerificationContract.View {
@@ -106,8 +109,9 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
         } else {
             Log.d(TAG, "onActivityCreated() called : autoReadOtp is not allowed");
             Observable observable = RxTextView.textChangeEvents(verificationCodeEditText);
-            RxView
+            Disposable buttonDisposable = RxView
                     .clicks(verificationCodeSubmitButton)
+                    .throttleFirst(3, TimeUnit.SECONDS)
                     .subscribe(new Consumer<Object>() {
                         @Override
                         public void accept(Object o) throws Exception {
@@ -115,7 +119,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
                         }
                     });
 
-            RxView
+            Disposable editTextDisposable = RxView
                     .clicks(verificationCodeCorrectButton)
                     .subscribe(new Consumer<Object>() {
                         @Override
@@ -124,6 +128,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
                             showLoginStepTwoDialog();
                         }
                     });
+            compositeDisposable.addAll(buttonDisposable, editTextDisposable);
         }
     }
 
