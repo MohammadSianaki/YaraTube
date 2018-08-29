@@ -1,6 +1,7 @@
 package com.yaratech.yaratube.ui.login;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -66,9 +67,18 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
 
     }
 
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateDialog() called with: savedInstanceState = [" + savedInstanceState + "]");
+        return super.onCreateDialog(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = ["
+                + container + "], savedInstanceState = [" + savedInstanceState + "]");
         // Inflate the layout for this fragment
         Log.d(TAG, "<<<<    lifecycle   >>>>    onCreateView: LoginDialogFragment");
         EventBus.getDefault().register(this);

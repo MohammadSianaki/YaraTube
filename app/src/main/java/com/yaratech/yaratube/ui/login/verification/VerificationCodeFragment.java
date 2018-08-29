@@ -54,6 +54,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     private Unbinder mUnBinder;
     private UserRepository userRepository;
     private CompositeDisposable compositeDisposable;
+    private SmsListener smsListener;
     //------------------------------------------------------------------------------------------
 
     public static VerificationCodeFragment newInstance() {
@@ -68,7 +69,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, "<<<<    lifecycle   >>>>    onCreate: VerificationCodeFragment");
         super.onCreate(savedInstanceState);
-
+        smsListener = getSmsListener();
     }
 
     @Nullable
@@ -93,19 +94,31 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+    }
+
+    private void showLoginStepTwoDialog() {
+        sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_CORRECT_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_TWO));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == BaseActivity.PERMISSION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                autoReadOtp = true;
+            } else {
+                autoReadOtp = false;
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (autoReadOtp) {
             Log.d(TAG, "onActivityCreated() called : autoReadOtp is allowed");
-            SmsReceiver.bindListener(new SmsListener() {
-                @Override
-                public void onReceivedMessage(String message) {
-                    if (getArguments() != null) {
-                        getArguments().putString(KEY_MESSAGE, message);
-                        String OTP = TextUtils.removeNonDigits(getArguments().getString(KEY_MESSAGE));
-                        Log.d(TAG, "onReceivedMessage(): removeNonDigits Returned : " + OTP);
-                        mPresenter.observeAutoReadVerificationCode(getArguments().getString(KEY_MOBILE_PHONE_NUMBER), OTP);
-                    }
-                }
-            });
+            SmsReceiver.bindListener(smsListener);
         } else {
             Log.d(TAG, "onActivityCreated() called : autoReadOtp is not allowed");
             Observable observable = RxTextView.textChangeEvents(verificationCodeEditText);
@@ -130,27 +143,6 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
                     });
             compositeDisposable.addAll(buttonDisposable, editTextDisposable);
         }
-    }
-
-    private void showLoginStepTwoDialog() {
-        sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_CORRECT_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_TWO));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == BaseActivity.PERMISSION_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                autoReadOtp = true;
-            } else {
-                autoReadOtp = false;
-            }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -185,6 +177,20 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
 
     public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
         this.compositeDisposable = compositeDisposable;
+    }
+
+    public SmsListener getSmsListener() {
+        return new SmsListener() {
+            @Override
+            public void onReceivedMessage(String message) {
+                if (getArguments() != null) {
+                    getArguments().putString(KEY_MESSAGE, message);
+                    String OTP = TextUtils.removeNonDigits(getArguments().getString(KEY_MESSAGE));
+                    Log.d(TAG, "onReceivedMessage(): removeNonDigits Returned : " + OTP);
+                    mPresenter.observeAutoReadVerificationCode(getArguments().getString(KEY_MOBILE_PHONE_NUMBER), OTP);
+                }
+            }
+        };
     }
 
     @Override

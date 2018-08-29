@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/login_dialog_shape"
+    android:padding="16dp"
     android:layoutDirection="rtl"
     android:orientation="vertical">
 
@@ -11,8 +12,8 @@
         android:id="@+id/tv_verification_code_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="21dp"
-        android:layout_marginStart="21dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
         android:text="@string/verification_code_dialog_title"
         android:textColor="@color/dark_jungle_green_color"
@@ -21,18 +22,18 @@
     <EditText
         android:id="@+id/et_code_number_verification_code_dialog_input"
         android:layout_width="match_parent"
-        android:layout_height="74.67dp"
+        android:layout_height="72dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="21dp"
-        android:layout_marginStart="21dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/edit_text_shape"
         android:hint="@string/verification_code_dialog_edit_text_hint"
         android:inputType="number"
-        android:paddingBottom="21.33dp"
-        android:paddingLeft="18dp"
-        android:paddingRight="17.42dp"
-        android:paddingTop="21.33dp"
+        android:paddingBottom="424dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="24dp"
         android:textAlignment="viewStart"
         android:textColor="#99000000"
         android:textDirection="rtl"
@@ -42,8 +43,8 @@
         android:id="@+id/tv_verification_code_dialog_not_received_code_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="21dp"
-        android:layout_marginStart="21dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:clickable="true"
         android:text="@string/tv_verification_code_dialog_not_recieved_code_link"
@@ -54,36 +55,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="21.33dp"
-        android:layout_marginEnd="21dp"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="9.33dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:baselineAligned="true"
         android:gravity="center"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_verification_code_dialog_submit_code"
-            android:layout_width="160.0dp"
-            android:layout_height="48.0dp"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@drawable/filled_button_shape"
             android:text="@string/btn_verification_code_dialog_submit_text"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="18.67sp" />
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/btn_verification_code_dialog_corrent_phone_number"
-            android:layout_width="160.0dp"
-            android:layout_height="48.0dp"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
             android:background="@drawable/button_shape"
             android:text="@string/btn_verification_code_dialog_corrent_phone_number_text"
             android:textAlignment="center"
             android:textColor="@color/celestialblue"
-            android:textSize="18.67sp" />
+            android:textSize="16sp" />
 
 
     </LinearLayout>

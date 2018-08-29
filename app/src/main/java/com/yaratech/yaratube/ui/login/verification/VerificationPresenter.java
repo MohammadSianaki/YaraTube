@@ -153,6 +153,8 @@ public class VerificationPresenter implements VerificationContract.Presenter {
         }, userLoginInfo);
     }
 
+
+
     @Override
     public String getUserMobilePhoneNumber() {
         return repository.getUserMobilePhoneNumber();
