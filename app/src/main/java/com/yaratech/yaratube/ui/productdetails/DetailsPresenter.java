@@ -3,7 +3,7 @@ package com.yaratech.yaratube.ui.productdetails;
 import android.util.Log;
 
 import com.yaratech.yaratube.data.model.Comment;
-import com.yaratech.yaratube.data.model.ProductDetails;
+import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreDataSource;
 import com.yaratech.yaratube.data.source.StoreRepository;
 import com.yaratech.yaratube.data.source.UserDataSource;
@@ -54,7 +54,7 @@ public class DetailsPresenter implements DetailsContract.Presenter {
             repository.fetchProductDetailsByProductId(new StoreDataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
-                    ProductDetails product = (ProductDetails) response;
+                    Product product = (Product) response;
                     if (mView != null) {
                         mView.finishProgressBarLoading();
                         mView.showLoadedData(product);
@@ -129,6 +129,31 @@ public class DetailsPresenter implements DetailsContract.Presenter {
             @Override
             public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
                 mView.showCommentDialog(userLoginInfo.getUser().getToken());
+            }
+
+            @Override
+            public void onAddedToCompositeDisposable(Disposable disposable) {
+                compositeDisposable.add(disposable);
+            }
+
+            @Override
+            public void onFailureMessage(String message) {
+                Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
+            }
+
+            @Override
+            public void onNotFoundUserInDatabase() {
+                mView.showLoginDialog();
+            }
+        });
+    }
+
+    @Override
+    public void isUserLoginToPlay() {
+        userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
+            @Override
+            public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
+                mView.goToPlayerActivity();
             }
 
             @Override

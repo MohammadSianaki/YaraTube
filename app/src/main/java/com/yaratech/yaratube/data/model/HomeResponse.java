@@ -19,7 +19,7 @@ public class HomeResponse {
 
     @SerializedName("headeritem")
     @Expose
-    private List<HeaderItem> headerItems = null;
+    private List<Product> headerItems = null;
     @SerializedName("tabStrip")
     @Expose
     private List<Object> tabStrip = null;
@@ -81,11 +81,11 @@ public class HomeResponse {
         this.homeItems = homeItems;
     }
 
-    public List<HeaderItem> getHeaderItems() {
+    public List<Product> getHeaderItems() {
         return headerItems;
     }
 
-    public void setHeaderItems(List<HeaderItem> headerItems) {
+    public void setHeaderItems(List<Product> headerItems) {
         this.headerItems = headerItems;
     }
 }

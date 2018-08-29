@@ -7,7 +7,6 @@ import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.model.MobileLoginStepOneResponse;
 import com.yaratech.yaratube.data.model.MobileLoginStepTwoResponse;
 import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.data.model.ProductDetails;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public interface ApiService {
     Call<List<Product>> fetchProductsByCategoryId(@Path("category_id") int categoryId);
 
     @GET("product/{productId}")
-    Call<ProductDetails> fetchProductDetailsByProductId(@Path("productId") int productId);
+    Call<Product> fetchProductDetailsByProductId(@Path("productId") int productId);
 
     @GET("comment/{productId}")
     Call<List<Comment>> fetchCommentOfProductsByProductId(@Path("productId") int productId);

@@ -4,14 +4,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.yaratech.yaratube.data.model.HeaderItem;
+import com.yaratech.yaratube.data.model.Product;
 
 import java.util.List;
 
 public class HeaderPagerAdapter extends FragmentPagerAdapter {
 
 
-    private List<HeaderItem> mHeaderItems;
+    private List<Product> mHeaderItems;
 
     public HeaderPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -30,7 +30,7 @@ public class HeaderPagerAdapter extends FragmentPagerAdapter {
         return mHeaderItems.size();
     }
 
-    public void setHeaderItems(List<HeaderItem> mHeaderItems) {
+    public void setHeaderItems(List<Product> mHeaderItems) {
         this.mHeaderItems = mHeaderItems;
         notifyDataSetChanged();
     }

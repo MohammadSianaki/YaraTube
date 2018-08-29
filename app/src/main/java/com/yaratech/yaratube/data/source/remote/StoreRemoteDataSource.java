@@ -7,7 +7,6 @@ import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.data.model.ProductDetails;
 import com.yaratech.yaratube.data.source.StoreDataSource;
 import com.yaratech.yaratube.utils.NetworkUtils;
 
@@ -25,7 +24,7 @@ public class StoreRemoteDataSource implements StoreDataSource {
     private Call<HomeResponse> homeResponseCall;
     private Call<List<Category>> categoryCall;
     private Call<List<Product>> productsByCategoryCall;
-    private Call<ProductDetails> productDetailsByProductIdCall;
+    private Call<Product> productDetailsByProductIdCall;
     private Call<List<Comment>> commentOfProductsByProductId;
 
     public StoreRemoteDataSource(Context context) {
@@ -135,9 +134,9 @@ public class StoreRemoteDataSource implements StoreDataSource {
             Log.i(TAG, "fetchProductDetailsByProductId: network available");
 
             productDetailsByProductIdCall = apiService.fetchProductDetailsByProductId(productId);
-            productDetailsByProductIdCall.enqueue(new Callback<ProductDetails>() {
+            productDetailsByProductIdCall.enqueue(new Callback<Product>() {
                 @Override
-                public void onResponse(Call<ProductDetails> call, Response<ProductDetails> response) {
+                public void onResponse(Call<Product> call, Response<Product> response) {
                     if (response.isSuccessful()) {
                         callback.onDataLoaded(response.body());
                         Log.i(TAG, "onResponse: successful");
@@ -148,7 +147,7 @@ public class StoreRemoteDataSource implements StoreDataSource {
                 }
 
                 @Override
-                public void onFailure(Call<ProductDetails> call, Throwable t) {
+                public void onFailure(Call<Product> call, Throwable t) {
                     callback.onDataNotAvailable();
                     Log.i(TAG, "onFailure: " + t.getMessage());
                 }

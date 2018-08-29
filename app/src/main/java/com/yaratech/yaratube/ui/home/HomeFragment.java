@@ -36,7 +36,9 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements HomeContract.View, HomeItemsAdapter.OnHomeItemsClickListener {
+public class HomeFragment extends Fragment implements
+        HomeContract.View,
+        HomeItemsAdapter.OnHomeItemsClickListener {
 
     //----------------------------------------------------------------------------------------
     private static final String TAG = "HomeFragment";

@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
-import com.yaratech.yaratube.data.model.HeaderItem;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreRepository;
 import com.yaratech.yaratube.data.source.UserDataSource;
@@ -218,9 +217,9 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showRequestedHeaderItemDetails(HeaderItem item) {
+    public void showRequestedHeaderItemDetails(Product item) {
         int headerId = item.getId();
-        ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(headerId);
+        ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(item);
         detailsFragment.setStoreRepository(storeRepository);
         detailsFragment.setUserRepository(userRepository);
         detailsFragment.setCompositeDisposable(compositeDisposable);
@@ -233,9 +232,8 @@ public class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void showProductDetailsOfRequestedProductItem(Product item) {
-        int productId = item.getId();
         Log.i(TAG, "onProductItemClicked: <<<<  " + item.getName() + "\t" + item.getId() + "  >>>>");
-        ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(productId);
+        ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(item);
         detailsFragment.setStoreRepository(storeRepository);
         detailsFragment.setUserRepository(userRepository);
         detailsFragment.setCompositeDisposable(compositeDisposable);

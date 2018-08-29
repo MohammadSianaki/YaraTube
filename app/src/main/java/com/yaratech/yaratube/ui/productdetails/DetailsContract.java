@@ -1,7 +1,7 @@
 package com.yaratech.yaratube.ui.productdetails;
 
 import com.yaratech.yaratube.data.model.Comment;
-import com.yaratech.yaratube.data.model.ProductDetails;
+import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.ui.base.BasePresenter;
 import com.yaratech.yaratube.ui.base.BaseView;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public interface DetailsContract {
 
     interface View extends BaseView {
-        void showLoadedData(ProductDetails productDetails);
+        void showLoadedData(Product productDetails);
 
         void showLoadedComments(List<Comment> comments);
 
@@ -29,6 +29,8 @@ public interface DetailsContract {
         void showCommentDialog(String token);
 
         void showLoginDialog();
+
+        void goToPlayerActivity();
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -41,6 +43,8 @@ public interface DetailsContract {
         void cancelProductDetailsApiRequest();
 
         void isUserLogin();
+
+        void isUserLoginToPlay();
     }
 
 }

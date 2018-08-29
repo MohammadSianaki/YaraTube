@@ -1,11 +1,14 @@
 
 package com.yaratech.yaratube.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Product {
+public class Product implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -19,12 +22,18 @@ public class Product {
     @SerializedName("product_type")
     @Expose
     private int productType;
+    @SerializedName("producer")
+    @Expose
+    private Producer producer;
     @SerializedName("producer_name")
     @Expose
     private String producerName;
     @SerializedName("payment_type")
     @Expose
-    private List<Object> paymentType = null;
+    private List<Integer> paymentType = null;
+    @SerializedName("category")
+    @Expose
+    private List<Integer> category = null;
     @SerializedName("price")
     @Expose
     private int price;
@@ -37,9 +46,21 @@ public class Product {
     @SerializedName("rank")
     @Expose
     private double rank;
+    @SerializedName("is_enable")
+    @Expose
+    private boolean isEnable;
+    @SerializedName("totalInstalled")
+    @Expose
+    private int totalInstalled;
     @SerializedName("short_description")
     @Expose
     private String shortDescription;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("promotionalContainers")
+    @Expose
+    private List<PromotionalContainer> promotionalContainers = null;
     @SerializedName("is_purchased")
     @Expose
     private boolean isPurchased;
@@ -52,12 +73,30 @@ public class Product {
     @SerializedName("sku")
     @Expose
     private String sku;
+    @SerializedName("files")
+    @Expose
+    private List<Object> files = null;
+    @SerializedName("tags")
+    @Expose
+    private List<Object> tags = null;
+    @SerializedName("category_model")
+    @Expose
+    private List<Object> categoryModel = null;
+    @SerializedName("comments_summery")
+    @Expose
+    private List<CommentsSummery> commentsSummery = null;
     @SerializedName("price_unit")
     @Expose
     private String priceUnit;
     @SerializedName("total_view")
     @Expose
     private int totalView;
+    @SerializedName("custom_json")
+    @Expose
+    private Object customJson;
+    @SerializedName("polls")
+    @Expose
+    private List<Object> polls = null;
     @SerializedName("date_added")
     @Expose
     private String dateAdded;
@@ -82,6 +121,9 @@ public class Product {
     @SerializedName("customjson")
     @Expose
     private Object customjson;
+    @SerializedName("last_checked_file")
+    @Expose
+    private Object lastCheckedFile;
 
     public int getId() {
         return id;
@@ -115,6 +157,14 @@ public class Product {
         this.productType = productType;
     }
 
+    public Producer getProducer() {
+        return producer;
+    }
+
+    public void setProducer(Producer producer) {
+        this.producer = producer;
+    }
+
     public String getProducerName() {
         return producerName;
     }
@@ -123,12 +173,20 @@ public class Product {
         this.producerName = producerName;
     }
 
-    public List<Object> getPaymentType() {
+    public List<Integer> getPaymentType() {
         return paymentType;
     }
 
-    public void setPaymentType(List<Object> paymentType) {
+    public void setPaymentType(List<Integer> paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public List<Integer> getCategory() {
+        return category;
+    }
+
+    public void setCategory(List<Integer> category) {
+        this.category = category;
     }
 
     public int getPrice() {
@@ -163,12 +221,44 @@ public class Product {
         this.rank = rank;
     }
 
+    public boolean isIsEnable() {
+        return isEnable;
+    }
+
+    public void setIsEnable(boolean isEnable) {
+        this.isEnable = isEnable;
+    }
+
+    public int getTotalInstalled() {
+        return totalInstalled;
+    }
+
+    public void setTotalInstalled(int totalInstalled) {
+        this.totalInstalled = totalInstalled;
+    }
+
     public String getShortDescription() {
         return shortDescription;
     }
 
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<PromotionalContainer> getPromotionalContainers() {
+        return promotionalContainers;
+    }
+
+    public void setPromotionalContainers(List<PromotionalContainer> promotionalContainers) {
+        this.promotionalContainers = promotionalContainers;
     }
 
     public boolean isIsPurchased() {
@@ -203,6 +293,38 @@ public class Product {
         this.sku = sku;
     }
 
+    public List<Object> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<Object> files) {
+        this.files = files;
+    }
+
+    public List<Object> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Object> tags) {
+        this.tags = tags;
+    }
+
+    public List<Object> getCategoryModel() {
+        return categoryModel;
+    }
+
+    public void setCategoryModel(List<Object> categoryModel) {
+        this.categoryModel = categoryModel;
+    }
+
+    public List<CommentsSummery> getCommentsSummery() {
+        return commentsSummery;
+    }
+
+    public void setCommentsSummery(List<CommentsSummery> commentsSummery) {
+        this.commentsSummery = commentsSummery;
+    }
+
     public String getPriceUnit() {
         return priceUnit;
     }
@@ -217,6 +339,22 @@ public class Product {
 
     public void setTotalView(int totalView) {
         this.totalView = totalView;
+    }
+
+    public Object getCustomJson() {
+        return customJson;
+    }
+
+    public void setCustomJson(Object customJson) {
+        this.customJson = customJson;
+    }
+
+    public List<Object> getPolls() {
+        return polls;
+    }
+
+    public void setPolls(List<Object> polls) {
+        this.polls = polls;
     }
 
     public String getDateAdded() {
@@ -283,4 +421,21 @@ public class Product {
         this.customjson = customjson;
     }
 
+    public Object getLastCheckedFile() {
+        return lastCheckedFile;
+    }
+
+    public void setLastCheckedFile(Object lastCheckedFile) {
+        this.lastCheckedFile = lastCheckedFile;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
 }

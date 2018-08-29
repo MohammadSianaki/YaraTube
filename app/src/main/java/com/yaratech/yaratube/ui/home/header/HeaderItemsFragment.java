@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.HeaderItem;
+import com.yaratech.yaratube.data.model.Product;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +25,7 @@ import butterknife.Unbinder;
 public class HeaderItemsFragment extends Fragment {
 
     private final static String KEY_HEADER_ITEM = "KEY_HEADER_ITEM";
-    private HeaderItem headerItem;
+    private Product headerItem;
     private Unbinder unbinder;
     private OnHeaderItemsInteractionListener mListener;
 
@@ -36,7 +36,7 @@ public class HeaderItemsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static HeaderItemsFragment newInstance(HeaderItem headerItem) {
+    public static HeaderItemsFragment newInstance(Product headerItem) {
 
         Bundle args = new Bundle();
         args.putParcelable(KEY_HEADER_ITEM, headerItem);
@@ -84,6 +84,6 @@ public class HeaderItemsFragment extends Fragment {
     }
 
     public interface OnHeaderItemsInteractionListener {
-         void showRequestedHeaderItemDetails(HeaderItem item);
+         void showRequestedHeaderItemDetails(Product item);
     }
 }

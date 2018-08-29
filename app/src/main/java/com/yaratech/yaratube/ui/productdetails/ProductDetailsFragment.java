@@ -2,6 +2,7 @@ package com.yaratech.yaratube.ui.productdetails;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,7 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Comment;
-import com.yaratech.yaratube.data.model.ProductDetails;
+import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreRepository;
 import com.yaratech.yaratube.data.source.UserRepository;
 
@@ -70,16 +72,19 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     @BindView(R.id.btn_submit_comment)
     Button submitComment;
 
+    @BindView(R.id.product_details_fragment_play_image_button)
+    ImageButton playVideo;
+
     //------------------------------------------------------------------------------------------------------
 
     public ProductDetailsFragment() {
         // Required empty public constructor
     }
 
-    public static ProductDetailsFragment newInstance(int productId) {
+    public static ProductDetailsFragment newInstance(Product product) {
 
         Bundle args = new Bundle();
-        args.putInt(KEY_ID, productId);
+        args.putInt(KEY_ID, product.getId());
         ProductDetailsFragment fragment = new ProductDetailsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -128,11 +133,17 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         Log.i(TAG, "onActivityCreated: ProductDetailsFragment");
         mPresenter.fetchProductDetails(getArguments().getInt(KEY_ID));
         mPresenter.fetchProductComments(getArguments().getInt(KEY_ID));
+        playVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.isUserLoginToPlay();
+            }
+        });
     }
 
 
     @Override
-    public void showLoadedData(ProductDetails productDetails) {
+    public void showLoadedData(Product productDetails) {
         Glide.with(this).load(productDetails.getFeatureAvatar().getXxxDpiUrl()).into(productDetailsMedia);
         productDetailsTitle.setText(productDetails.getName());
         productDetailsDescription.setText(productDetails.getDescription());
@@ -226,6 +237,11 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         void showLoginDialogToInsertComment();
 
         void showCommentDialog(String token, int productId);
+
     }
 
+    @Override
+    public void goToPlayerActivity() {
+        Intent intent = new Intent();
+    }
 }

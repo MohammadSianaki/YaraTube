@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.HeaderItem;
+import com.yaratech.yaratube.data.model.Product;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ import butterknife.ButterKnife;
 
 public class HeaderItemsAdapter extends RecyclerView.Adapter<HeaderItemsAdapter.HeaderViewHolder> {
 
-    private List<HeaderItem> headerItems;
+    private List<Product> headerItems;
 
-    public void setHeaderItems(List<HeaderItem> headerItems) {
+    public void setHeaderItems(List<Product> headerItems) {
         this.headerItems = headerItems;
         notifyDataSetChanged();
     }
@@ -35,7 +35,7 @@ public class HeaderItemsAdapter extends RecyclerView.Adapter<HeaderItemsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull HeaderViewHolder holder, int position) {
-        HeaderItem headerItem = headerItems.get(position);
+        Product headerItem = headerItems.get(position);
         holder.onBind(headerItem);
     }
 
@@ -59,7 +59,7 @@ public class HeaderItemsAdapter extends RecyclerView.Adapter<HeaderItemsAdapter.
             ButterKnife.bind(this, itemView);
         }
 
-        public void onBind(HeaderItem headerItem) {
+        public void onBind(Product headerItem) {
             Glide.with(itemView.getContext()).load(headerItem.getFeatureAvatar().getXxxDpiUrl()).into(imageView);
         }
     }

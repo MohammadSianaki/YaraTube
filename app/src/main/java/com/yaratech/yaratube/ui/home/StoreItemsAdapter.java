@@ -14,8 +14,8 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.HeaderItem;
 import com.yaratech.yaratube.data.model.HomeItem;
+import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsAdapter;
 import com.yaratech.yaratube.ui.home.header.HeaderPagerAdapter;
 
@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 
 public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<HeaderItem> headerItems;
+    private List<Product> headerItems;
     private List<HomeItem> homeItems;
     private HomeItemsAdapter.OnHomeItemsClickListener mListener;
     private FragmentManager fragmentManager;
@@ -40,7 +40,7 @@ public class StoreItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
-    public void setHeaderItems(List<HeaderItem> headerItems) {
+    public void setHeaderItems(List<Product> headerItems) {
         this.headerItems = headerItems;
         notifyDataSetChanged();
     }
