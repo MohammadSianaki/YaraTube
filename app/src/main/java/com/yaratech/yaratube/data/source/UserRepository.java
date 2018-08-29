@@ -42,6 +42,11 @@ public class UserRepository implements UserDataSource {
 
 
     @Override
+    public void cancelPostCommentRequest() {
+        remoteUserDataSource.cancelPostCommentRequest();
+    }
+
+    @Override
     public void registerUserWithThisPhoneNumber(ApiResultCallback callback, String phoneNumber) {
         remoteUserDataSource.registerUserWithThisPhoneNumber(callback, phoneNumber);
     }
@@ -78,6 +83,12 @@ public class UserRepository implements UserDataSource {
     public void setUserLoginStep(int loginStep) {
         appPreferencesHelper.setUserLoginStep(loginStep);
     }
+
+    @Override
+    public void submitCommentToProduct(int productId, int score, String title, String textContent, String token, ApiResultCallback callback) {
+        remoteUserDataSource.submitCommentToProduct(productId, score, title, textContent, token, callback);
+    }
+
 
     @Override
     public int getUserLoginStep() {

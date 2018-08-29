@@ -288,8 +288,9 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showCommentDialog() {
-        CommentDialogFragment commentDialogFragment = CommentDialogFragment.newInstance();
+    public void showCommentDialog(String token, int productId) {
+        CommentDialogFragment commentDialogFragment = CommentDialogFragment.newInstance(token, productId);
+        commentDialogFragment.setUserRepository(userRepository);
         commentDialogFragment.show(getSupportFragmentManager(), CommentDialogFragment.class.getSimpleName());
     }
 

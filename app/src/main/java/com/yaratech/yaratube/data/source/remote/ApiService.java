@@ -2,6 +2,7 @@ package com.yaratech.yaratube.data.source.remote;
 
 import com.yaratech.yaratube.data.model.Category;
 import com.yaratech.yaratube.data.model.Comment;
+import com.yaratech.yaratube.data.model.CommentResponse;
 import com.yaratech.yaratube.data.model.HomeResponse;
 import com.yaratech.yaratube.data.model.MobileLoginStepOneResponse;
 import com.yaratech.yaratube.data.model.MobileLoginStepTwoResponse;
@@ -16,6 +17,7 @@ import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -58,4 +60,12 @@ public interface ApiService {
             @Field("verification_code") String verificationCode,
             @Field("nickname") String nickName
     );
+
+    @POST("comment/{product_id}")
+    @FormUrlEncoded
+    Call<CommentResponse> postComment(@Field("title") String title,
+                                      @Field("score") int score,
+                                      @Field("comment_text") String commentText,
+                                      @Path("product_id") int productId,
+                                      @Header("Authorization") String token);
 }

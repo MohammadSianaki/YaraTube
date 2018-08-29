@@ -3,17 +3,21 @@ package com.yaratech.yaratube.data.source.remote;
 import android.content.Context;
 import android.util.Log;
 
+import com.yaratech.yaratube.data.model.CommentResponse;
 import com.yaratech.yaratube.data.model.MobileLoginStepOneResponse;
 import com.yaratech.yaratube.data.model.MobileLoginStepTwoResponse;
 import com.yaratech.yaratube.data.source.UserDataSource;
 import com.yaratech.yaratube.data.source.local.UserLoginInfo;
 import com.yaratech.yaratube.utils.DeviceUtils;
+import com.yaratech.yaratube.utils.NetworkUtils;
 
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
@@ -24,10 +28,18 @@ public class UserRemoteDataSource implements UserDataSource {
     private Context context;
     private Single<Response<MobileLoginStepOneResponse>> mobileLoginStepOneResponseSingle;
     private Single<Response<MobileLoginStepTwoResponse>> mobileLoginStepTwoResponseSingle;
+    private Call<CommentResponse> postComment;
 
     public UserRemoteDataSource(Context context) {
         this.context = context;
         apiService = ApiClient.getClient().create(ApiService.class);
+    }
+
+    @Override
+    public void cancelPostCommentRequest() {
+        if (postComment != null) {
+            postComment.cancel();
+        }
     }
 
     @Override
@@ -137,4 +149,36 @@ public class UserRemoteDataSource implements UserDataSource {
 
     }
 
+    @Override
+    public void submitCommentToProduct(int productId, int score, String title, String textContent, String token, ApiResultCallback callback) {
+        postComment = apiService.postComment(
+                title,
+                score,
+                textContent,
+                productId,
+                token);
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            postComment.enqueue(new Callback<CommentResponse>() {
+                @Override
+                public void onResponse(Call<CommentResponse> call, Response<CommentResponse> response) {
+                    Log.d(TAG, "onResponse  : post comment");
+                    if (response.isSuccessful()) {
+                        Log.d(TAG, "onResponse  : post comment is successful");
+                        callback.onSuccessMessage(response.message(), response.code(), response.body());
+                    } else {
+                        Log.d(TAG, "onResponse  : post comment is not successful");
+                        callback.onErrorMessage(response.message(), response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CommentResponse> call, Throwable t) {
+                    Log.e(TAG, "onFailure: post comment", t);
+                    callback.onFailureMessage(t.getMessage(), ((HttpException) t).code());
+                }
+            });
+        } else {
+            callback.onErrorMessage("Check Your Internet Connection...", -1);
+        }
+    }
 }

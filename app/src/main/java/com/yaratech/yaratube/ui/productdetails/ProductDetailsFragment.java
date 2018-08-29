@@ -209,7 +209,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     @Override
     public void showCommentDialog(String token) {
-        mListener.showCommentDialog();
+        mListener.showCommentDialog(token, getArguments().getInt(KEY_ID));
     }
 
     @Override
@@ -225,7 +225,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     public interface OnProductDetailsInteraction {
         void showLoginDialogToInsertComment();
 
-        void showCommentDialog();
+        void showCommentDialog(String token, int productId);
     }
 
 }

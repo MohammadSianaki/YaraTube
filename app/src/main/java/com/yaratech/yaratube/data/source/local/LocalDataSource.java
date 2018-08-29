@@ -120,6 +120,16 @@ public class LocalDataSource implements UserDataSource {
     }
 
     @Override
+    public void submitCommentToProduct(int productId, int score, String title, String textContent, String token, ApiResultCallback callback) {
+
+    }
+
+    @Override
+    public void cancelPostCommentRequest() {
+
+    }
+
+    @Override
     public void registerUserWithThisPhoneNumber(ApiResultCallback callback, String phoneNumber) {
 
     }
