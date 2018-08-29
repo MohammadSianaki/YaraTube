@@ -1,22 +1,35 @@
 package com.yaratech.yaratube.ui.productdetails;
 
+import android.util.Log;
+
 import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.ProductDetails;
 import com.yaratech.yaratube.data.source.StoreDataSource;
 import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.UserDataSource;
+import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.source.local.UserLoginInfo;
 
 import java.util.List;
+
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class DetailsPresenter implements DetailsContract.Presenter {
 
     //---------------------------------------------------------------------------------------------
+    private static final String TAG = "DetailsPresenter";
     private StoreRepository repository;
+    private UserRepository userRepository;
+    private CompositeDisposable compositeDisposable;
     private DetailsContract.View mView;
     //---------------------------------------------------------------------------------------------
 
 
-    public DetailsPresenter(StoreRepository storeRepository) {
+    public DetailsPresenter(StoreRepository storeRepository, UserRepository userRepository, CompositeDisposable compositeDisposable) {
         this.repository = storeRepository;
+        this.userRepository = userRepository;
+        this.compositeDisposable = compositeDisposable;
     }
 
     @Override
@@ -108,5 +121,30 @@ public class DetailsPresenter implements DetailsContract.Presenter {
     @Override
     public void cancelProductDetailsApiRequest() {
         repository.cancelProductDetailsByProductIdApiRequest();
+    }
+
+    @Override
+    public void isUserLogin() {
+        userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
+            @Override
+            public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
+                mView.showCommentDialog(userLoginInfo.getUser().getToken());
+            }
+
+            @Override
+            public void onAddedToCompositeDisposable(Disposable disposable) {
+                compositeDisposable.add(disposable);
+            }
+
+            @Override
+            public void onFailureMessage(String message) {
+                Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
+            }
+
+            @Override
+            public void onNotFoundUserInDatabase() {
+                mView.showLoginDialog();
+            }
+        });
     }
 }

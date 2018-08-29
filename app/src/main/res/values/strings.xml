@@ -22,5 +22,7 @@
     <string name="btn_verification_code_dialog_submit_text">ثبت</string>
     <string name="tv_verification_code_dialog_not_recieved_code_link">کد را دریافت نکردید؟</string>
     <string name="login_method_dialog_google_sign_in_button_text">از طریق حساب google</string>
+    <string name="dialog_fragment_edit_text_hint">نظر</string>
+    <string name="comment_dialog_fragment_submit_button_text">ثبت</string>
 </resources>
 

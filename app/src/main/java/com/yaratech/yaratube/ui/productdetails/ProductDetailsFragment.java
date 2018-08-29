@@ -1,6 +1,7 @@
 package com.yaratech.yaratube.ui.productdetails;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,12 +23,15 @@ import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.ProductDetails;
 import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.source.UserRepository;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +45,10 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     private Unbinder mUnBinder;
     private CommentAdapter commentAdapter;
     private StoreRepository storeRepository;
+    private UserRepository userRepository;
+    private CompositeDisposable compositeDisposable;
+    private OnProductDetailsInteraction mListener;
+
     @BindView(R.id.iv_product_details_media)
     ImageView productDetailsMedia;
 
@@ -58,6 +67,9 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     @BindView(R.id.rv_comments_of_products)
     RecyclerView listOfComments;
 
+    @BindView(R.id.btn_submit_comment)
+    Button submitComment;
+
     //------------------------------------------------------------------------------------------------------
 
     public ProductDetailsFragment() {
@@ -73,6 +85,15 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         return fragment;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnProductDetailsInteraction) {
+            mListener = (OnProductDetailsInteraction) context;
+        } else {
+            throw new ClassCastException("mListener not instance of OnProductDetailsInteraction");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,7 +111,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
         mUnBinder = ButterKnife.bind(this, view);
         Log.i(TAG, "onViewCreated: ProductDetailsFragment");
-        mPresenter = new DetailsPresenter(storeRepository);
+        mPresenter = new DetailsPresenter(storeRepository, userRepository, compositeDisposable);
         mPresenter.attachView(this);
         commentAdapter = new CommentAdapter();
         setRecyclerView();
@@ -171,9 +192,40 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener = null;
     }
 
     public void setStoreRepository(StoreRepository storeRepository) {
         this.storeRepository = storeRepository;
     }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
+        this.compositeDisposable = compositeDisposable;
+    }
+
+    @Override
+    public void showCommentDialog(String token) {
+        mListener.showCommentDialog();
+    }
+
+    @Override
+    public void showLoginDialog() {
+        mListener.showLoginDialogToInsertComment();
+    }
+
+    @OnClick(R.id.btn_submit_comment)
+    void onSubmitCommentClicked() {
+        mPresenter.isUserLogin();
+    }
+
+    public interface OnProductDetailsInteraction {
+        void showLoginDialogToInsertComment();
+
+        void showCommentDialog();
+    }
+
 }

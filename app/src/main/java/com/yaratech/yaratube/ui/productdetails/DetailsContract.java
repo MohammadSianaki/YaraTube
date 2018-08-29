@@ -25,6 +25,10 @@ public interface DetailsContract {
         void showProgressBarLoading();
 
         void finishProgressBarLoading();
+
+        void showCommentDialog(String token);
+
+        void showLoginDialog();
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -36,6 +40,7 @@ public interface DetailsContract {
 
         void cancelProductDetailsApiRequest();
 
+        void isUserLogin();
     }
 
 }

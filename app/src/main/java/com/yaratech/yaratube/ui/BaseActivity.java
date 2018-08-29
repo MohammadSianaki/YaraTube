@@ -28,6 +28,7 @@ import com.yaratech.yaratube.data.source.prefs.AppPreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
 import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
+import com.yaratech.yaratube.ui.comment.CommentDialogFragment;
 import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
@@ -44,7 +45,8 @@ public class BaseActivity extends AppCompatActivity implements
         CategoryFragment.OnCategoryFragmentInteractionListener,
         OnRequestedProductItemClickListener,
         HeaderItemsFragment.OnHeaderItemsInteractionListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener,
+        ProductDetailsFragment.OnProductDetailsInteraction {
 
     public static final int PERMISSION_REQUEST_CODE = 1234;
     private static final String TAG = "BaseActivity";
@@ -220,6 +222,8 @@ public class BaseActivity extends AppCompatActivity implements
         int headerId = item.getId();
         ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(headerId);
         detailsFragment.setStoreRepository(storeRepository);
+        detailsFragment.setUserRepository(userRepository);
+        detailsFragment.setCompositeDisposable(compositeDisposable);
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
                 detailsFragment,
@@ -233,6 +237,8 @@ public class BaseActivity extends AppCompatActivity implements
         Log.i(TAG, "onProductItemClicked: <<<<  " + item.getName() + "\t" + item.getId() + "  >>>>");
         ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(productId);
         detailsFragment.setStoreRepository(storeRepository);
+        detailsFragment.setUserRepository(userRepository);
+        detailsFragment.setCompositeDisposable(compositeDisposable);
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
                 detailsFragment,
@@ -251,11 +257,7 @@ public class BaseActivity extends AppCompatActivity implements
                         Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
                         Toast.makeText(BaseActivity.this, "You Are Just  Logged In", Toast.LENGTH_SHORT).show();
                     } else {
-                        // TODO: 8/26/2018 Show Login Dialogs Based On Saved StepsLogin
-                        LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
-                        loginFragment.setCompositeDisposable(compositeDisposable);
-                        loginFragment.setUserRepository(userRepository);
-                        loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
+                        showLoginDialog();
                     }
                 }
 
@@ -271,10 +273,7 @@ public class BaseActivity extends AppCompatActivity implements
 
                 @Override
                 public void onNotFoundUserInDatabase() {
-                    LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
-                    loginFragment.setCompositeDisposable(compositeDisposable);
-                    loginFragment.setUserRepository(userRepository);
-                    loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
+                    showLoginDialog();
                 }
             });
         }
@@ -283,4 +282,21 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void showLoginDialogToInsertComment() {
+        showLoginDialog();
+    }
+
+    @Override
+    public void showCommentDialog() {
+        CommentDialogFragment commentDialogFragment = CommentDialogFragment.newInstance();
+        commentDialogFragment.show(getSupportFragmentManager(), CommentDialogFragment.class.getSimpleName());
+    }
+
+    private void showLoginDialog() {
+        LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
+        loginFragment.setCompositeDisposable(compositeDisposable);
+        loginFragment.setUserRepository(userRepository);
+        loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
+    }
 }
