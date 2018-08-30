@@ -129,11 +129,11 @@ public class StoreRemoteDataSource implements StoreDataSource {
     }
 
     @Override
-    public void fetchProductDetailsByProductId(StoreDataSource.ApiResultCallback callback, int productId) {
+    public void fetchProductDetailsByProductId(ApiResultCallback callback, int productId, String deviceOs) {
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchProductDetailsByProductId: network available");
 
-            productDetailsByProductIdCall = apiService.fetchProductDetailsByProductId(productId);
+            productDetailsByProductIdCall = apiService.fetchProductDetailsByProductId(productId, deviceOs);
             productDetailsByProductIdCall.enqueue(new Callback<Product>() {
                 @Override
                 public void onResponse(Call<Product> call, Response<Product> response) {

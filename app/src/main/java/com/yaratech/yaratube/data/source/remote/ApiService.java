@@ -19,6 +19,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import static com.yaratech.yaratube.utils.AppConstants.CATEGORY_ID;
 import static com.yaratech.yaratube.utils.AppConstants.STORE_ID;
@@ -35,7 +36,7 @@ public interface ApiService {
     Call<List<Product>> fetchProductsByCategoryId(@Path("category_id") int categoryId);
 
     @GET("product/{productId}")
-    Call<Product> fetchProductDetailsByProductId(@Path("productId") int productId);
+    Call<Product> fetchProductDetailsByProductId(@Path("productId") int productId , @Query("device_os") String deviceOs);
 
     @GET("comment/{productId}")
     Call<List<Comment>> fetchCommentOfProductsByProductId(@Path("productId") int productId);

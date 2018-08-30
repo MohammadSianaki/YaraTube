@@ -1,9 +1,5 @@
 package com.yaratech.yaratube.data.source;
 
-import com.yaratech.yaratube.data.source.local.UserLoginInfo;
-
-import io.reactivex.disposables.Disposable;
-
 public interface StoreDataSource {
 
     interface ApiResultCallback<T> {
@@ -23,7 +19,7 @@ public interface StoreDataSource {
 
     void fetchProductsByCategoryId(ApiResultCallback callback, int categoryId);
 
-    void fetchProductDetailsByProductId(ApiResultCallback callback, int productId);
+    void fetchProductDetailsByProductId(ApiResultCallback callback, int productId, String androidOs);
 
     void fetchCommentsOfProductByProductId(ApiResultCallback callback, int productId);
 

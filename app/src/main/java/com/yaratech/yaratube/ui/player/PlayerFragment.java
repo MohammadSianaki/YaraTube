@@ -2,6 +2,7 @@ package com.yaratech.yaratube.ui.player;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,11 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.yaratech.yaratube.R;
@@ -54,6 +61,29 @@ public class PlayerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: ");
+        View rootView = inflater.inflate(R.layout.fragment_player, container, false);
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onViewCreated: ");
+        super.onViewCreated(view, savedInstanceState);
+        mUnBinder = ButterKnife.bind(this, view);
+//        Handler mainHandler = new Handler();
+//        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+//        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
+//        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+//
+//        // 2. Create a default LoadControl
+//        LoadControl loadControl = new DefaultLoadControl();
+//        playerView.requestFocus();
         String videoUrl = getArguments().getString(KEY_VIDEO_URL);
         player = ExoPlayerFactory.newSimpleInstance(getContext(), new DefaultTrackSelector());
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(
@@ -66,23 +96,8 @@ public class PlayerFragment extends Fragment {
                 .createMediaSource(Uri.parse(videoUrl));
         player.prepare(mediaSource);
         player.setPlayWhenReady(true);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
-        View rootView = inflater.inflate(R.layout.fragment_player, container, false);
-        mUnBinder = ButterKnife.bind(this, rootView);
         playerView.setPlayer(player);
-        return rootView;
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onViewCreated: ");
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

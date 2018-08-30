@@ -9,6 +9,7 @@ import com.yaratech.yaratube.data.source.StoreRepository;
 import com.yaratech.yaratube.data.source.UserDataSource;
 import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.data.source.local.UserLoginInfo;
+import com.yaratech.yaratube.utils.AppConstants;
 
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
                         mView.showNetworkNotAvailableToast();
                     }
                 }
-            }, productId);
+            }, productId, AppConstants.DEVICE_OS);
         }
     }
 
