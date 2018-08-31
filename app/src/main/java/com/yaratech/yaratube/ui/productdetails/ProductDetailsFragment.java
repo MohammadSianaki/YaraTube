@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +27,7 @@ import com.yaratech.yaratube.data.model.Comment;
 import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreRepository;
 import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.player.PlayerActivity;
 
 import java.util.List;
@@ -46,6 +46,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     private static final String TAG = "ProductDetailsFragment";
     private static final String KEY_PRODUCT = "KEY_PRODUCT";
     private static final String KEY_PRODUCT_FILE = "KEY_PRODUCT_FILE";
+    private BaseActivity baseActivity;
     //------------------------------------------------------------------------------------------------------
 
     private DetailsContract.Presenter mPresenter;
@@ -132,9 +133,10 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     private void setupToolbar() {
         toolbar.setTitle(R.string.details_fragment_toolbar_title);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        baseActivity = (BaseActivity) getActivity();
+        baseActivity.setSupportActionBar(toolbar);
+        baseActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        baseActivity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
     }
 
     private void setRecyclerView() {
@@ -216,6 +218,8 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         mPresenter.cancelProductDetailsApiRequest();
         mPresenter.detachView();
         super.onDestroyView();
+        baseActivity.setSupportActionBar(null);
+        baseActivity = null;
     }
 
     @Override
