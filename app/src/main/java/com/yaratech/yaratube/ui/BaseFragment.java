@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,6 +34,8 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
 
     //--------------------------------------------------------------------------------------------
     private static final String TAG = "BaseFragment";
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
@@ -78,6 +82,13 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
         }
     }
 
+    private void setupToolbar() {
+        toolbar.setTitle(R.string.app_name);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+    }
+
     private void initHomeFragmentDependency() {
         homeFragment.setCompositeDisposable(compositeDisposable);
         homeFragment.setStoreRepository(storeRepository);
@@ -102,6 +113,7 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
         super.onViewCreated(view, savedInstanceState);
         Log.i(TAG, "onViewCreated: BaseFragment");
         ButterKnife.bind(this, view);
+        setupToolbar();
         chooseFragment(bottomNavigationView.getMenu().getItem(0));
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }

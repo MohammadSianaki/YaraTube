@@ -26,5 +26,14 @@
     <string name="comment_dialog_fragment_submit_button_text">ثبت</string>
     <string name="title_activity_player">YaraTube</string>
     <string name="action_settings">Settings</string>
+    <string name="profile_fragment_cancel_button_text">انصراف</string>
+    <string name="profile_fragment_submit_changes_button_text">ثبت تغییرات</string>
+    <string name="profile_fragment_shown_name">نام نمایشی</string>
+    <string name="profile_fragment_first_and_last_name">نام و نام خانوادگی</string>
+    <string name="profile_fragment_gender">جنسیت</string>
+    <string name="profile_fragment_gender_value">مرد</string>
+    <string name="profile_fragment_birthday_title">تاریخ تولد</string>
+    <string name="profile_fragment_toolbar_title">پروفایل</string>
+    <string name="details_fragment_toolbar_title">جزئیات محصول</string>
 </resources>
 

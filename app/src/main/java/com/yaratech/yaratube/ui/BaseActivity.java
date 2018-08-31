@@ -10,10 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
@@ -33,6 +31,7 @@ import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
 import com.yaratech.yaratube.ui.login.LoginDialogFragment;
 import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
+import com.yaratech.yaratube.ui.profile.ProfileFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
@@ -51,8 +50,6 @@ public class BaseActivity extends AppCompatActivity implements
     private static final String TAG = "BaseActivity";
     //------------------------------------------------------------------------------------------------
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -77,7 +74,6 @@ public class BaseActivity extends AppCompatActivity implements
         Log.i(TAG, "onCreate: BaseActivity");
         ButterKnife.bind(this);
         ActivityUtils.checkAndSetRtl(this);
-        setupToolbar();
         requestPermissions();
         initDependencies();
 
@@ -193,13 +189,6 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
-    private void setupToolbar() {
-        toolbar.setTitle(R.string.app_name);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-    }
-
 
     @Override
     public void showProductsOfRequestedCategoryItem(Category item) {
@@ -231,7 +220,7 @@ public class BaseActivity extends AppCompatActivity implements
                 getSupportFragmentManager(),
                 detailsFragment,
                 R.id.fl_base_activity_content,
-                true, null);
+                true, ProductDetailsFragment.class.getSimpleName());
     }
 
     @Override
@@ -245,7 +234,7 @@ public class BaseActivity extends AppCompatActivity implements
                 getSupportFragmentManager(),
                 detailsFragment,
                 R.id.fl_base_activity_content,
-                true, null);
+                true, ProductDetailsFragment.class.getSimpleName());
 
     }
 
@@ -257,7 +246,7 @@ public class BaseActivity extends AppCompatActivity implements
                 public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
                     if (userLoginInfo.getIsAuthorized() == 1) {
                         Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
-                        Toast.makeText(BaseActivity.this, "You Are Just  Logged In", Toast.LENGTH_SHORT).show();
+                        showProfileFragment();
                     } else {
                         showLoginDialog();
                     }
@@ -281,6 +270,17 @@ public class BaseActivity extends AppCompatActivity implements
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showProfileFragment() {
+        ProfileFragment profileFragment = ProfileFragment.newInstance();
+        ActivityUtils
+                .addFragmentToActivity(
+                        getSupportFragmentManager(),
+                        profileFragment,
+                        R.id.fl_base_activity_content,
+                        true,
+                        ProfileFragment.class.getSimpleName());
     }
 
 

@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +80,9 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     @BindView(R.id.product_details_fragment_play_image_button)
     ImageButton playVideo;
 
+    @BindView(R.id.details_toolbar)
+    Toolbar toolbar;
+
     //------------------------------------------------------------------------------------------------------
 
     public ProductDetailsFragment() {
@@ -116,13 +121,19 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mUnBinder = ButterKnife.bind(this, view);
+        setupToolbar();
         Log.i(TAG, "onViewCreated: ProductDetailsFragment");
         mPresenter = new ProductDetailsPresenter(storeRepository, userRepository, compositeDisposable);
         mPresenter.attachView(this);
         commentAdapter = new CommentAdapter();
         setRecyclerView();
+    }
+    private void setupToolbar() {
+        toolbar.setTitle(R.string.details_fragment_toolbar_title);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
     }
 
     private void setRecyclerView() {
