@@ -79,7 +79,7 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
 
 
         public void onBind(Product product) {
-            Glide.with(itemView.getContext()).load(product.getFeatureAvatar().getXxxDpiUrl()).into(imageView);
+            Glide.with((GridCategoryFragment) mListener).load(product.getFeatureAvatar().getXxxDpiUrl()).into(imageView);
             title.setText(product.getName());
             description.setText(product.getShortDescription());
         }

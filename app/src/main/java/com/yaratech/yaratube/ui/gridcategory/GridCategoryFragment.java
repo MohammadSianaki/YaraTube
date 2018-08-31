@@ -140,6 +140,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void onDestroyView() {
+        Log.d(TAG, "onDestroyView: ");
         mUnBinder.unbind();
         mPresenter.cancelProductApiRequest();
         mPresenter.detachView();
@@ -148,6 +149,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy: ");
         super.onDestroy();
     }
 
