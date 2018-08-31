@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
+        android:theme="?attr/actionBarTheme"
+        app:titleTextColor="@color/white" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
