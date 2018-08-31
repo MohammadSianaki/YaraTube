@@ -129,6 +129,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         commentAdapter = new CommentAdapter();
         setRecyclerView();
     }
+
     private void setupToolbar() {
         toolbar.setTitle(R.string.details_fragment_toolbar_title);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -148,6 +149,13 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         mPresenter.fetchProductDetails(getArguments().getInt(KEY_ID));
         mPresenter.fetchProductComments(getArguments().getInt(KEY_ID));
         playVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.isUserLoginToPlay();
+            }
+        });
+
+        productDetailsMedia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.isUserLoginToPlay();
@@ -248,13 +256,6 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         mPresenter.isUserLogin();
     }
 
-    public interface OnProductDetailsInteraction {
-        void showLoginDialogToInsertComment();
-
-        void showCommentDialog(String token, int productId);
-
-    }
-
     @Override
     public void goToPlayerActivity() {
         Intent intent = new Intent(getActivity(), PlayerActivity.class);
@@ -263,4 +264,12 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         intent.putExtras(bundle);
         startActivity(intent);
     }
+
+    public interface OnProductDetailsInteraction {
+        void showLoginDialogToInsertComment();
+
+        void showCommentDialog(String token, int productId);
+
+    }
+
 }
