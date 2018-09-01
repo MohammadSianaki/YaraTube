@@ -1,6 +1,7 @@
 package com.yaratech.yaratube.ui.productdetails;
 
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,9 +21,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     private List<Comment> commentList;
 
+    public CommentAdapter() {
+        this.commentList = new ArrayList<>();
+    }
+
     public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
-        notifyDataSetChanged();
+        ArrayList<Comment> newCommentList = new ArrayList<>();
+        newCommentList.addAll(this.commentList);
+        newCommentList.addAll(commentList);
+        DiffUtil.DiffResult diffResult = DiffUtil.
+                calculateDiff(new CommentDiffUtilCallback(this.commentList, newCommentList));
+        this.commentList = newCommentList;
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull

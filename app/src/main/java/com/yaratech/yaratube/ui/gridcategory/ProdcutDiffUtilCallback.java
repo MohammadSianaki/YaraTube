@@ -6,11 +6,11 @@ import com.yaratech.yaratube.data.model.Product;
 
 import java.util.List;
 
-public class DiffCallback extends DiffUtil.Callback {
+public class ProdcutDiffUtilCallback extends DiffUtil.Callback {
     private List<Product> oldList;
     private List<Product> newList;
 
-    public DiffCallback(List<Product> oldList, List<Product> newList) {
+    public ProdcutDiffUtilCallback(List<Product> oldList, List<Product> newList) {
         this.oldList = oldList;
         this.newList = newList;
     }

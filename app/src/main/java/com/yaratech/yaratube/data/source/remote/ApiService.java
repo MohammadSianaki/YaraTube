@@ -42,7 +42,10 @@ public interface ApiService {
     Call<Product> fetchProductDetailsByProductId(@Path("productId") int productId, @Query("device_os") String deviceOs);
 
     @GET("comment/{productId}")
-    Call<List<Comment>> fetchCommentOfProductsByProductId(@Path("productId") int productId);
+    Call<List<Comment>> fetchCommentOfProductsByProductId(
+            @Path("productId") int productId,
+            @Query("offset") int offset,
+            @Query("limit") int limit);
 
 
     @POST("mobile_login_step1/" + STORE_ID)

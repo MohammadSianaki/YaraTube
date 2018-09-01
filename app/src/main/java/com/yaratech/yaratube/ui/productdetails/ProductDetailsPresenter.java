@@ -88,10 +88,10 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
     }
 
     @Override
-    public void fetchProductComments(int productId) {
+    public void fetchProductComments(int productId, int offset, int limit) {
         if (isAttached()) {
             mView.showCommentLoading();
-            repository.fetchCommentsOfProductByProductId(new StoreDataSource.ApiResultCallback() {
+            repository.fetchCommentsOfProductByProductId(productId, offset, limit, new StoreDataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
                     List<Comment> commentList = (List<Comment>) response;
@@ -116,7 +116,7 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
                         mView.showNetworkNotAvailableToast();
                     }
                 }
-            }, productId);
+            });
         }
     }
 

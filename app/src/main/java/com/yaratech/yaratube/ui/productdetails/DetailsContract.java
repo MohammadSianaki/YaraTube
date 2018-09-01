@@ -36,7 +36,7 @@ public interface DetailsContract {
     interface Presenter extends BasePresenter<View> {
         void fetchProductDetails(int productId);
 
-        void fetchProductComments(int productId);
+        void fetchProductComments(int productId, int offset, int limit);
 
         void cancelProductCommentApiRequest();
 

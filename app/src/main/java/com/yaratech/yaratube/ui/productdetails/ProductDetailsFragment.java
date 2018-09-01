@@ -28,6 +28,7 @@ import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreRepository;
 import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.ui.BaseActivity;
+import com.yaratech.yaratube.ui.EndlessRecyclerViewScrollListener;
 import com.yaratech.yaratube.ui.player.PlayerActivity;
 
 import java.util.List;
@@ -46,9 +47,11 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     private static final String TAG = "ProductDetailsFragment";
     private static final String KEY_PRODUCT = "KEY_PRODUCT";
     private static final String KEY_PRODUCT_FILE = "KEY_PRODUCT_FILE";
+    private static final int LIMIT = 3;
+    private static final int BASE_OFFSET = 0;
     private BaseActivity baseActivity;
     //------------------------------------------------------------------------------------------------------
-
+    private LinearLayoutManager linearLayoutManager;
     private DetailsContract.Presenter mPresenter;
     private Unbinder mUnBinder;
     private CommentAdapter commentAdapter;
@@ -139,8 +142,19 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     }
 
     private void setRecyclerView() {
-        listOfComments.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        listOfComments.setLayoutManager(linearLayoutManager);
         listOfComments.setAdapter(commentAdapter);
+        listOfComments.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadNextDataFromApi(view.getAdapter().getItemCount());
+            }
+        });
+    }
+
+    private void loadNextDataFromApi(int offset) {
+        mPresenter.fetchProductComments(getArguments().getInt(KEY_ID), offset, LIMIT);
     }
 
     @Override
@@ -148,7 +162,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         super.onActivityCreated(savedInstanceState);
         Log.i(TAG, "onActivityCreated: ProductDetailsFragment");
         mPresenter.fetchProductDetails(getArguments().getInt(KEY_ID));
-        mPresenter.fetchProductComments(getArguments().getInt(KEY_ID));
+        mPresenter.fetchProductComments(getArguments().getInt(KEY_ID),BASE_OFFSET ,LIMIT );
         playVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

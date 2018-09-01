@@ -92,8 +92,8 @@ public class StoreRemoteDataSource implements StoreDataSource {
     }
 
     @Override
-    public void fetchCommentsOfProductByProductId(StoreDataSource.ApiResultCallback callback, int productId) {
-        commentOfProductsByProductId = apiService.fetchCommentOfProductsByProductId(productId);
+    public void fetchCommentsOfProductByProductId(int productId, int offset, int limit, ApiResultCallback callback) {
+        commentOfProductsByProductId = apiService.fetchCommentOfProductsByProductId(productId, offset, limit);
         if (NetworkUtils.isNetworkAvailable(context)) {
             Log.i(TAG, "fetchCommentsOfProductByProductId: network available");
             commentOfProductsByProductId.enqueue(new Callback<List<Comment>>() {

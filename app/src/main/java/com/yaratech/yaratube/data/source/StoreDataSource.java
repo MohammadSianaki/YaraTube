@@ -21,7 +21,7 @@ public interface StoreDataSource {
 
     void fetchProductDetailsByProductId(ApiResultCallback callback, int productId, String androidOs);
 
-    void fetchCommentsOfProductByProductId(ApiResultCallback callback, int productId);
+    void fetchCommentsOfProductByProductId(int productId, int offset, int limit, ApiResultCallback callback);
 
     void cancelCommentApiRequest();
 

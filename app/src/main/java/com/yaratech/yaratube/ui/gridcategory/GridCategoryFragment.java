@@ -21,6 +21,7 @@ import com.yaratech.yaratube.data.model.Product;
 import com.yaratech.yaratube.data.source.StoreRepository;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
+import com.yaratech.yaratube.ui.EndlessRecyclerViewScrollListener;
 
 import java.util.List;
 

@@ -40,7 +40,7 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
         ArrayList newProducts = new ArrayList();
         newProducts.addAll(productList);
         newProducts.addAll(newProductList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffCallback(productList, newProducts), true);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ProdcutDiffUtilCallback(productList, newProducts), true);
         this.productList = newProducts;
         diffResult.dispatchUpdatesTo(this);
 //        notifyDataSetChanged();
