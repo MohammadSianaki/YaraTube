@@ -11,6 +11,10 @@ public interface ProfileContract {
 
 
     interface Presenter extends BasePresenter<View> {
+
+        String getUserProfileImageAvatarPath();
+
+        void saveUserProfileImageAvatarPath(String imagePath);
     }
 
 }

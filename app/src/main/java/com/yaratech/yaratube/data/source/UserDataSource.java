@@ -19,9 +19,11 @@ public interface UserDataSource {
 
 
     }
+
     interface ReadFromDatabaseCallback {
 
         void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo);
+
         void onAddedToCompositeDisposable(Disposable disposable);
 
         void onFailureMessage(String message);
@@ -29,14 +31,17 @@ public interface UserDataSource {
         void onNotFoundUserInDatabase();
 
     }
+
     interface ApiResultCallback<T> {
 
         void onSuccessMessage(String message, int responseCode, T response);
+
         void onErrorMessage(String message, int responseCode);
 
         void onFailureMessage(String message, int responseCode);
 
     }
+
     void registerUserWithThisPhoneNumber(ApiResultCallback callback, String phoneNumber);
 
     void verifyUserWithThisCode(ApiResultCallback callback, String code, String phoneNumber);
@@ -54,4 +59,8 @@ public interface UserDataSource {
     int getUserLoginStep();
 
     void submitCommentToProduct(int productId, int score, String title, String textContent, String token, ApiResultCallback callback);
+
+    void saveUserProfileImageAvatarPath(String imagePath);
+
+    String loadUserProfileImageAvatarPath();
 }

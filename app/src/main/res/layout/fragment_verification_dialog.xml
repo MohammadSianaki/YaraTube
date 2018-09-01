@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/login_dialog_shape"
-    android:padding="16dp"
     android:layoutDirection="rtl"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
 
     <TextView
@@ -30,11 +30,10 @@
         android:background="@drawable/edit_text_shape"
         android:hint="@string/verification_code_dialog_edit_text_hint"
         android:inputType="number"
-        android:paddingBottom="424dp"
+        android:paddingBottom="24dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="24dp"
-        android:textAlignment="viewStart"
         android:textColor="#99000000"
         android:textDirection="rtl"
         android:textIsSelectable="false" />

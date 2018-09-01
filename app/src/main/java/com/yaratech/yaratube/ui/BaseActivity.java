@@ -274,6 +274,7 @@ public class BaseActivity extends AppCompatActivity implements
 
     private void showProfileFragment() {
         ProfileFragment profileFragment = ProfileFragment.newInstance();
+        profileFragment.setUserRepository(userRepository);
         ActivityUtils
                 .addFragmentToActivity(
                         getSupportFragmentManager(),

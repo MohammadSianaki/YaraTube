@@ -181,4 +181,17 @@ public class UserRemoteDataSource implements UserDataSource {
             callback.onErrorMessage("Check Your Internet Connection...", -1);
         }
     }
+
+    // // TODO: 9/1/2018 below method have no implementation
+
+
+    @Override
+    public void saveUserProfileImageAvatarPath(String imagePath) {
+
+    }
+
+    @Override
+    public String loadUserProfileImageAvatarPath() {
+        return null;
+    }
 }

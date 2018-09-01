@@ -94,4 +94,14 @@ public class UserRepository implements UserDataSource {
     public int getUserLoginStep() {
         return appPreferencesHelper.getUserLoginStep();
     }
+
+    @Override
+    public void saveUserProfileImageAvatarPath(String imagePath) {
+        appPreferencesHelper.saveUserProfileImageAvatarPath(imagePath);
+    }
+
+    @Override
+    public String loadUserProfileImageAvatarPath() {
+        return appPreferencesHelper.loadUserProfileImageAvatarPath();
+    }
 }

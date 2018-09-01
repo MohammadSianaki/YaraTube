@@ -9,4 +9,8 @@ public interface PreferencesHelper {
     void setUserLoginStep(int loginStep);
 
     int getUserLoginStep();
+
+    void saveUserProfileImageAvatarPath(String imagePath);
+
+    String loadUserProfileImageAvatarPath();
 }

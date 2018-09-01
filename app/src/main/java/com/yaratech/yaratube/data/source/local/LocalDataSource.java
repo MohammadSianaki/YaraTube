@@ -124,6 +124,17 @@ public class LocalDataSource implements UserDataSource {
 
     }
 
+
+    @Override
+    public void saveUserProfileImageAvatarPath(String imagePath) {
+
+    }
+
+    @Override
+    public String loadUserProfileImageAvatarPath() {
+        return null;
+    }
+
     @Override
     public void cancelPostCommentRequest() {
 

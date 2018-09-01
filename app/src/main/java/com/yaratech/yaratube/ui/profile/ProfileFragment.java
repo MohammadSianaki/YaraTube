@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.source.UserRepository;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -37,7 +39,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
 
     private ProfileContract.Presenter mPresenter;
     private Unbinder mUnBinder;
-
+    private UserRepository userRepository;
 
     @BindView(R.id.profile_fragment_toolbar)
     Toolbar toolbar;
@@ -72,20 +74,35 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
         toolbar.setTitle(R.string.profile_fragment_toolbar_title);
-        mPresenter = new ProfilePresenter();
+        mPresenter = new ProfilePresenter(userRepository);
         mPresenter.attachView(this);
         avatarImageView.setOnClickListener(v -> {
-            Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-            getIntent.setType("image/*");
-
-            Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            pickIntent.setType("image/*");
-
-            Intent chooserIntent = Intent.createChooser(getIntent, "Select Picture");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-            startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST_CODE);
+            String avatarPath = mPresenter.getUserProfileImageAvatarPath();
+            Log.d(TAG, "onViewCreated: avatar path is : " + avatarPath);
+            if (avatarPath == null) {
+                loadImageAvatarFromGallery();
+            } else {
+                Glide
+                        .with(this)
+                        .load(Uri.parse(avatarPath))
+                        .apply(RequestOptions.encodeQualityOf(100))
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(avatarImageView);
+            }
         });
+    }
+
+    private void loadImageAvatarFromGallery() {
+        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        getIntent.setType("image/*");
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/*");
+
+        Intent chooserIntent = Intent.createChooser(getIntent, "Select Picture");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
+
+        startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST_CODE);
     }
 
     @Override
@@ -109,6 +126,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
                 InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
                 Log.d(TAG, "onActivityResult: file decoded path is : " + data.getData().getPath());
                 Log.d(TAG, "onActivityResult: file  encoded path is : " + data.getData().getEncodedPath());
+                mPresenter.saveUserProfileImageAvatarPath(data.getData().getPath());
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 if (bitmap != null) {
                     Glide
@@ -134,5 +152,9 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }
