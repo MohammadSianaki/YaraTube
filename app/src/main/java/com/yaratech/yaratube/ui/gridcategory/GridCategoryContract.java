@@ -22,7 +22,7 @@ public interface GridCategoryContract {
 
 
     interface Presenter extends BasePresenter<View> {
-        void fetchProducts(int id);
+        void fetchProducts(int id, int offset, int limit);
 
         void cancelProductApiRequest();
     }

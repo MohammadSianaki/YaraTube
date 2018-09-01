@@ -55,6 +55,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     private UserRepository userRepository;
     private CompositeDisposable compositeDisposable;
     private SmsListener smsListener;
+    private SmsReceiver smsReceiver;
     //------------------------------------------------------------------------------------------
 
     public static VerificationCodeFragment newInstance() {
@@ -118,7 +119,8 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
         super.onResume();
         if (autoReadOtp) {
             Log.d(TAG, "onActivityCreated() called : autoReadOtp is allowed");
-            SmsReceiver.bindListener(smsListener);
+            smsReceiver = new SmsReceiver();
+            smsReceiver.bindListener(smsListener);
         } else {
             Log.d(TAG, "onActivityCreated() called : autoReadOtp is not allowed");
             Observable observable = RxTextView.textChangeEvents(verificationCodeEditText);
@@ -157,7 +159,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     public void onDestroy() {
         Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroy: VerificationCodeFragment");
         super.onDestroy();
-        SmsReceiver.unBindListener();
+        smsReceiver.unBindListener();
     }
 
     @Override

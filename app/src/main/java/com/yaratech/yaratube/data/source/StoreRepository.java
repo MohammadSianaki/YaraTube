@@ -31,8 +31,8 @@ public class StoreRepository implements StoreDataSource {
 
 
     @Override
-    public void fetchProductsByCategoryId(StoreDataSource.ApiResultCallback callback, int categoryId) {
-        storeRemoteDataSource.fetchProductsByCategoryId(callback, categoryId);
+    public void fetchProductsByCategoryId(int categoryId, int offset, int limit, ApiResultCallback callback) {
+        storeRemoteDataSource.fetchProductsByCategoryId(categoryId, offset, limit, callback);
     }
 
     @Override

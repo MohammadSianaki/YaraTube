@@ -34,10 +34,14 @@ import butterknife.Unbinder;
 public class GridCategoryFragment extends Fragment implements GridCategoryContract.View, GridCategoryAdapter.OnCategoryGridClickListener {
     private static final String KEY_ID = "KEY_ID";
     private static final String TAG = "GridCategoryFragment";
+    private static final int SPAN_COUNT = 2;
+    private static final int LIMIT = 10;
+    private static final int BASE_OFFSET = 0;
     //-------------------------------------------------------------------------------------------
 
     private GridCategoryContract.Presenter mPresenter;
     private GridCategoryAdapter gridCategoryAdapter;
+    private GridLayoutManager gridLayoutManager;
     private OnRequestedProductItemClickListener onRequestedProductItemClickListener;
     private Unbinder mUnBinder;
     private StoreRepository storeRepository;
@@ -92,6 +96,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         mUnBinder = ButterKnife.bind(this, view);
         Log.i(TAG, "onViewCreated: GridCategoryFragment");
         gridCategoryAdapter = new GridCategoryAdapter(this);
+        gridCategoryAdapter.setHasStableIds(true);
         mPresenter = new GridCategoryPresenter(storeRepository);
         mPresenter.attachView(this);
         setupRecyclerView();
@@ -99,17 +104,31 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     }
 
     private void setupRecyclerView() {
-        recyclerViewOfProducts.setLayoutManager(new GridLayoutManager(
+        Log.d(TAG, "setupRecyclerView() called");
+        gridLayoutManager = new GridLayoutManager(
                 getContext(),
-                2,
+                SPAN_COUNT,
                 LinearLayoutManager.VERTICAL,
-                false));
+                false);
+        recyclerViewOfProducts.setLayoutManager(gridLayoutManager);
         recyclerViewOfProducts.setAdapter(gridCategoryAdapter);
+        recyclerViewOfProducts.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.d(TAG, "<<<<    addOnScrollListener     >>>>     onLoadMore: ");
+                loadNextDataFromApi(view.getAdapter().getItemCount());
+            }
+        });
     }
 
     @Override
     public void showLoadedData(List list) {
         gridCategoryAdapter.setProductList(list);
+    }
+
+    private void loadNextDataFromApi(int offset) {
+        Log.d(TAG, "loadNextDataFromApi() called with: offset = [" + offset + "]");
+        mPresenter.fetchProducts(getArguments().getInt(KEY_ID), offset, LIMIT);
     }
 
     @Override
@@ -135,7 +154,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPresenter.fetchProducts(getArguments().getInt(KEY_ID));
+        mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
     }
 
     @Override

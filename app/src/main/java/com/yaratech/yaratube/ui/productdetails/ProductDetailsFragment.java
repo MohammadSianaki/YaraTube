@@ -119,7 +119,6 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
 
     @Override
-
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);

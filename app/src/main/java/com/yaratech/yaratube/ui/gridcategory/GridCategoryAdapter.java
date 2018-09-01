@@ -1,6 +1,7 @@
 package com.yaratech.yaratube.ui.gridcategory;
 
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -26,12 +28,24 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
 
     public GridCategoryAdapter(OnCategoryGridClickListener mListener) {
         this.mListener = mListener;
+        productList = new ArrayList<>();
     }
 
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
-        notifyDataSetChanged();
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
+
+    public void setProductList(List<Product> newProductList) {
+        ArrayList newProducts = new ArrayList();
+        newProducts.addAll(productList);
+        newProducts.addAll(newProductList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffCallback(productList, newProducts), true);
+        this.productList = newProducts;
+        diffResult.dispatchUpdatesTo(this);
+//        notifyDataSetChanged();
+    }
+
 
     @NonNull
     @Override

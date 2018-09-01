@@ -34,10 +34,10 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
     }
 
     @Override
-    public void fetchProducts(int id) {
+    public void fetchProducts(int categoryId, int offset, int limit) {
         if (isAttached()) {
             mView.showProgressBarLoading();
-            repository.fetchProductsByCategoryId(new StoreDataSource.ApiResultCallback() {
+            repository.fetchProductsByCategoryId(categoryId, offset, limit, new StoreDataSource.ApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
                     List<Product> productList = null;
@@ -67,7 +67,7 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
                         mView.showNetworkNotAvailableToast();
                     }
                 }
-            }, id);
+            });
         }
     }
 

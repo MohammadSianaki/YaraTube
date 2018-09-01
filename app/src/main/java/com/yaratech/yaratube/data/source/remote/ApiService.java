@@ -33,10 +33,13 @@ public interface ApiService {
     Call<HomeResponse> fetchStoreItems();
 
     @GET("listproducts/{category_id}")
-    Call<List<Product>> fetchProductsByCategoryId(@Path("category_id") int categoryId);
+    Call<List<Product>> fetchProductsByCategoryId(
+            @Path("category_id") int categoryId,
+            @Query("offset") int offset,
+            @Query("limit") int limit);
 
     @GET("product/{productId}")
-    Call<Product> fetchProductDetailsByProductId(@Path("productId") int productId , @Query("device_os") String deviceOs);
+    Call<Product> fetchProductDetailsByProductId(@Path("productId") int productId, @Query("device_os") String deviceOs);
 
     @GET("comment/{productId}")
     Call<List<Comment>> fetchCommentOfProductsByProductId(@Path("productId") int productId);

@@ -17,7 +17,7 @@ public interface StoreDataSource {
 
     void fetchStoreItems(ApiResultCallback callback);
 
-    void fetchProductsByCategoryId(ApiResultCallback callback, int categoryId);
+    void fetchProductsByCategoryId(int categoryId, int offset, int limit, ApiResultCallback callback);
 
     void fetchProductDetailsByProductId(ApiResultCallback callback, int productId, String androidOs);
 
