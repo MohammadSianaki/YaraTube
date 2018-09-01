@@ -87,6 +87,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
         mUnBinder = ButterKnife.bind(this, view);
         mPresenter = new VerificationPresenter(userRepository, compositeDisposable);
         mPresenter.attachView(this);
+        smsReceiver = new SmsReceiver();
         if (getArguments() != null) {
             getArguments().putString(KEY_MOBILE_PHONE_NUMBER, mPresenter.getUserMobilePhoneNumber());
         }
@@ -119,7 +120,6 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
         super.onResume();
         if (autoReadOtp) {
             Log.d(TAG, "onActivityCreated() called : autoReadOtp is allowed");
-            smsReceiver = new SmsReceiver();
             smsReceiver.bindListener(smsListener);
         } else {
             Log.d(TAG, "onActivityCreated() called : autoReadOtp is not allowed");

@@ -11,13 +11,17 @@ import com.yaratech.yaratube.data.model.Product;
 import java.util.List;
 
 import io.reactivex.Single;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -74,4 +78,19 @@ public interface ApiService {
                                       @Field("comment_text") String commentText,
                                       @Path("product_id") int productId,
                                       @Header("Authorization") String token);
+
+
+    @Multipart
+    @POST("profile")
+    void uploadUserProfileInformation(
+            @Part MultipartBody.Part imageAvatar,
+            @Part("nickname") RequestBody nickName,
+            @Part("date_of_birth") RequestBody dateOfBirth,
+            @Part("gender") RequestBody gender,
+            @Part("email") RequestBody email,
+            @Part("mobile") RequestBody mobile,
+            @Part("device_id") RequestBody deviceId,
+            @Part("device_model") RequestBody deviceModel,
+            @Part("device_os") RequestBody deviceOs,
+            @Part("password") RequestBody password);
 }

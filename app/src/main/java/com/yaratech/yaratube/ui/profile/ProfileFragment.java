@@ -76,19 +76,23 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         toolbar.setTitle(R.string.profile_fragment_toolbar_title);
         mPresenter = new ProfilePresenter(userRepository);
         mPresenter.attachView(this);
+        String avatarPath = mPresenter.getUserProfileImageAvatarPath();
+        Log.d(TAG, "onViewCreated: avatar path is : " + avatarPath);
+        if (avatarPath != null) {
+            Log.d(TAG, "onViewCreated: Uri.parse : " + Uri.parse(avatarPath));
+            Glide
+                    .with(this)
+                    .load(Uri.parse(avatarPath))
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(avatarImageView);
+        } else {
+            Glide
+                    .with(this)
+                    .load(R.drawable.images_avatar_circular)
+                    .into(avatarImageView);
+        }
         avatarImageView.setOnClickListener(v -> {
-            String avatarPath = mPresenter.getUserProfileImageAvatarPath();
-            Log.d(TAG, "onViewCreated: avatar path is : " + avatarPath);
-            if (avatarPath == null) {
-                loadImageAvatarFromGallery();
-            } else {
-                Glide
-                        .with(this)
-                        .load(Uri.parse(avatarPath))
-                        .apply(RequestOptions.encodeQualityOf(100))
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(avatarImageView);
-            }
+            loadImageAvatarFromGallery();
         });
     }
 
@@ -124,9 +128,10 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             try {
                 InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
+                Log.d(TAG, "onActivityResult: <<<< profile >>>> data.getData() = " + data.getData());
                 Log.d(TAG, "onActivityResult: file decoded path is : " + data.getData().getPath());
                 Log.d(TAG, "onActivityResult: file  encoded path is : " + data.getData().getEncodedPath());
-                mPresenter.saveUserProfileImageAvatarPath(data.getData().getPath());
+                mPresenter.saveUserProfileImageAvatarPath(data.getData().toString());
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 if (bitmap != null) {
                     Glide

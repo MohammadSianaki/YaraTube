@@ -36,4 +36,8 @@ public class ProfilePresenter implements ProfileContract.Presenter {
         userRepository.saveUserProfileImageAvatarPath(imagePath);
     }
 
+    @Override
+    public void uploadUserProfileInfo() {
+
+    }
 }
