@@ -20,4 +20,7 @@ public interface UserDao {
     @Delete
     void deleteUserLoginInfo(UserLoginInfo userLoginInfo);
 
+    @Query("delete from user ")
+    void clearDatabase();
+
 }

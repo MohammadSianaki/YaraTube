@@ -194,4 +194,9 @@ public class UserRemoteDataSource implements UserDataSource {
     public String loadUserProfileImageAvatarPath() {
         return null;
     }
+
+    @Override
+    public void clearDatabase(DeleteDatabaseCallback callback) {
+
+    }
 }

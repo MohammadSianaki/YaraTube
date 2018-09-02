@@ -20,6 +20,15 @@ public interface UserDataSource {
 
     }
 
+
+    interface DeleteDatabaseCallback {
+        void onSuccess();
+
+        void onAddedToCompositeDisposable(Disposable disposable);
+
+        void onFailure(String message);
+    }
+
     interface ReadFromDatabaseCallback {
 
         void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo);
@@ -63,4 +72,6 @@ public interface UserDataSource {
     void saveUserProfileImageAvatarPath(String imagePath);
 
     String loadUserProfileImageAvatarPath();
+
+    void clearDatabase(DeleteDatabaseCallback callback);
 }

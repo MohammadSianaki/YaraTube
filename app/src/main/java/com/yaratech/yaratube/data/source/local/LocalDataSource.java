@@ -150,4 +150,31 @@ public class LocalDataSource implements UserDataSource {
 
     }
 
+    @Override
+    public void clearDatabase(DeleteDatabaseCallback callback) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                appDataBase.userDao().clearDatabase();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+                        callback.onAddedToCompositeDisposable(disposable);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onFailure(e.getMessage());
+                    }
+                });
+    }
 }

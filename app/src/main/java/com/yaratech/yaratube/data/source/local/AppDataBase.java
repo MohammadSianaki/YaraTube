@@ -11,7 +11,7 @@ import android.content.Context;
 public abstract class AppDataBase extends RoomDatabase {
 
     private static AppDataBase INSTANCE;
-    private final static String DATABASE_NAME = "user";
+    public final static String DATABASE_NAME = "user";
 
     public abstract UserDao userDao();
 

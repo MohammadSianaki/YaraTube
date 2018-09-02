@@ -35,5 +35,7 @@
     <string name="profile_fragment_birthday_title">تاریخ تولد</string>
     <string name="profile_fragment_toolbar_title">پروفایل</string>
     <string name="details_fragment_toolbar_title">جزئیات محصول</string>
+    <string name="nav_logout">خروج از حساب کاربری</string>
+    <string name="logout_toast_message">خروج شما موفقیت آمیز بود</string>
 </resources>
 

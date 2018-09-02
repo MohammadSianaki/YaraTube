@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -12,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.Category;
@@ -245,7 +247,8 @@ public class BaseActivity extends AppCompatActivity implements
                 @Override
                 public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
                     if (userLoginInfo.getIsAuthorized() == 1) {
-                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized");
+                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized ---> token =" + userLoginInfo.getUser().getToken());
+
                         showProfileFragment();
                     } else {
                         showLoginDialog();
@@ -267,6 +270,30 @@ public class BaseActivity extends AppCompatActivity implements
                     showLoginDialog();
                 }
             });
+        }
+        if (item.getItemId() == R.id.nav_logout_item) {
+            userRepository.clearDatabase(new UserDataSource.DeleteDatabaseCallback() {
+                @Override
+                public void onSuccess() {
+                    Log.d(TAG, "onSuccess: ");
+                }
+
+                @Override
+                public void onAddedToCompositeDisposable(Disposable disposable) {
+                    compositeDisposable.add(disposable);
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Log.d(TAG, "onFailure: " + message);
+                }
+            });
+            PreferenceManager.
+                    getDefaultSharedPreferences(getApplicationContext())
+                    .edit()
+                    .clear()
+                    .apply();
+            Toast.makeText(this, R.string.logout_toast_message, Toast.LENGTH_SHORT).show();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

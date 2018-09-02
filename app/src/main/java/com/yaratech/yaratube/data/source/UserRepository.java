@@ -104,4 +104,9 @@ public class UserRepository implements UserDataSource {
     public String loadUserProfileImageAvatarPath() {
         return appPreferencesHelper.loadUserProfileImageAvatarPath();
     }
+
+    @Override
+    public void clearDatabase(DeleteDatabaseCallback callback) {
+        localUserDataSource.clearDatabase(callback);
+    }
 }
