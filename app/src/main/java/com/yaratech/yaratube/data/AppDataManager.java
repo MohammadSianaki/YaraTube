@@ -47,18 +47,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void cancelListOfCategoriesApiRequest() {
-        apiHelper.cancelListOfCategoriesApiRequest();
-    }
-
-    @Override
     public Disposable fetchStoreItems(StoreApiResultCallback callback) {
         return apiHelper.fetchStoreItems(callback);
-    }
-
-    @Override
-    public void cancelStoreItemsApiRequest() {
-        apiHelper.cancelStoreItemsApiRequest();
     }
 
     @Override
@@ -67,18 +57,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void cancelProductsByCategoryIdApiRequest() {
-        apiHelper.cancelProductsByCategoryIdApiRequest();
-    }
-
-    @Override
     public Disposable fetchProductDetailsByProductId(int productId, String deviceOs, StoreApiResultCallback callback) {
         return apiHelper.fetchProductDetailsByProductId(productId, deviceOs, callback);
-    }
-
-    @Override
-    public void cancelProductDetailsByProductIdApiRequest() {
-        apiHelper.cancelProductDetailsByProductIdApiRequest();
     }
 
     @Override
@@ -87,18 +67,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void cancelCommentListOfProductByProductIdApiRequest() {
-        apiHelper.cancelCommentListOfProductByProductIdApiRequest();
-    }
-
-    @Override
     public Disposable submitCommentToProduct(int productId, int score, String title, String commentText, String token, CommentApiResultCallback callback) {
         return apiHelper.submitCommentToProduct(productId, score, title, commentText, token, callback);
-    }
-
-    @Override
-    public void cancelSubmitCommentToProductApiRequest() {
-        apiHelper.cancelSubmitCommentToProductApiRequest();
     }
 
     //endregion

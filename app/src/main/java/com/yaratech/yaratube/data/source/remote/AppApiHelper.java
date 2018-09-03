@@ -61,10 +61,6 @@ public class AppApiHelper implements ApiHelper {
                 });
     }
 
-    @Override
-    public void cancelListOfCategoriesApiRequest() {
-
-    }
 
     @Override
     public Disposable fetchStoreItems(DataManager.StoreApiResultCallback callback) {
@@ -99,10 +95,6 @@ public class AppApiHelper implements ApiHelper {
                 });
     }
 
-    @Override
-    public void cancelStoreItemsApiRequest() {
-
-    }
 
     @Override
     public Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, DataManager.StoreApiResultCallback callback) {
@@ -137,10 +129,6 @@ public class AppApiHelper implements ApiHelper {
                 });
     }
 
-    @Override
-    public void cancelProductsByCategoryIdApiRequest() {
-
-    }
 
     @Override
     public Disposable fetchProductDetailsByProductId(int productId, String deviceOs, DataManager.StoreApiResultCallback callback) {
@@ -175,10 +163,6 @@ public class AppApiHelper implements ApiHelper {
                 });
     }
 
-    @Override
-    public void cancelProductDetailsByProductIdApiRequest() {
-
-    }
 
     @Override
     public Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, DataManager.StoreApiResultCallback callback) {
@@ -213,10 +197,6 @@ public class AppApiHelper implements ApiHelper {
                 });
     }
 
-    @Override
-    public void cancelCommentListOfProductByProductIdApiRequest() {
-
-    }
 
     @Override
     public Disposable submitCommentToProduct(int productId, int score, String title, String commentText, String token, DataManager.CommentApiResultCallback callback) {
@@ -251,10 +231,6 @@ public class AppApiHelper implements ApiHelper {
                 });
     }
 
-    @Override
-    public void cancelSubmitCommentToProductApiRequest() {
-
-    }
 
     @Override
     public Disposable registerUserWithThisPhoneNumber(String phoneNumber, String deviceId, String deviceModel, String deviceOs, DataManager.LoginApiResultCallback callback) {

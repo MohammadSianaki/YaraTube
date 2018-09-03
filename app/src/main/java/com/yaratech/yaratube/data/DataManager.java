@@ -50,27 +50,21 @@ public interface DataManager extends PreferencesHelper, DbHelper, ApiHelper {
 
     Disposable fetchListOfCategories(StoreApiResultCallback callback);
 
-    void cancelListOfCategoriesApiRequest();
 
     Disposable fetchStoreItems(StoreApiResultCallback callback);
 
-    void cancelStoreItemsApiRequest();
 
     Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, StoreApiResultCallback callback);
 
-    void cancelProductsByCategoryIdApiRequest();
 
     Disposable fetchProductDetailsByProductId(int productId, String deviceOs, StoreApiResultCallback callback);
 
-    void cancelProductDetailsByProductIdApiRequest();
 
     Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, StoreApiResultCallback callback);
 
-    void cancelCommentListOfProductByProductIdApiRequest();
 
     Disposable submitCommentToProduct(int productId, int score, String title, String commentText, String token, CommentApiResultCallback callback);
 
-    void cancelSubmitCommentToProductApiRequest();
 
     //endregion
 
