@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Comment;
+import com.yaratech.yaratube.data.model.other.Comment;
 
 import java.util.ArrayList;
 import java.util.List;

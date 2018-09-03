@@ -1,7 +1,7 @@
 package com.yaratech.yaratube.ui.productdetails;
 
-import com.yaratech.yaratube.data.model.Comment;
-import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.model.other.Comment;
+import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.ui.base.BasePresenter;
 import com.yaratech.yaratube.ui.base.BaseView;
 

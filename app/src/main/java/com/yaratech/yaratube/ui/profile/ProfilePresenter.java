@@ -1,7 +1,5 @@
 package com.yaratech.yaratube.ui.profile;
 
-import com.yaratech.yaratube.data.source.UserRepository;
-
 public class ProfilePresenter implements ProfileContract.Presenter {
 
     private ProfileContract.View mView;

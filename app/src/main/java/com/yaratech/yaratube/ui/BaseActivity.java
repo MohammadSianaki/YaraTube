@@ -16,16 +16,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Category;
-import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.UserDataSource;
-import com.yaratech.yaratube.data.source.UserRepository;
-import com.yaratech.yaratube.data.source.local.LocalDataSource;
-import com.yaratech.yaratube.data.source.local.UserLoginInfo;
-import com.yaratech.yaratube.data.source.prefs.AppPreferencesHelper;
-import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
-import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
+import com.yaratech.yaratube.data.model.other.Category;
+import com.yaratech.yaratube.data.model.other.Product;
+import com.yaratech.yaratube.data.source.local.db.AppDbHelper;
+import com.yaratech.yaratube.data.model.db.UserLoginInfo;
+import com.yaratech.yaratube.data.source.local.prefs.AppPreferencesHelper;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.comment.CommentDialogFragment;
 import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
@@ -62,7 +57,7 @@ public class BaseActivity extends AppCompatActivity implements
 
     private UserRepository userRepository;
     private StoreRepository storeRepository;
-    private LocalDataSource localDataSource;
+    private AppDbHelper appDbHelper;
     private StoreRemoteDataSource storeRemoteDataSource;
     private UserRemoteDataSource userRemoteDataSource;
     private AppPreferencesHelper appPreferencesHelper;
@@ -96,8 +91,8 @@ public class BaseActivity extends AppCompatActivity implements
         this.appPreferencesHelper = new AppPreferencesHelper(getApplicationContext());
         this.userRemoteDataSource = new UserRemoteDataSource(getApplicationContext());
         this.storeRemoteDataSource = new StoreRemoteDataSource(getApplicationContext());
-        this.localDataSource = LocalDataSource.getINSTANCE(this);
-        this.userRepository = UserRepository.getINSTANCE(userRemoteDataSource, localDataSource, appPreferencesHelper);
+        this.appDbHelper = AppDbHelper.getINSTANCE(this);
+        this.userRepository = UserRepository.getINSTANCE(userRemoteDataSource, appDbHelper, appPreferencesHelper);
         this.storeRepository = StoreRepository.getINSTANCE(storeRemoteDataSource);
         this.compositeDisposable = new CompositeDisposable();
     }

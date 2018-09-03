@@ -3,12 +3,10 @@ package com.yaratech.yaratube.ui.login.verification;
 import android.util.Log;
 
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
-import com.yaratech.yaratube.data.model.Event;
-import com.yaratech.yaratube.data.model.MobileLoginStepTwoResponse;
-import com.yaratech.yaratube.data.source.UserDataSource;
-import com.yaratech.yaratube.data.source.UserRepository;
-import com.yaratech.yaratube.data.source.local.User;
-import com.yaratech.yaratube.data.source.local.UserLoginInfo;
+import com.yaratech.yaratube.data.model.other.Event;
+import com.yaratech.yaratube.data.model.api.MobileLoginStepTwoResponse;
+import com.yaratech.yaratube.data.model.db.User;
+import com.yaratech.yaratube.data.model.db.UserLoginInfo;
 import com.yaratech.yaratube.utils.TextUtils;
 
 import io.reactivex.Observable;
@@ -48,7 +46,7 @@ public class VerificationPresenter implements VerificationContract.Presenter {
 
     @Override
     public void observeAutoReadVerificationCode(String phoneNumber, String verificationCode) {
-        repository.verifyUserWithThisCode(new UserDataSource.ApiResultCallback() {
+        repository.verifyUserWithThisCode(new UserDataSource.UserApiResultCallback() {
             @Override
             public void onSuccessMessage(String message, int responseCode, Object response) {
                 Log.d(TAG, "<<<<    AutoReadOTP     >>>>    onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "], response = [" + response + "]");
@@ -89,7 +87,7 @@ public class VerificationPresenter implements VerificationContract.Presenter {
         Disposable disposable = (Disposable) o.subscribeWith(new DisposableObserver<String>() {
             @Override
             public void onNext(String code) {
-                repository.verifyUserWithThisCode(new UserDataSource.ApiResultCallback() {
+                repository.verifyUserWithThisCode(new UserDataSource.UserApiResultCallback() {
 
                     @Override
                     public void onSuccessMessage(String message, int responseCode, Object response) {

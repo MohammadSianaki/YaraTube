@@ -14,8 +14,8 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.HomeItem;
-import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.model.other.HomeItem;
+import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsAdapter;
 import com.yaratech.yaratube.ui.home.header.HeaderPagerAdapter;
 

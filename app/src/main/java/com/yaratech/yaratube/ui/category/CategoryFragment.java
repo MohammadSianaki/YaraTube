@@ -17,12 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Category;
-import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.UserRepository;
-import com.yaratech.yaratube.data.source.local.LocalDataSource;
-import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
-import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
+import com.yaratech.yaratube.data.model.other.Category;
+import com.yaratech.yaratube.data.source.local.db.AppDbHelper;
 
 import java.util.List;
 
@@ -52,7 +48,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     private Unbinder mUnBinder;
     private UserRepository userRepository;
     private StoreRepository storeRepository;
-    private LocalDataSource localDataSource;
+    private AppDbHelper appDbHelper;
     private StoreRemoteDataSource storeRemoteDataSource;
     private UserRemoteDataSource userRemoteDataSource;
     private CompositeDisposable compositeDisposable;
@@ -218,8 +214,8 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         this.storeRepository = storeRepository;
     }
 
-    public void setLocalDataSource(LocalDataSource localDataSource) {
-        this.localDataSource = localDataSource;
+    public void setAppDbHelper(AppDbHelper appDbHelper) {
+        this.appDbHelper = appDbHelper;
     }
 
     public void setStoreRemoteDataSource(StoreRemoteDataSource storeRemoteDataSource) {

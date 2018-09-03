@@ -17,8 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.UserRepository;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;

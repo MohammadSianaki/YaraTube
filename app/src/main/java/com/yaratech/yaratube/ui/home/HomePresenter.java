@@ -1,8 +1,6 @@
 package com.yaratech.yaratube.ui.home;
 
-import com.yaratech.yaratube.data.model.HomeResponse;
-import com.yaratech.yaratube.data.source.StoreDataSource;
-import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.model.api.StoreResponse;
 
 public class HomePresenter implements HomeContract.Presenter {
     //------------------------------------------------------------------------------------
@@ -40,11 +38,11 @@ public class HomePresenter implements HomeContract.Presenter {
 
                 @Override
                 public void onDataLoaded(Object response) {
-                    HomeResponse homeResponse = (HomeResponse) response;
+                    StoreResponse storeResponse = (StoreResponse) response;
                     if (mView != null) {
                         mView.finishProgressBarLoading();
                         ((HomeFragment) mView).runLayoutAnimation();
-                        mView.showLoadedData(homeResponse);
+                        mView.showLoadedData(storeResponse);
                     }
                 }
 

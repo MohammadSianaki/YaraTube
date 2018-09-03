@@ -1,8 +1,6 @@
 package com.yaratech.yaratube.ui.gridcategory;
 
-import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.data.source.StoreDataSource;
-import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.model.other.Product;
 
 import java.util.List;
 

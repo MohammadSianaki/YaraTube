@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.model.other.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
         ArrayList newProducts = new ArrayList();
         newProducts.addAll(productList);
         newProducts.addAll(newProductList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ProdcutDiffUtilCallback(productList, newProducts), true);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ProductDiffUtilCallback(productList, newProducts), true);
         this.productList = newProducts;
         diffResult.dispatchUpdatesTo(this);
 //        notifyDataSetChanged();

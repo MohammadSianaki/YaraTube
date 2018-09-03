@@ -1,6 +1,6 @@
 package com.yaratech.yaratube.ui.home;
 
-import com.yaratech.yaratube.data.model.HomeResponse;
+import com.yaratech.yaratube.data.model.api.StoreResponse;
 import com.yaratech.yaratube.ui.base.BasePresenter;
 import com.yaratech.yaratube.ui.base.BaseView;
 
@@ -8,7 +8,7 @@ public interface HomeContract {
 
 
     interface View extends BaseView {
-        void showLoadedData(HomeResponse response);
+        void showLoadedData(StoreResponse response);
 
         void showDataNotAvailableToast();
 

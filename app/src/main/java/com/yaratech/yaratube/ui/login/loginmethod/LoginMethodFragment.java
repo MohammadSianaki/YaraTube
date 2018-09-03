@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Event;
+import com.yaratech.yaratube.data.model.other.Event;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -15,8 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Event;
-import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.model.other.Event;
 import com.yaratech.yaratube.ui.login.loginmethod.LoginMethodFragment;
 import com.yaratech.yaratube.ui.login.phonenumberlogin.PhoneNumberLoginFragment;
 import com.yaratech.yaratube.ui.login.verification.VerificationCodeFragment;

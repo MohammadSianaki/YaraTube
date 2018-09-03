@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.model.other.Product;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

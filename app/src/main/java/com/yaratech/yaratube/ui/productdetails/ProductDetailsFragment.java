@@ -23,10 +23,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Comment;
-import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.model.other.Comment;
+import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.EndlessRecyclerViewScrollListener;
 import com.yaratech.yaratube.ui.player.PlayerActivity;

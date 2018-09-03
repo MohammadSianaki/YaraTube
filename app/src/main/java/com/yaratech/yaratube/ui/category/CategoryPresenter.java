@@ -1,8 +1,5 @@
 package com.yaratech.yaratube.ui.category;
 
-import com.yaratech.yaratube.data.source.StoreDataSource;
-import com.yaratech.yaratube.data.source.StoreRepository;
-
 import java.util.List;
 
 public class CategoryPresenter implements CategoryContract.Presenter {

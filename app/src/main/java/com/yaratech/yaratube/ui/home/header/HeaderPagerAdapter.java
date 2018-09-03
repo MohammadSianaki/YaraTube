@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.yaratech.yaratube.data.model.Product;
+import com.yaratech.yaratube.data.model.other.Product;
 
 import java.util.List;
 

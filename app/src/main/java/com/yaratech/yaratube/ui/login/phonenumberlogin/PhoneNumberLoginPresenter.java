@@ -3,8 +3,6 @@ package com.yaratech.yaratube.ui.login.phonenumberlogin;
 import android.util.Log;
 
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
-import com.yaratech.yaratube.data.source.UserDataSource;
-import com.yaratech.yaratube.data.source.UserRepository;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -13,7 +11,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Presenter {
     private static final String TAG = "PhoneNumberLoginPresent";
@@ -50,7 +47,7 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
             @Override
             public void onNext(String phoneNumber) {
                 Log.d(TAG, "onNext() called with: phoneNumber = [" + phoneNumber + "]");
-                repository.registerUserWithThisPhoneNumber(new UserDataSource.ApiResultCallback() {
+                repository.registerUserWithThisPhoneNumber(new UserDataSource.UserApiResultCallback() {
 
                     @Override
                     public void onSuccessMessage(String message, int responseCode, Object response) {

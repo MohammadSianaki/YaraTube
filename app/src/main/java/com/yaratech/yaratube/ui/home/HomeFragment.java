@@ -18,13 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.HomeResponse;
-import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.UserRepository;
-import com.yaratech.yaratube.data.source.local.LocalDataSource;
-import com.yaratech.yaratube.data.source.remote.StoreRemoteDataSource;
-import com.yaratech.yaratube.data.source.remote.UserRemoteDataSource;
+import com.yaratech.yaratube.data.model.api.StoreResponse;
+import com.yaratech.yaratube.data.model.other.Product;
+import com.yaratech.yaratube.data.source.local.db.AppDbHelper;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 
@@ -49,7 +45,7 @@ public class HomeFragment extends Fragment implements
 
     private UserRepository userRepository;
     private StoreRepository storeRepository;
-    private LocalDataSource localDataSource;
+    private AppDbHelper appDbHelper;
     private StoreRemoteDataSource storeRemoteDataSource;
     private UserRemoteDataSource userRemoteDataSource;
     private CompositeDisposable compositeDisposable;
@@ -183,9 +179,9 @@ public class HomeFragment extends Fragment implements
     }
 
     @Override
-    public void showLoadedData(HomeResponse homeResponse) {
-        mStoreItemsAdapter.setHeaderItems(homeResponse.getHeaderItems());
-        mStoreItemsAdapter.setHomeItems(homeResponse.getHomeItems());
+    public void showLoadedData(StoreResponse storeResponse) {
+        mStoreItemsAdapter.setHeaderItems(storeResponse.getHeaderItems());
+        mStoreItemsAdapter.setHomeItems(storeResponse.getHomeItems());
     }
 
     @Override
@@ -221,8 +217,8 @@ public class HomeFragment extends Fragment implements
         this.storeRepository = storeRepository;
     }
 
-    public void setLocalDataSource(LocalDataSource localDataSource) {
-        this.localDataSource = localDataSource;
+    public void setAppDbHelper(AppDbHelper appDbHelper) {
+        this.appDbHelper = appDbHelper;
     }
 
     public void setStoreRemoteDataSource(StoreRemoteDataSource storeRemoteDataSource) {

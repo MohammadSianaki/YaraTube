@@ -2,13 +2,9 @@ package com.yaratech.yaratube.ui.productdetails;
 
 import android.util.Log;
 
-import com.yaratech.yaratube.data.model.Comment;
-import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.data.source.StoreDataSource;
-import com.yaratech.yaratube.data.source.StoreRepository;
-import com.yaratech.yaratube.data.source.UserDataSource;
-import com.yaratech.yaratube.data.source.UserRepository;
-import com.yaratech.yaratube.data.source.local.UserLoginInfo;
+import com.yaratech.yaratube.data.model.other.Comment;
+import com.yaratech.yaratube.data.model.other.Product;
+import com.yaratech.yaratube.data.model.db.UserLoginInfo;
 import com.yaratech.yaratube.utils.AppConstants;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.yaratech.yaratube.ui.login;
 
-import com.yaratech.yaratube.data.model.Event;
-import com.yaratech.yaratube.data.source.UserRepository;
+import com.yaratech.yaratube.data.model.other.Event;
 
 public class LoginPresenter implements LoginContract.Presenter {
 

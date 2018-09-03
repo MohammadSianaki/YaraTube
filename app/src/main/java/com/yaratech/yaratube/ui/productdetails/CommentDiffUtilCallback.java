@@ -2,7 +2,7 @@ package com.yaratech.yaratube.ui.productdetails;
 
 import android.support.v7.util.DiffUtil;
 
-import com.yaratech.yaratube.data.model.Comment;
+import com.yaratech.yaratube.data.model.other.Comment;
 
 import java.util.List;
 

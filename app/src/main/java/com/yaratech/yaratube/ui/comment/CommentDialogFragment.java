@@ -14,7 +14,6 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.source.UserRepository;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

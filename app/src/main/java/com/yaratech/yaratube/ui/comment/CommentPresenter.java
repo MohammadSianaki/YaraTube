@@ -2,9 +2,6 @@ package com.yaratech.yaratube.ui.comment;
 
 import android.util.Log;
 
-import com.yaratech.yaratube.data.source.UserDataSource;
-import com.yaratech.yaratube.data.source.UserRepository;
-
 public class CommentPresenter implements CommentContract.Presenter {
     private static final String TAG = "CommentPresenter";
     private CommentContract.View mView;
@@ -31,7 +28,7 @@ public class CommentPresenter implements CommentContract.Presenter {
 
     @Override
     public void submitCommentToProduct(int productId, int score, String title, String textContent, String token) {
-        userRepository.submitCommentToProduct(productId, score, title, textContent, token, new UserDataSource.ApiResultCallback() {
+        userRepository.submitCommentToProduct(productId, score, title, textContent, token, new UserDataSource.UserApiResultCallback() {
             @Override
             public void onSuccessMessage(String message, int responseCode, Object response) {
                 mView.showToast("دیدگاه شما با موفقیت ثبت گردید");

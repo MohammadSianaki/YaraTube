@@ -17,11 +17,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
-import com.yaratech.yaratube.data.model.Product;
-import com.yaratech.yaratube.data.source.StoreRepository;
+import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
-import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 import com.yaratech.yaratube.ui.EndlessRecyclerViewScrollListener;
+import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     private GridLayoutManager gridLayoutManager;
     private OnRequestedProductItemClickListener onRequestedProductItemClickListener;
     private Unbinder mUnBinder;
-    private StoreRepository storeRepository;
+    private AppDataManager appDataManager;
 
 
     @BindView(R.id.rv_products_of_category)
