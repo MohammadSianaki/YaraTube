@@ -1,15 +1,23 @@
 package com.yaratech.yaratube.ui.category;
 
+import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.data.DataManager;
+
 import java.util.List;
+
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class CategoryPresenter implements CategoryContract.Presenter {
 
     private static final String TAG = "CategoryPresenter";
-    private StoreRepository repository;
+    private AppDataManager appDataManager;
     private CategoryContract.View mView;
+    private CompositeDisposable compositeDisposable;
 
-    public CategoryPresenter(StoreRepository storeRepository) {
-        this.repository = storeRepository;
+    public CategoryPresenter(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -27,6 +35,12 @@ public class CategoryPresenter implements CategoryContract.Presenter {
         return mView != null;
     }
 
+    @Override
+    public void unSubscribe() {
+        if (isAttached()) {
+            compositeDisposable.clear();
+        }
+    }
 
     @Override
     public void fetchCategoriesFromRemoteDataSource() {
@@ -34,7 +48,7 @@ public class CategoryPresenter implements CategoryContract.Presenter {
         if (isAttached()) {
             // show progress bar
             mView.showProgressBarLoading();
-            repository.fetchAllCategories(new StoreDataSource.ApiResultCallback() {
+            Disposable disposable = appDataManager.fetchListOfCategories(new DataManager.DashboardApiResultCallback() {
 
                 @Override
                 public void onDataLoaded(Object response) {
@@ -61,11 +75,7 @@ public class CategoryPresenter implements CategoryContract.Presenter {
                     }
                 }
             });
+            compositeDisposable.add(disposable);
         }
-    }
-
-    @Override
-    public void cancelCategoryApiRequest() {
-        repository.cancelCategoryApiRequest();
     }
 }

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
@@ -41,8 +42,7 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     private HomeFragment homeFragment;
     private CategoryFragment categoryFragment;
 
-    private UserRepository userRepository;
-    private StoreRepository storeRepository;
+    private AppDataManager appDataManager;
     private CompositeDisposable compositeDisposable;
 
     //--------------------------------------------------------------------------------------------
@@ -88,15 +88,11 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     }
 
     private void initHomeFragmentDependency() {
-        homeFragment.setCompositeDisposable(compositeDisposable);
-        homeFragment.setStoreRepository(storeRepository);
-        homeFragment.setUserRepository(userRepository);
+        homeFragment.setAppDataManager(appDataManager);
     }
 
     private void initCategoryFragmentDependency() {
-        categoryFragment.setCompositeDisposable(compositeDisposable);
-        categoryFragment.setStoreRepository(storeRepository);
-        categoryFragment.setUserRepository(userRepository);
+        categoryFragment.setAppDataManager(appDataManager);
     }
 
     @Nullable
@@ -233,14 +229,9 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
                         addToBackStack, tag);
     }
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
-
-    public void setStoreRepository(StoreRepository storeRepository) {
-        this.storeRepository = storeRepository;
-    }
-
 
     public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
         this.compositeDisposable = compositeDisposable;

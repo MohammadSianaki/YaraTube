@@ -1,14 +1,19 @@
 package com.yaratech.yaratube.ui.login;
 
+import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Event;
+
+import io.reactivex.disposables.CompositeDisposable;
 
 public class LoginPresenter implements LoginContract.Presenter {
 
     private LoginContract.View mView;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
+    private CompositeDisposable compositeDisposable;
 
-    public LoginPresenter(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public LoginPresenter(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -27,16 +32,23 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
+    public void unSubscribe() {
+        if (isAttached()) {
+            compositeDisposable.clear();
+        }
+    }
+
+    @Override
     public void saveLoginStep(int loginStep) {
-        userRepository.setUserLoginStep(loginStep);
+        appDataManager.setUserLoginStep(loginStep);
     }
 
     @Override
     public void checkUserStepLogin() {
-        int step = userRepository.getUserLoginStep();
+        int step = appDataManager.getUserLoginStep();
         if (step == Event.LOGIN_STEP_FINISH) {
             mView.showUserHasBeenLoginToast();
-        } else if (userRepository.getUserLoginStep() == Event.LOGIN_STEP_THREE) {
+        } else if (appDataManager.getUserLoginStep() == Event.LOGIN_STEP_THREE) {
             mView.showVerificationDialog();
         } else {
             mView.showLoginMethodDialog();
@@ -45,6 +57,6 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void saveUserMobilePhoneNumber(String phoneNumber) {
-        userRepository.setUserMobilePhoneNumber(phoneNumber);
+        appDataManager.setUserMobilePhoneNumber(phoneNumber);
     }
 }

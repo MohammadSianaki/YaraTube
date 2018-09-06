@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Event;
 import com.yaratech.yaratube.ui.login.loginmethod.LoginMethodFragment;
 import com.yaratech.yaratube.ui.login.phonenumberlogin.PhoneNumberLoginFragment;
@@ -35,13 +36,14 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
     private static final String TAG = "LoginDialogFragment";
     private LoginContract.Presenter mPresenter;
     private Unbinder mUnBinder;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
     private CompositeDisposable compositeDisposable;
 
     //---------------------------------------------------------------------------------------
 
     public LoginDialogFragment() {
         // Required empty public constructor
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     public static LoginDialogFragment newInstance() {
@@ -89,7 +91,7 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
         Log.d(TAG, "<<<<    lifecycle   >>>>    onViewCreated: LoginDialogFragment");
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mPresenter = new LoginPresenter(userRepository);
+        mPresenter = new LoginPresenter(appDataManager);
         mPresenter.attachView(this);
         mPresenter.checkUserStepLogin();
     }
@@ -172,12 +174,8 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
         }
     }
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
-        this.compositeDisposable = compositeDisposable;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
 
     @Override
@@ -209,8 +207,7 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
         if (phoneNumberLoginFragment == null) {
             phoneNumberLoginFragment = PhoneNumberLoginFragment.newInstance();
         }
-        phoneNumberLoginFragment.setUserRepository(userRepository);
-        phoneNumberLoginFragment.setCompositeDisposable(compositeDisposable);
+        phoneNumberLoginFragment.setAppDataManager(appDataManager);
         addFragment(phoneNumberLoginFragment,
                 false,
                 PhoneNumberLoginFragment.class.getSimpleName());
@@ -222,8 +219,7 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
         if (verificationCodeFragment == null) {
             verificationCodeFragment = VerificationCodeFragment.newInstance();
         }
-        verificationCodeFragment.setUserRepository(userRepository);
-        verificationCodeFragment.setCompositeDisposable(compositeDisposable);
+        verificationCodeFragment.setAppDataManager(appDataManager);
         addFragment(verificationCodeFragment,
                 false,
                 VerificationCodeFragment.class.getSimpleName());

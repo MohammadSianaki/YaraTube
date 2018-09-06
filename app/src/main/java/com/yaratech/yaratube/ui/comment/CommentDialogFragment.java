@@ -14,6 +14,7 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +25,7 @@ public class CommentDialogFragment extends DialogFragment implements CommentCont
     private static final String KEY_TOKEN = "KEY_TOKEN";
     private static final String KEY_PRODUCT_ID = "KEY_PRODUCT_ID";
     private CommentContract.Presenter mPresenter;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
     private Unbinder mUnBinder;
 
     @BindView(R.id.comment_dialog_fragment_rating_bar)
@@ -68,7 +69,7 @@ public class CommentDialogFragment extends DialogFragment implements CommentCont
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mPresenter = new CommentPresenter(userRepository);
+        mPresenter = new CommentPresenter(appDataManager);
         mPresenter.attachView(this);
     }
 
@@ -86,8 +87,9 @@ public class CommentDialogFragment extends DialogFragment implements CommentCont
 
     @Override
     public void onDestroyView() {
-        mPresenter.detachView();
         mUnBinder.unbind();
+        mPresenter.unSubscribe();
+        mPresenter.detachView();
         super.onDestroyView();
     }
 
@@ -106,8 +108,8 @@ public class CommentDialogFragment extends DialogFragment implements CommentCont
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
 
     @Override

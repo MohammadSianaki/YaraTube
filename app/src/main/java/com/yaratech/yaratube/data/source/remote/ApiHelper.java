@@ -8,19 +8,19 @@ public interface ApiHelper {
 
     //region Store Remote Api Access Methods
 
-    Disposable fetchListOfCategories(DataManager.StoreApiResultCallback callback);
+    Disposable fetchListOfCategories(DataManager.DashboardApiResultCallback callback);
 
 
-    Disposable fetchStoreItems(DataManager.StoreApiResultCallback callback);
+    Disposable fetchStoreItems(DataManager.DashboardApiResultCallback callback);
 
 
-    Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, DataManager.StoreApiResultCallback callback);
+    Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, DataManager.DashboardApiResultCallback callback);
 
 
-    Disposable fetchProductDetailsByProductId(int productId, String deviceOs, DataManager.StoreApiResultCallback callback);
+    Disposable fetchProductDetailsByProductId(int productId, String deviceOs, DataManager.DashboardApiResultCallback callback);
 
 
-    Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, DataManager.StoreApiResultCallback callback);
+    Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, DataManager.DashboardApiResultCallback callback);
 
 
     Disposable submitCommentToProduct(int productId, int score, String title, String commentText, String token, DataManager.CommentApiResultCallback callback);
@@ -30,9 +30,9 @@ public interface ApiHelper {
 
     //region User Remote Api Access Methods
 
-    Disposable registerUserWithThisPhoneNumber(String phoneNumber, String deviceId, String deviceModel, String deviceOs, DataManager.LoginApiResultCallback callback);
+    Disposable registerUserWithThisPhoneNumber(String phoneNumber, DataManager.LoginApiResultCallback callback);
 
-    Disposable verifyUserWithThisCode(String phoneNumber, String deviceId, String verificationCode, DataManager.LoginApiResultCallback callback);
+    Disposable verifyUserWithThisCode(String phoneNumber, String verificationCode, DataManager.LoginApiResultCallback callback);
 
     //endregions
 

@@ -38,10 +38,6 @@ public interface DetailsContract {
 
         void fetchProductComments(int productId, int offset, int limit);
 
-        void cancelProductCommentApiRequest();
-
-        void cancelProductDetailsApiRequest();
-
         void isUserLogin();
 
         void isUserLoginToPlay();

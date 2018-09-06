@@ -8,5 +8,7 @@ public interface BasePresenter<V extends BaseView> {
 
     boolean isAttached();
 
+    void unSubscribe();
+
 
 }

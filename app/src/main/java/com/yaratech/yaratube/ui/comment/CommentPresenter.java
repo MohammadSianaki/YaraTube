@@ -2,13 +2,21 @@ package com.yaratech.yaratube.ui.comment;
 
 import android.util.Log;
 
+import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.data.DataManager;
+
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 public class CommentPresenter implements CommentContract.Presenter {
     private static final String TAG = "CommentPresenter";
     private CommentContract.View mView;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
+    private CompositeDisposable compositeDisposable;
 
-    public CommentPresenter(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CommentPresenter(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -27,16 +35,23 @@ public class CommentPresenter implements CommentContract.Presenter {
     }
 
     @Override
+    public void unSubscribe() {
+        if (isAttached()) {
+            compositeDisposable.clear();
+        }
+    }
+
+    @Override
     public void submitCommentToProduct(int productId, int score, String title, String textContent, String token) {
-        userRepository.submitCommentToProduct(productId, score, title, textContent, token, new UserDataSource.UserApiResultCallback() {
+        Disposable disposable = appDataManager.submitCommentToProduct(productId, score, title, textContent, token, new DataManager.CommentApiResultCallback() {
             @Override
-            public void onSuccessMessage(String message, int responseCode, Object response) {
+            public void onSuccess(String message, int responseCode) {
                 mView.showToast("دیدگاه شما با موفقیت ثبت گردید");
                 mView.closeDialog();
             }
 
             @Override
-            public void onErrorMessage(String message, int responseCode) {
+            public void onError(String message, int responseCode) {
                 if (responseCode == -1) {
                     mView.showToast(message);
                 }
@@ -44,14 +59,11 @@ public class CommentPresenter implements CommentContract.Presenter {
             }
 
             @Override
-            public void onFailureMessage(String message, int responseCode) {
-                Log.d(TAG, "onFailureMessage: " + message + "   response code [" + responseCode + "]");
+            public void onFailure(String message) {
+                Log.d(TAG, "onFailure() called with: message = [" + message + "]");
             }
         });
+        compositeDisposable.add(disposable);
     }
 
-    @Override
-    public void cancelPostComment() {
-        userRepository.cancelPostCommentRequest();
-    }
 }

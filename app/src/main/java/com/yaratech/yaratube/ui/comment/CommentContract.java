@@ -14,8 +14,6 @@ public class CommentContract {
     interface Presenter extends BasePresenter<View> {
 
         void submitCommentToProduct(int productId, int score, String title, String textContent, String token);
-
-        void cancelPostComment();
     }
 
 }

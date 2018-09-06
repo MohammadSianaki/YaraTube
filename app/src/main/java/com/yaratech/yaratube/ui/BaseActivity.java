@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -13,14 +12,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.data.DataManager;
 import com.yaratech.yaratube.data.model.other.Category;
 import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.data.source.local.db.AppDbHelper;
-import com.yaratech.yaratube.data.model.db.UserLoginInfo;
 import com.yaratech.yaratube.data.source.local.prefs.AppPreferencesHelper;
+import com.yaratech.yaratube.data.source.remote.AppApiHelper;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.comment.CommentDialogFragment;
 import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
@@ -30,6 +30,8 @@ import com.yaratech.yaratube.ui.login.LoginDialogFragment;
 import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
 import com.yaratech.yaratube.ui.profile.ProfileFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,14 +56,11 @@ public class BaseActivity extends AppCompatActivity implements
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
-
-    private UserRepository userRepository;
-    private StoreRepository storeRepository;
-    private AppDbHelper appDbHelper;
-    private StoreRemoteDataSource storeRemoteDataSource;
-    private UserRemoteDataSource userRemoteDataSource;
-    private AppPreferencesHelper appPreferencesHelper;
     private CompositeDisposable compositeDisposable;
+    private AppDbHelper appDbHelper;
+    private AppApiHelper appApiHelper;
+    private AppDataManager appDataManager;
+    private AppPreferencesHelper appPreferencesHelper;
     //------------------------------------------------------------------------------------------------
 
     @Override
@@ -80,21 +79,17 @@ public class BaseActivity extends AppCompatActivity implements
         if (fragment == null) {
             Log.i(TAG, "onCreate: content fragment is null");
             fragment = BaseFragment.newInstance();
-            fragment.setCompositeDisposable(compositeDisposable);
-            fragment.setStoreRepository(storeRepository);
-            fragment.setUserRepository(userRepository);
+            fragment.setAppDataManager(appDataManager);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.fl_base_activity_content);
         }
     }
 
     private void initDependencies() {
-        this.appPreferencesHelper = new AppPreferencesHelper(getApplicationContext());
-        this.userRemoteDataSource = new UserRemoteDataSource(getApplicationContext());
-        this.storeRemoteDataSource = new StoreRemoteDataSource(getApplicationContext());
-        this.appDbHelper = AppDbHelper.getINSTANCE(this);
-        this.userRepository = UserRepository.getINSTANCE(userRemoteDataSource, appDbHelper, appPreferencesHelper);
-        this.storeRepository = StoreRepository.getINSTANCE(storeRemoteDataSource);
         this.compositeDisposable = new CompositeDisposable();
+        this.appPreferencesHelper = new AppPreferencesHelper(getApplicationContext());
+        this.appDbHelper = AppDbHelper.getINSTANCE(this);
+        this.appApiHelper = new AppApiHelper(this);
+        this.appDataManager = AppDataManager.getINSTANCE(appPreferencesHelper, appDbHelper, appApiHelper);
     }
 
     private void requestPermissions() {
@@ -155,6 +150,7 @@ public class BaseActivity extends AppCompatActivity implements
 
     @Override
     protected void onStop() {
+        compositeDisposable.clear();
         super.onStop();
         Log.i(TAG, "onStop: BaseActivity");
     }
@@ -162,7 +158,6 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        compositeDisposable.clear();
         Log.i(TAG, "onDestroy: BaseActivity");
     }
 
@@ -194,7 +189,7 @@ public class BaseActivity extends AppCompatActivity implements
                 .beginTransaction()
                 .hide(getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content));
         GridCategoryFragment gridCategoryFragment = GridCategoryFragment.newInstance(categoryId);
-        gridCategoryFragment.setStoreRepository(storeRepository);
+        gridCategoryFragment.setAppDataManager(appDataManager);
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
                 gridCategoryFragment,
@@ -210,9 +205,8 @@ public class BaseActivity extends AppCompatActivity implements
             Log.d(TAG, "showRequestedHeaderItemDetails: else : file size is : " + item.getFiles().size());
         }
         ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(item);
-        detailsFragment.setStoreRepository(storeRepository);
-        detailsFragment.setUserRepository(userRepository);
-        detailsFragment.setCompositeDisposable(compositeDisposable);
+        detailsFragment.setAppDataManager(appDataManager);
+
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
                 detailsFragment,
@@ -224,9 +218,7 @@ public class BaseActivity extends AppCompatActivity implements
     public void showProductDetailsOfRequestedProductItem(Product item) {
         Log.i(TAG, "onProductItemClicked: <<<<  " + item.getName() + "\t" + item.getId() + "  >>>>");
         ProductDetailsFragment detailsFragment = ProductDetailsFragment.newInstance(item);
-        detailsFragment.setStoreRepository(storeRepository);
-        detailsFragment.setUserRepository(userRepository);
-        detailsFragment.setCompositeDisposable(compositeDisposable);
+        detailsFragment.setAppDataManager(appDataManager);
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),
                 detailsFragment,
@@ -238,12 +230,11 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_profile_item) {
-            userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
+            Disposable disposable = appDataManager.isUserAuthorized(new DataManager.LoginDatabaseResultCallback() {
                 @Override
-                public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
-                    if (userLoginInfo.getIsAuthorized() == 1) {
-                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized ---> token =" + userLoginInfo.getUser().getToken());
-
+                public void onSuccess(Map<Boolean, String> map) {
+                    if (map.containsKey(true)) {
+                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized ---> token =" + map.get(true));
                         showProfileFragment();
                     } else {
                         showLoginDialog();
@@ -251,44 +242,14 @@ public class BaseActivity extends AppCompatActivity implements
                 }
 
                 @Override
-                public void onAddedToCompositeDisposable(Disposable disposable) {
-                    compositeDisposable.add(disposable);
-                }
-
-                @Override
-                public void onFailureMessage(String message) {
-                    Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
-                }
-
-                @Override
-                public void onNotFoundUserInDatabase() {
-                    showLoginDialog();
+                public void onFailure(String message) {
+                    Log.d(TAG, "onFailure() called with: message = [" + message + "]");
                 }
             });
+            compositeDisposable.add(disposable);
         }
         if (item.getItemId() == R.id.nav_logout_item) {
-            userRepository.clearDatabase(new UserDataSource.DeleteDatabaseCallback() {
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "onSuccess: ");
-                }
-
-                @Override
-                public void onAddedToCompositeDisposable(Disposable disposable) {
-                    compositeDisposable.add(disposable);
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    Log.d(TAG, "onFailure: " + message);
-                }
-            });
-            PreferenceManager.
-                    getDefaultSharedPreferences(getApplicationContext())
-                    .edit()
-                    .clear()
-                    .apply();
-            Toast.makeText(this, R.string.logout_toast_message, Toast.LENGTH_SHORT).show();
+            // TODO: 9/6/2018  add logout item
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -296,7 +257,7 @@ public class BaseActivity extends AppCompatActivity implements
 
     private void showProfileFragment() {
         ProfileFragment profileFragment = ProfileFragment.newInstance();
-        profileFragment.setUserRepository(userRepository);
+        profileFragment.setAppDataManager(appDataManager);
         ActivityUtils
                 .addFragmentToActivity(
                         getSupportFragmentManager(),
@@ -315,14 +276,13 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     public void showCommentDialog(String token, int productId) {
         CommentDialogFragment commentDialogFragment = CommentDialogFragment.newInstance(token, productId);
-        commentDialogFragment.setUserRepository(userRepository);
+        commentDialogFragment.setAppDataManager(appDataManager);
         commentDialogFragment.show(getSupportFragmentManager(), CommentDialogFragment.class.getSimpleName());
     }
 
     private void showLoginDialog() {
         LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
-        loginFragment.setCompositeDisposable(compositeDisposable);
-        loginFragment.setUserRepository(userRepository);
+        loginFragment.setAppDataManager(appDataManager);
         loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
     }
 }

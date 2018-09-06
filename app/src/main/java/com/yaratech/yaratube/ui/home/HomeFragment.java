@@ -18,16 +18,15 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.api.StoreResponse;
 import com.yaratech.yaratube.data.model.other.Product;
-import com.yaratech.yaratube.data.source.local.db.AppDbHelper;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,13 +41,7 @@ public class HomeFragment extends Fragment implements
     private StoreItemsAdapter mStoreItemsAdapter;
     private OnRequestedProductItemClickListener mListener;
     private Unbinder mUnBinder;
-
-    private UserRepository userRepository;
-    private StoreRepository storeRepository;
-    private AppDbHelper appDbHelper;
-    private StoreRemoteDataSource storeRemoteDataSource;
-    private UserRemoteDataSource userRemoteDataSource;
-    private CompositeDisposable compositeDisposable;
+    private AppDataManager appDataManager;
 
 
     @BindView(R.id.pb_store_items_loading)
@@ -60,7 +53,6 @@ public class HomeFragment extends Fragment implements
     //----------------------------------------------------------------------------------------
 
     public HomeFragment() {
-
         // Required empty public constructor
     }
 
@@ -106,7 +98,7 @@ public class HomeFragment extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
         mStoreItemsAdapter = new StoreItemsAdapter(this, getFragmentManager());
-        mPresenter = new HomePresenter(storeRepository);
+        mPresenter = new HomePresenter(appDataManager);
         mPresenter.attachView(this);
         setupRecyclerView();
     }
@@ -153,7 +145,7 @@ public class HomeFragment extends Fragment implements
     public void onDestroyView() {
         Log.i(TAG, "onDestroyView: HomeFragment");
         mUnBinder.unbind();
-        mPresenter.cancelStoreApiRequest();
+        mPresenter.unSubscribe();
         mPresenter.detachView();
         super.onDestroyView();
     }
@@ -209,28 +201,8 @@ public class HomeFragment extends Fragment implements
         mListener.showProductDetailsOfRequestedProductItem(item);
     }
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public void setStoreRepository(StoreRepository storeRepository) {
-        this.storeRepository = storeRepository;
-    }
-
-    public void setAppDbHelper(AppDbHelper appDbHelper) {
-        this.appDbHelper = appDbHelper;
-    }
-
-    public void setStoreRemoteDataSource(StoreRemoteDataSource storeRemoteDataSource) {
-        this.storeRemoteDataSource = storeRemoteDataSource;
-    }
-
-    public void setUserRemoteDataSource(UserRemoteDataSource userRemoteDataSource) {
-        this.userRemoteDataSource = userRemoteDataSource;
-    }
-
-    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
-        this.compositeDisposable = compositeDisposable;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
 
     public void runLayoutAnimation() {

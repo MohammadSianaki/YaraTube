@@ -4,11 +4,13 @@ import com.yaratech.yaratube.data.source.local.db.DbHelper;
 import com.yaratech.yaratube.data.source.local.prefs.PreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.ApiHelper;
 
+import java.util.Map;
+
 import io.reactivex.disposables.Disposable;
 
 public interface DataManager extends PreferencesHelper, DbHelper, ApiHelper {
 
-    interface StoreApiResultCallback<T> {
+    interface DashboardApiResultCallback<T> {
 
         void onDataLoaded(T response);
 
@@ -39,7 +41,7 @@ public interface DataManager extends PreferencesHelper, DbHelper, ApiHelper {
 
     interface LoginDatabaseResultCallback {
 
-        void onSuccess(boolean aBoolean);
+        void onSuccess(Map<Boolean, String> map);
 
         void onFailure(String message);
 
@@ -48,19 +50,19 @@ public interface DataManager extends PreferencesHelper, DbHelper, ApiHelper {
     //region Store Remote Api Access Methods
 
 
-    Disposable fetchListOfCategories(StoreApiResultCallback callback);
+    Disposable fetchListOfCategories(DashboardApiResultCallback callback);
 
 
-    Disposable fetchStoreItems(StoreApiResultCallback callback);
+    Disposable fetchStoreItems(DashboardApiResultCallback callback);
 
 
-    Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, StoreApiResultCallback callback);
+    Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, DashboardApiResultCallback callback);
 
 
-    Disposable fetchProductDetailsByProductId(int productId, String deviceOs, StoreApiResultCallback callback);
+    Disposable fetchProductDetailsByProductId(int productId, String deviceOs, DashboardApiResultCallback callback);
 
 
-    Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, StoreApiResultCallback callback);
+    Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, DashboardApiResultCallback callback);
 
 
     Disposable submitCommentToProduct(int productId, int score, String title, String commentText, String token, CommentApiResultCallback callback);
@@ -70,9 +72,9 @@ public interface DataManager extends PreferencesHelper, DbHelper, ApiHelper {
 
     //region User Remote Api Access Methods
 
-    Disposable registerUserWithThisPhoneNumber(String phoneNumber, String deviceId, String deviceModel, String deviceOs, LoginApiResultCallback callback);
+    Disposable registerUserWithThisPhoneNumber(String phoneNumber, LoginApiResultCallback callback);
 
-    Disposable verifyUserWithThisCode(String phoneNumber, String deviceId, String verificationCode, LoginApiResultCallback callback);
+    Disposable verifyUserWithThisCode(String phoneNumber, String verificationCode, LoginApiResultCallback callback);
 
     //endregions
 

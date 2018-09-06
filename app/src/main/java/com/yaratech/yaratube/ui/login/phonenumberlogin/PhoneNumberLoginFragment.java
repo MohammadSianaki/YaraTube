@@ -16,16 +16,17 @@ import android.widget.Toast;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Event;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLoginContract.View {
@@ -41,13 +42,14 @@ public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLog
 
     private Unbinder mUnBinder;
     private PhoneNumberLoginContract.Presenter mPresenter;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
     private CompositeDisposable compositeDisposable;
     //----------------------------------------------------------------------------------------------------------------------
 
 
     public PhoneNumberLoginFragment() {
         // Required empty public constructor
+        this.compositeDisposable = new CompositeDisposable();
     }
 
 
@@ -76,7 +78,6 @@ public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLog
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.d(TAG, "<<<<    lifecycle   >>>>    onCreateView: PhoneLoginFragment");
-        EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.fragment_phone_number_login, container, false);
     }
 
@@ -87,10 +88,10 @@ public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLog
 
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mPresenter = new PhoneNumberLoginPresenter(userRepository, compositeDisposable);
+        mPresenter = new PhoneNumberLoginPresenter(appDataManager);
         mPresenter.attachView(this);
         Observable observable = RxTextView.textChangeEvents(phoneNumberEditText);
-        RxView.clicks(submitPhoneNumberButton)
+        Disposable disposable = RxView.clicks(submitPhoneNumberButton)
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
@@ -98,15 +99,16 @@ public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLog
                         mPresenter.observePhoneNumberInput(observable);
                     }
                 });
+        compositeDisposable.add(disposable);
     }
 
     @Override
     public void onDestroyView() {
         Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroyView: PhoneLoginFragment");
+        mPresenter.unSubscribe();
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -132,20 +134,11 @@ public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLog
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    @Subscribe
-    public void getMessageFromParentFragment(Event.ParentChildMessage event) {
-
-    }
-
     public void sendMessageToParentFragment(Event.ChildParentMessage event) {
         EventBus.getDefault().post(event);
     }
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
-        this.compositeDisposable = compositeDisposable;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
 }

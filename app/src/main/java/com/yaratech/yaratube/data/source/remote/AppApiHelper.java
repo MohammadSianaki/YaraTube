@@ -1,5 +1,6 @@
 package com.yaratech.yaratube.data.source.remote;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.yaratech.yaratube.data.DataManager;
@@ -10,6 +11,7 @@ import com.yaratech.yaratube.data.model.api.StoreResponse;
 import com.yaratech.yaratube.data.model.other.Category;
 import com.yaratech.yaratube.data.model.other.Comment;
 import com.yaratech.yaratube.data.model.other.Product;
+import com.yaratech.yaratube.utils.DeviceUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,14 +26,16 @@ public class AppApiHelper implements ApiHelper {
     //-------------------------------------------------------------------------------------
     private static final String TAG = "AppApiHelper";
     private ApiService apiService;
+    private Context context;
 
-    public AppApiHelper() {
+    public AppApiHelper(Context context) {
+        this.context = context;
         apiService = ApiClient.getClient().create(ApiService.class);
     }
     //-------------------------------------------------------------------------------------
 
     @Override
-    public Disposable fetchListOfCategories(DataManager.StoreApiResultCallback callback) {
+    public Disposable fetchListOfCategories(DataManager.DashboardApiResultCallback callback) {
         return apiService
                 .fetchAllCategories()
                 .subscribeOn(Schedulers.io())
@@ -63,7 +67,7 @@ public class AppApiHelper implements ApiHelper {
 
 
     @Override
-    public Disposable fetchStoreItems(DataManager.StoreApiResultCallback callback) {
+    public Disposable fetchStoreItems(DataManager.DashboardApiResultCallback callback) {
         return apiService
                 .fetchStoreItems()
                 .subscribeOn(Schedulers.io())
@@ -97,7 +101,7 @@ public class AppApiHelper implements ApiHelper {
 
 
     @Override
-    public Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, DataManager.StoreApiResultCallback callback) {
+    public Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, DataManager.DashboardApiResultCallback callback) {
         return apiService
                 .fetchProductsByCategoryId(categoryId, offset, limit)
                 .subscribeOn(Schedulers.io())
@@ -131,7 +135,7 @@ public class AppApiHelper implements ApiHelper {
 
 
     @Override
-    public Disposable fetchProductDetailsByProductId(int productId, String deviceOs, DataManager.StoreApiResultCallback callback) {
+    public Disposable fetchProductDetailsByProductId(int productId, String deviceOs, DataManager.DashboardApiResultCallback callback) {
         return apiService
                 .fetchProductDetailsByProductId(productId, deviceOs)
                 .subscribeOn(Schedulers.io())
@@ -165,7 +169,7 @@ public class AppApiHelper implements ApiHelper {
 
 
     @Override
-    public Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, DataManager.StoreApiResultCallback callback) {
+    public Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, DataManager.DashboardApiResultCallback callback) {
         return apiService
                 .fetchCommentOfProductsByProductId(productId, offset, limit)
                 .subscribeOn(Schedulers.io())
@@ -233,11 +237,11 @@ public class AppApiHelper implements ApiHelper {
 
 
     @Override
-    public Disposable registerUserWithThisPhoneNumber(String phoneNumber, String deviceId, String deviceModel, String deviceOs, DataManager.LoginApiResultCallback callback) {
+    public Disposable registerUserWithThisPhoneNumber(String phoneNumber, DataManager.LoginApiResultCallback callback) {
         return apiService.mobileLoginStepOne(phoneNumber,
-                deviceId,
-                deviceModel,
-                deviceOs,
+                DeviceUtils.getDeviceId(context),
+                DeviceUtils.getDeviceModel(),
+                DeviceUtils.getDeviceOS(),
                 null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -269,13 +273,13 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Disposable verifyUserWithThisCode(String phoneNumber, String deviceId, String verificationCode, DataManager.LoginApiResultCallback callback) {
+    public Disposable verifyUserWithThisCode(String phoneNumber, String verificationCode, DataManager.LoginApiResultCallback callback) {
         return apiService
                 .mobileLoginStepTwo(
                         null,
                         phoneNumber,
                         verificationCode,
-                        deviceId)
+                        DeviceUtils.getDeviceId(context))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<Response<MobileLoginStepTwoResponse>>() {

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Comment;
 import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
@@ -53,8 +54,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     private DetailsContract.Presenter mPresenter;
     private Unbinder mUnBinder;
     private CommentAdapter commentAdapter;
-    private StoreRepository storeRepository;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
     private CompositeDisposable compositeDisposable;
     private OnProductDetailsInteraction mListener;
 
@@ -89,6 +89,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     public ProductDetailsFragment() {
         // Required empty public constructor
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     public static ProductDetailsFragment newInstance(Product product) {
@@ -125,7 +126,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         mUnBinder = ButterKnife.bind(this, view);
         setupToolbar();
         Log.i(TAG, "onViewCreated: ProductDetailsFragment");
-        mPresenter = new ProductDetailsPresenter(storeRepository, userRepository, compositeDisposable);
+        mPresenter = new ProductDetailsPresenter(appDataManager);
         mPresenter.attachView(this);
         commentAdapter = new CommentAdapter();
         setRecyclerView();
@@ -160,7 +161,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         super.onActivityCreated(savedInstanceState);
         Log.i(TAG, "onActivityCreated: ProductDetailsFragment");
         mPresenter.fetchProductDetails(getArguments().getInt(KEY_ID));
-        mPresenter.fetchProductComments(getArguments().getInt(KEY_ID),BASE_OFFSET ,LIMIT );
+        mPresenter.fetchProductComments(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
         playVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,9 +225,8 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     @Override
     public void onDestroyView() {
+        mPresenter.unSubscribe();
         mUnBinder.unbind();
-        mPresenter.cancelProductCommentApiRequest();
-        mPresenter.cancelProductDetailsApiRequest();
         mPresenter.detachView();
         super.onDestroyView();
         baseActivity.setSupportActionBar(null);
@@ -244,16 +244,8 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         mListener = null;
     }
 
-    public void setStoreRepository(StoreRepository storeRepository) {
-        this.storeRepository = storeRepository;
-    }
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
-        this.compositeDisposable = compositeDisposable;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
 
     @Override

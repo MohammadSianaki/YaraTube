@@ -19,4 +19,9 @@ public class PlayerPresenter implements PlayerContract.Presenter {
     public boolean isAttached() {
         return mView != null;
     }
+
+    @Override
+    public void unSubscribe() {
+        // TODO: 9/6/2018  
+    }
 }

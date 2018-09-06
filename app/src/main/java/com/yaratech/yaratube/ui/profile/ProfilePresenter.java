@@ -1,12 +1,18 @@
 package com.yaratech.yaratube.ui.profile;
 
+import com.yaratech.yaratube.data.AppDataManager;
+
+import io.reactivex.disposables.CompositeDisposable;
+
 public class ProfilePresenter implements ProfileContract.Presenter {
 
     private ProfileContract.View mView;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
+    private CompositeDisposable compositeDisposable;
 
-    public ProfilePresenter(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public ProfilePresenter(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -25,13 +31,20 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     }
 
     @Override
+    public void unSubscribe() {
+        if (isAttached()) {
+            compositeDisposable.clear();
+        }
+    }
+
+    @Override
     public String getUserProfileImageAvatarPath() {
-        return userRepository.loadUserProfileImageAvatarPath();
+        return appDataManager.getUserProfileImageAvatarPath();
     }
 
     @Override
     public void saveUserProfileImageAvatarPath(String imagePath) {
-        userRepository.saveUserProfileImageAvatarPath(imagePath);
+        appDataManager.setUserProfileImageAvatarPath(imagePath);
     }
 
     @Override

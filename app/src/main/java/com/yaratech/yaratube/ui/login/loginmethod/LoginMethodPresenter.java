@@ -24,4 +24,9 @@ public class LoginMethodPresenter implements LoginMethodContract.Presenter {
     public boolean isAttached() {
         return mView != null;
     }
+
+    @Override
+    public void unSubscribe() {
+        //no-op
+    }
 }

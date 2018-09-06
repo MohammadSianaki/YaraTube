@@ -2,12 +2,14 @@ package com.yaratech.yaratube.ui.productdetails;
 
 import android.util.Log;
 
+import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.data.DataManager;
 import com.yaratech.yaratube.data.model.other.Comment;
 import com.yaratech.yaratube.data.model.other.Product;
-import com.yaratech.yaratube.data.model.db.UserLoginInfo;
 import com.yaratech.yaratube.utils.AppConstants;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -16,17 +18,15 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
 
     //---------------------------------------------------------------------------------------------
     private static final String TAG = "ProductDetailsPresenter";
-    private StoreRepository repository;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
     private CompositeDisposable compositeDisposable;
     private DetailsContract.View mView;
     //---------------------------------------------------------------------------------------------
 
 
-    public ProductDetailsPresenter(StoreRepository storeRepository, UserRepository userRepository, CompositeDisposable compositeDisposable) {
-        this.repository = storeRepository;
-        this.userRepository = userRepository;
-        this.compositeDisposable = compositeDisposable;
+    public ProductDetailsPresenter(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -45,10 +45,18 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
     }
 
     @Override
+    public void unSubscribe() {
+        if (isAttached()) {
+            compositeDisposable.clear();
+        }
+    }
+
+    @Override
     public void fetchProductDetails(int productId) {
         if (isAttached()) {
             mView.showProgressBarLoading();
-            repository.fetchProductDetailsByProductId(new StoreDataSource.ApiResultCallback() {
+            Disposable disposable = appDataManager.fetchProductDetailsByProductId(productId, AppConstants.DEVICE_OS, new DataManager.DashboardApiResultCallback() {
+
                 @Override
                 public void onDataLoaded(Object response) {
                     Product product = (Product) response;
@@ -79,7 +87,8 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
                         mView.showNetworkNotAvailableToast();
                     }
                 }
-            }, productId, AppConstants.DEVICE_OS);
+            });
+            compositeDisposable.add(disposable);
         }
     }
 
@@ -87,7 +96,7 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
     public void fetchProductComments(int productId, int offset, int limit) {
         if (isAttached()) {
             mView.showCommentLoading();
-            repository.fetchCommentsOfProductByProductId(productId, offset, limit, new StoreDataSource.ApiResultCallback() {
+            appDataManager.fetchCommentListOfProductByProductId(productId, offset, limit, new DataManager.DashboardApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
                     List<Comment> commentList = (List<Comment>) response;
@@ -116,63 +125,45 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
         }
     }
 
-    @Override
-    public void cancelProductCommentApiRequest() {
-
-    }
-
-    @Override
-    public void cancelProductDetailsApiRequest() {
-        repository.cancelProductDetailsByProductIdApiRequest();
-    }
 
     @Override
     public void isUserLogin() {
-        userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
+        Disposable disposable = appDataManager.isUserAuthorized(new DataManager.LoginDatabaseResultCallback() {
             @Override
-            public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
-                mView.showCommentDialog(userLoginInfo.getUser().getToken());
+            public void onSuccess(Map<Boolean, String> map) {
+                if (map.containsKey(true)) {
+                    mView.showCommentDialog(map.get(true));
+                } else {
+                    mView.showLoginDialog();
+                }
             }
 
             @Override
-            public void onAddedToCompositeDisposable(Disposable disposable) {
-                compositeDisposable.add(disposable);
+            public void onFailure(String message) {
+                Log.d(TAG, "onFailure() called with: message = [" + message + "]");
             }
 
-            @Override
-            public void onFailureMessage(String message) {
-                Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
-            }
-
-            @Override
-            public void onNotFoundUserInDatabase() {
-                mView.showLoginDialog();
-            }
         });
+        compositeDisposable.add(disposable);
     }
 
     @Override
     public void isUserLoginToPlay() {
-        userRepository.checkIfUserIsAuthorized(new UserDataSource.ReadFromDatabaseCallback() {
+        Disposable disposable = appDataManager.isUserAuthorized(new DataManager.LoginDatabaseResultCallback() {
             @Override
-            public void onUserLoginInfoLoaded(UserLoginInfo userLoginInfo) {
-                mView.goToPlayerActivity();
+            public void onSuccess(Map<Boolean, String> map) {
+                if (map.containsKey(true)) {
+                    mView.goToPlayerActivity();
+                } else {
+                    mView.showLoginDialog();
+                }
             }
 
             @Override
-            public void onAddedToCompositeDisposable(Disposable disposable) {
-                compositeDisposable.add(disposable);
-            }
-
-            @Override
-            public void onFailureMessage(String message) {
-                Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
-            }
-
-            @Override
-            public void onNotFoundUserInDatabase() {
-                mView.showLoginDialog();
+            public void onFailure(String message) {
+                Log.d(TAG, "onFailure() called with: message = [" + message + "]");
             }
         });
+        compositeDisposable.add(disposable);
     }
 }

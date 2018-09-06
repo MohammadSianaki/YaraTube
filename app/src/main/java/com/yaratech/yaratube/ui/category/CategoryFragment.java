@@ -17,15 +17,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Category;
-import com.yaratech.yaratube.data.source.local.db.AppDbHelper;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,16 +45,10 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     private CategoryContract.Presenter mPresenter;
     private OnCategoryFragmentInteractionListener mListener;
     private Unbinder mUnBinder;
-    private UserRepository userRepository;
-    private StoreRepository storeRepository;
-    private AppDbHelper appDbHelper;
-    private StoreRemoteDataSource storeRemoteDataSource;
-    private UserRemoteDataSource userRemoteDataSource;
-    private CompositeDisposable compositeDisposable;
+    private AppDataManager appDataManager;
 
     //------------------------------------------------------------------------------------------------
     public CategoryFragment() {
-
         // Required empty public constructor
     }
 
@@ -100,7 +93,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         Log.i(TAG, "onViewCreated: CategoryFragment");
         mUnBinder = ButterKnife.bind(this, view);
         categoryAdapter = new CategoryAdapter(this);
-        mPresenter = new CategoryPresenter(storeRepository);
+        mPresenter = new CategoryPresenter(appDataManager);
         mPresenter.attachView(this);
         setupRecyclerView();
 
@@ -149,7 +142,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
     @Override
     public void onDestroyView() {
         mUnBinder.unbind();
-        mPresenter.cancelCategoryApiRequest();
+        mPresenter.unSubscribe();
         mPresenter.detachView();
         super.onDestroyView();
         Log.i(TAG, "onDestroyView: CategoryFragment");
@@ -194,7 +187,6 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         Toast.makeText(getContext(), "Check you network connection...", Toast.LENGTH_SHORT).show();
     }
 
-
     @Override
     public void showProgressBarLoading() {
         progressBar.setVisibility(View.VISIBLE);
@@ -205,34 +197,12 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         progressBar.setVisibility(View.GONE);
     }
 
-
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public void setStoreRepository(StoreRepository storeRepository) {
-        this.storeRepository = storeRepository;
-    }
-
-    public void setAppDbHelper(AppDbHelper appDbHelper) {
-        this.appDbHelper = appDbHelper;
-    }
-
-    public void setStoreRemoteDataSource(StoreRemoteDataSource storeRemoteDataSource) {
-        this.storeRemoteDataSource = storeRemoteDataSource;
-    }
-
-    public void setUserRemoteDataSource(UserRemoteDataSource userRemoteDataSource) {
-        this.userRemoteDataSource = userRemoteDataSource;
-    }
-
-    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
-        this.compositeDisposable = compositeDisposable;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
 
     public interface OnCategoryFragmentInteractionListener {
         void showProductsOfRequestedCategoryItem(Category item);
     }
-
 
 }

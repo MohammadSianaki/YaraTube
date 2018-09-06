@@ -22,8 +22,6 @@ public interface HomeContract {
 
     interface Presenter extends BasePresenter<View> {
         void fetchStoreItems();
-
-        void cancelStoreApiRequest();
     }
 
 

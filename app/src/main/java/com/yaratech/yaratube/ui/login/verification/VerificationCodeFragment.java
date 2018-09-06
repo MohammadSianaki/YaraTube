@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Event;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.login.LoginDialogFragment;
@@ -51,11 +52,15 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     private VerificationContract.Presenter mPresenter;
     private boolean autoReadOtp = false;
     private Unbinder mUnBinder;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
     private CompositeDisposable compositeDisposable;
     private SmsListener smsListener;
     private SmsReceiver smsReceiver;
     //------------------------------------------------------------------------------------------
+
+    public VerificationCodeFragment() {
+        this.compositeDisposable = new CompositeDisposable();
+    }
 
     public static VerificationCodeFragment newInstance() {
 
@@ -84,7 +89,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
         Log.d(TAG, "<<<<    lifecycle   >>>>    onViewCreated: VerificationCodeFragment");
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mPresenter = new VerificationPresenter(userRepository, compositeDisposable);
+        mPresenter = new VerificationPresenter(appDataManager);
         mPresenter.attachView(this);
         smsReceiver = new SmsReceiver();
         if (getArguments() != null) {
@@ -172,12 +177,8 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
         EventBus.getDefault().post(event);
     }
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
-        this.compositeDisposable = compositeDisposable;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
 
     public SmsListener getSmsListener() {

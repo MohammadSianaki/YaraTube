@@ -98,7 +98,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         Log.i(TAG, "onViewCreated: GridCategoryFragment");
         gridCategoryAdapter = new GridCategoryAdapter(this);
         gridCategoryAdapter.setHasStableIds(true);
-        mPresenter = new GridCategoryPresenter(storeRepository);
+        mPresenter = new GridCategoryPresenter(appDataManager);
         mPresenter.attachView(this);
         setupRecyclerView();
 
@@ -162,7 +162,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView: ");
         mUnBinder.unbind();
-        mPresenter.cancelProductApiRequest();
+        mPresenter.unSubscribe();
         mPresenter.detachView();
         super.onDestroyView();
     }
@@ -184,7 +184,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         onRequestedProductItemClickListener.showProductDetailsOfRequestedProductItem(item);
     }
 
-    public void setStoreRepository(StoreRepository storeRepository) {
-        this.storeRepository = storeRepository;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
 }

@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.yaratech.yaratube.R;
+import com.yaratech.yaratube.data.AppDataManager;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -38,7 +39,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
 
     private ProfileContract.Presenter mPresenter;
     private Unbinder mUnBinder;
-    private UserRepository userRepository;
+    private AppDataManager appDataManager;
 
     @BindView(R.id.profile_fragment_toolbar)
     Toolbar toolbar;
@@ -73,7 +74,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
         toolbar.setTitle(R.string.profile_fragment_toolbar_title);
-        mPresenter = new ProfilePresenter(userRepository);
+        mPresenter = new ProfilePresenter(appDataManager);
         mPresenter.attachView(this);
         String avatarPath = mPresenter.getUserProfileImageAvatarPath();
         Log.d(TAG, "onViewCreated: avatar path is : " + avatarPath);
@@ -116,6 +117,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     @Override
     public void onDestroyView() {
         Log.d(TAG, "onDestroy: ProfileFragment");
+        mPresenter.unSubscribe();
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
@@ -158,7 +160,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         super.onDetach();
     }
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setAppDataManager(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
     }
 }

@@ -3,11 +3,15 @@ package com.yaratech.yaratube.ui.login.verification;
 import android.util.Log;
 
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
-import com.yaratech.yaratube.data.model.other.Event;
+import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.data.DataManager;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepTwoResponse;
 import com.yaratech.yaratube.data.model.db.User;
 import com.yaratech.yaratube.data.model.db.UserLoginInfo;
+import com.yaratech.yaratube.data.model.other.Event;
 import com.yaratech.yaratube.utils.TextUtils;
+
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,13 +23,13 @@ import io.reactivex.observers.DisposableObserver;
 
 public class VerificationPresenter implements VerificationContract.Presenter {
     private static final String TAG = "VerificationPresenter";
-    private final UserRepository repository;
+    private AppDataManager appDataManager;
     private final CompositeDisposable compositeDisposable;
     private VerificationContract.View mView;
 
-    public VerificationPresenter(UserRepository repository, CompositeDisposable compositeDisposable) {
-        this.repository = repository;
-        this.compositeDisposable = compositeDisposable;
+    public VerificationPresenter(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
+        this.compositeDisposable = new CompositeDisposable();
     }
 
     @Override
@@ -35,7 +39,6 @@ public class VerificationPresenter implements VerificationContract.Presenter {
 
     @Override
     public void detachView() {
-        compositeDisposable.clear();
         mView = null;
     }
 
@@ -45,23 +48,31 @@ public class VerificationPresenter implements VerificationContract.Presenter {
     }
 
     @Override
+    public void unSubscribe() {
+        if (isAttached()) {
+            compositeDisposable.clear();
+        }
+    }
+
+    @Override
     public void observeAutoReadVerificationCode(String phoneNumber, String verificationCode) {
-        repository.verifyUserWithThisCode(new UserDataSource.UserApiResultCallback() {
+        Disposable disposable = appDataManager.verifyUserWithThisCode(phoneNumber, verificationCode, new DataManager.LoginApiResultCallback() {
             @Override
-            public void onSuccessMessage(String message, int responseCode, Object response) {
+            public void onSuccess(String message, int responseCode, Object response) {
                 Log.d(TAG, "<<<<    AutoReadOTP     >>>>    onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "], response = [" + response + "]");
             }
 
             @Override
-            public void onErrorMessage(String message, int responseCode) {
+            public void onError(String message, int responseCode) {
                 Log.d(TAG, "<<<<    AutoReadOTP     >>>>    onErrorMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
             }
 
             @Override
-            public void onFailureMessage(String message, int responseCode) {
-                Log.d(TAG, "<<<<    AutoReadOTP     >>>>    onFailureMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
+            public void onFailure(String message) {
+                Log.d(TAG, "<<<<    AutoReadOTP     >>>>    onFailureMessage() called with: message = [" + message);
             }
-        }, verificationCode, phoneNumber);
+        });
+        compositeDisposable.add(disposable);
     }
 
     @Override
@@ -86,11 +97,11 @@ public class VerificationPresenter implements VerificationContract.Presenter {
 
         Disposable disposable = (Disposable) o.subscribeWith(new DisposableObserver<String>() {
             @Override
-            public void onNext(String code) {
-                repository.verifyUserWithThisCode(new UserDataSource.UserApiResultCallback() {
+            public void onNext(String verificationCode) {
+                Disposable disposable1 = appDataManager.verifyUserWithThisCode(phoneNumber, verificationCode, new AppDataManager.LoginApiResultCallback() {
 
                     @Override
-                    public void onSuccessMessage(String message, int responseCode, Object response) {
+                    public void onSuccess(String message, int responseCode, Object response) {
                         ((VerificationCodeFragment) mView).sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_VERIFY_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_FINISH));
                         MobileLoginStepTwoResponse mobileLoginStepTwoResponse = (MobileLoginStepTwoResponse) response;
                         UserLoginInfo userLoginInfo = new UserLoginInfo();
@@ -108,15 +119,16 @@ public class VerificationPresenter implements VerificationContract.Presenter {
                     }
 
                     @Override
-                    public void onErrorMessage(String message, int responseCode) {
+                    public void onError(String message, int responseCode) {
                         Log.d(TAG, "onErrorMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
                     }
 
                     @Override
-                    public void onFailureMessage(String message, int responseCode) {
-                        Log.d(TAG, "onFailureMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
+                    public void onFailure(String message) {
+                        Log.d(TAG, "onFailureMessage() called with: message = [" + message);
                     }
-                }, code, phoneNumber);
+                });
+                compositeDisposable.add(disposable1);
             }
 
             @Override
@@ -133,28 +145,23 @@ public class VerificationPresenter implements VerificationContract.Presenter {
     }
 
     private void saveUserLoginInfoIntoDatabase(UserLoginInfo userLoginInfo) {
-        repository.insertUserLoginInfo(new UserDataSource.InsertIntoDatabaseCallback() {
+        Disposable disposable = appDataManager.saveUserLoginInfo(userLoginInfo, new DataManager.LoginDatabaseResultCallback() {
+
             @Override
-            public void onUserLoginInserted() {
-                Log.d(TAG, "onUserLoginInserted() called");
+            public void onSuccess(Map<Boolean, String> map) {
+                Log.d(TAG, "onSuccess() called with: aBoolean = [" + map.containsKey(true) + "]");
             }
 
             @Override
-            public void onAddedToCompositeDisposable(Disposable disposable) {
-                compositeDisposable.add(disposable);
+            public void onFailure(String message) {
+                Log.d(TAG, "onFailure() called with: message = [" + message + "]");
             }
-
-            @Override
-            public void onFailureMessage(String message) {
-                Log.d(TAG, "onFailureMessage() called with: message = [" + message + "]");
-            }
-        }, userLoginInfo);
+        });
     }
-
 
 
     @Override
     public String getUserMobilePhoneNumber() {
-        return repository.getUserMobilePhoneNumber();
+        return appDataManager.getUserMobilePhoneNumber();
     }
 }

@@ -22,10 +22,7 @@ public interface CategoryContract {
 
 
     interface Presenter extends BasePresenter<View> {
-
         void fetchCategoriesFromRemoteDataSource();
-
-        void cancelCategoryApiRequest();
     }
 
 

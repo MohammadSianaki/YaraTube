@@ -1,18 +1,26 @@
 package com.yaratech.yaratube.ui.gridcategory;
 
+import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.data.DataManager;
 import com.yaratech.yaratube.data.model.other.Product;
 
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 public class GridCategoryPresenter implements GridCategoryContract.Presenter {
 
 
-    private StoreRepository repository;
+    private AppDataManager appDataManager;
     private GridCategoryContract.View mView;
+    private CompositeDisposable compositeDisposable;
 
-    public GridCategoryPresenter(StoreRepository storeRepository) {
-        this.repository = storeRepository;
+    public GridCategoryPresenter(AppDataManager appDataManager) {
+        this.appDataManager = appDataManager;
+        compositeDisposable = new CompositeDisposable();
     }
+
 
     @Override
     public void attachView(GridCategoryContract.View view) {
@@ -25,17 +33,16 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
     }
 
     @Override
-    public void cancelProductApiRequest() {
-        if (isAttached()) {
-            repository.cancelProductsByCategoryIdApiRequest();
-        }
+    public void unSubscribe() {
+        compositeDisposable.clear();
     }
 
     @Override
     public void fetchProducts(int categoryId, int offset, int limit) {
         if (isAttached()) {
             mView.showProgressBarLoading();
-            repository.fetchProductsByCategoryId(categoryId, offset, limit, new StoreDataSource.ApiResultCallback() {
+            Disposable disposable = appDataManager.fetchProductsByCategoryId(categoryId, offset, limit, new DataManager.DashboardApiResultCallback() {
+
                 @Override
                 public void onDataLoaded(Object response) {
                     List<Product> productList = null;
@@ -66,6 +73,7 @@ public class GridCategoryPresenter implements GridCategoryContract.Presenter {
                     }
                 }
             });
+            compositeDisposable.add(disposable);
         }
     }
 

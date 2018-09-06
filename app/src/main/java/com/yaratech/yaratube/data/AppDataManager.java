@@ -1,11 +1,11 @@
 package com.yaratech.yaratube.data;
 
-import android.content.Context;
-
 import com.yaratech.yaratube.data.model.db.UserLoginInfo;
 import com.yaratech.yaratube.data.source.local.db.DbHelper;
 import com.yaratech.yaratube.data.source.local.prefs.PreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.ApiHelper;
+
+import java.util.Map;
 
 import io.reactivex.disposables.Disposable;
 
@@ -15,24 +15,20 @@ public class AppDataManager implements DataManager {
     private PreferencesHelper preferencesHelper;
     private DbHelper dbHelper;
     private ApiHelper apiHelper;
-    private Context context;
 
     private AppDataManager(PreferencesHelper preferencesHelper,
                            DbHelper dbHelper,
-                           ApiHelper apiHelper,
-                           Context context) {
+                           ApiHelper apiHelper) {
         this.preferencesHelper = preferencesHelper;
         this.dbHelper = dbHelper;
         this.apiHelper = apiHelper;
-        this.context = context;
     }
 
     public static AppDataManager getINSTANCE(PreferencesHelper preferencesHelper,
                                              DbHelper dbHelper,
-                                             ApiHelper apiHelper,
-                                             Context context) {
+                                             ApiHelper apiHelper) {
         if (INSTANCE == null) {
-            INSTANCE = new AppDataManager(preferencesHelper, dbHelper, apiHelper, context);
+            INSTANCE = new AppDataManager(preferencesHelper, dbHelper, apiHelper);
         }
         return INSTANCE;
     }
@@ -42,27 +38,27 @@ public class AppDataManager implements DataManager {
     //region Store Remote Api Request Implementation
 
     @Override
-    public Disposable fetchListOfCategories(StoreApiResultCallback callback) {
+    public Disposable fetchListOfCategories(DashboardApiResultCallback callback) {
         return apiHelper.fetchListOfCategories(callback);
     }
 
     @Override
-    public Disposable fetchStoreItems(StoreApiResultCallback callback) {
+    public Disposable fetchStoreItems(DashboardApiResultCallback callback) {
         return apiHelper.fetchStoreItems(callback);
     }
 
     @Override
-    public Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, StoreApiResultCallback callback) {
+    public Disposable fetchProductsByCategoryId(int categoryId, int offset, int limit, DashboardApiResultCallback callback) {
         return apiHelper.fetchProductsByCategoryId(categoryId, offset, limit, callback);
     }
 
     @Override
-    public Disposable fetchProductDetailsByProductId(int productId, String deviceOs, StoreApiResultCallback callback) {
+    public Disposable fetchProductDetailsByProductId(int productId, String deviceOs, DashboardApiResultCallback callback) {
         return apiHelper.fetchProductDetailsByProductId(productId, deviceOs, callback);
     }
 
     @Override
-    public Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, StoreApiResultCallback callback) {
+    public Disposable fetchCommentListOfProductByProductId(int productId, int offset, int limit, DashboardApiResultCallback callback) {
         return apiHelper.fetchCommentListOfProductByProductId(productId, offset, limit, callback);
     }
 
@@ -76,22 +72,18 @@ public class AppDataManager implements DataManager {
     //region User Remote Api Request Implementation
 
     @Override
-    public Disposable registerUserWithThisPhoneNumber(String phoneNumber, String deviceId, String deviceModel, String deviceOs, LoginApiResultCallback callback) {
+    public Disposable registerUserWithThisPhoneNumber(String phoneNumber, LoginApiResultCallback callback) {
         return apiHelper.
                 registerUserWithThisPhoneNumber(
                         phoneNumber,
-                        deviceId,
-                        deviceModel,
-                        deviceOs,
                         callback);
     }
 
     @Override
-    public Disposable verifyUserWithThisCode(String phoneNumber, String deviceId, String verificationCode, LoginApiResultCallback callback) {
+    public Disposable verifyUserWithThisCode(String phoneNumber, String verificationCode, LoginApiResultCallback callback) {
         return apiHelper
                 .verifyUserWithThisCode(
                         phoneNumber,
-                        deviceId,
                         verificationCode,
                         callback);
     }
@@ -145,8 +137,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Disposable clearDatabase() {
-        return dbHelper.clearDatabase();
+    public Disposable clearDatabase(LoginDatabaseResultCallback loginDatabaseResultCallback) {
+        return dbHelper.clearDatabase(new LoginDatabaseResultCallback() {
+            @Override
+            public void onSuccess(Map<Boolean, String> map) {
+            }
+
+            @Override
+            public void onFailure(String message) {
+            }
+        });
     }
 
     //endregion
