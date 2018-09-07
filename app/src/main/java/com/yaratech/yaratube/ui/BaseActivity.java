@@ -1,6 +1,7 @@
 package com.yaratech.yaratube.ui;
 
 import android.Manifest;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,9 +28,14 @@ import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
 import com.yaratech.yaratube.ui.login.LoginDialogFragment;
+import com.yaratech.yaratube.ui.login.verification.SmsListener;
+import com.yaratech.yaratube.ui.login.verification.SmsReceiver;
 import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
 import com.yaratech.yaratube.ui.profile.ProfileFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
+import com.yaratech.yaratube.utils.TextUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 
@@ -61,6 +67,9 @@ public class BaseActivity extends AppCompatActivity implements
     private AppApiHelper appApiHelper;
     private AppPreferencesHelper appPreferencesHelper;
     private AppDataManager appDataManager;
+    private boolean autoReadOtp;
+    private SmsReceiver smsReceiver;
+
     //------------------------------------------------------------------------------------------------
 
     @Override
@@ -72,7 +81,6 @@ public class BaseActivity extends AppCompatActivity implements
         ActivityUtils.checkAndSetRtl(this);
         requestPermissions();
         initDependencies();
-
         navigationView.setNavigationItemSelectedListener(this);
 
         BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
@@ -93,7 +101,7 @@ public class BaseActivity extends AppCompatActivity implements
         this.appPreferencesHelper = new AppPreferencesHelper(this);
         this.appDbHelper = new AppDbHelper(this);
         this.appApiHelper = new AppApiHelper(this);
-        this.appDataManager = new  AppDataManager(appPreferencesHelper, appDbHelper, appApiHelper);
+        this.appDataManager = new AppDataManager(appPreferencesHelper, appDbHelper, appApiHelper);
     }
 
     private void requestPermissions() {
@@ -105,6 +113,17 @@ public class BaseActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == BaseActivity.PERMISSION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                autoReadOtp = true;
+            } else {
+                autoReadOtp = false;
+            }
+        }
+    }
 
     @Override
     public void onAttachFragment(android.support.v4.app.Fragment fragment) {
@@ -125,6 +144,10 @@ public class BaseActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart: BaseActivity");
+        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+        smsReceiver = new SmsReceiver();
+        SmsReceiver.bindListener(getSmsListener());
+        registerReceiver(smsReceiver, filter);
     }
 
     @Override
@@ -155,6 +178,8 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         compositeDisposable.clear();
+        SmsReceiver.unBindListener();
+        unregisterReceiver(smsReceiver);
         super.onStop();
         Log.i(TAG, "onStop: BaseActivity");
     }
@@ -289,4 +314,21 @@ public class BaseActivity extends AppCompatActivity implements
         loginFragment.setAppDataManager(appDataManager);
         loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
     }
+
+    public SmsListener getSmsListener() {
+        return new SmsListener() {
+            @Override
+            public void onReceivedMessage(String message) {
+                String OTP = TextUtils.removeNonDigits(message);
+                sendOneTimePasswordToVerificationFragment(OTP);
+                Log.d(TAG, "<<<<   OTP     >>>>    onReceivedMessage(): removeNonDigits Returned : " + OTP);
+            }
+        };
+    }
+
+    private void sendOneTimePasswordToVerificationFragment(String otp) {
+        Log.d(TAG, "<<<<   OTP     >>>>    sendOneTimePasswordToVerificationFragment() called with: otp = [" + otp + "]");
+        EventBus.getDefault().post(otp);
+    }
+
 }

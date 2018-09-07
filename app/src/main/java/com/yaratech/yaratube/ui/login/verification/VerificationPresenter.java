@@ -140,6 +140,20 @@ public class VerificationPresenter implements VerificationContract.Presenter {
     }
 
     @Override
+    public void observerCorrectButtonClicks(Observable buttonClicks) {
+        Disposable disposable = buttonClicks
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        mView.showLoginStepTwoDialog();
+                    }
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
     public void saveUserLoginInfoIntoDatabase(UserLoginInfo userLoginInfo) {
         Log.d(TAG, "saveUserLoginInfoIntoDatabase() called with: userLoginInfo = [" + userLoginInfo + "]");
         Disposable disposable = appDataManager.saveUserLoginInfo(userLoginInfo, new DataManager.SaveUserDatabaseResultCallback() {

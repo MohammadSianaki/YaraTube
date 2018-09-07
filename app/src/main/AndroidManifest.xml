@@ -26,12 +26,6 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ui.login.verification.SmsReceiver">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".ui.player.PlayerActivity"
             android:label="@string/title_activity_player"

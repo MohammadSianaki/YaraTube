@@ -28,11 +28,11 @@ public class SmsReceiver extends BroadcastReceiver {
         }
     }
 
-    public void bindListener(SmsListener listener) {
+    public static void bindListener(SmsListener listener) {
         mListener = listener;
     }
 
-    public void unBindListener() {
+    public static void unBindListener() {
         mListener = null;
     }
 }

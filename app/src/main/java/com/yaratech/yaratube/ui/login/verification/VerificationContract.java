@@ -28,6 +28,8 @@ public interface VerificationContract {
                 Observable observable, String phoneNumber);
 
         void observerSubmitButtonClicks(Observable buttonClicks, String phoneNumber, String verificationCode);
+
+        void observerCorrectButtonClicks(Observable buttonClicks);
     }
 
 }

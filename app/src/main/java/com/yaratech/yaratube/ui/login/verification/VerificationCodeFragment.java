@@ -1,6 +1,5 @@
 package com.yaratech.yaratube.ui.login.verification;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,19 +16,14 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Event;
-import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.login.LoginDialogFragment;
-import com.yaratech.yaratube.utils.TextUtils;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.concurrent.TimeUnit;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public class VerificationCodeFragment extends Fragment implements VerificationContract.View {
     //------------------------------------------------------------------------------------------
@@ -48,11 +42,8 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     Button verificationCodeCorrectButton;
 
     private VerificationContract.Presenter mPresenter;
-    private boolean autoReadOtp = false;
     private Unbinder mUnBinder;
     private AppDataManager appDataManager;
-    private SmsListener smsListener;
-    private SmsReceiver smsReceiver;
     //------------------------------------------------------------------------------------------
 
     public VerificationCodeFragment() {
@@ -69,7 +60,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        smsListener = getSmsListener();
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -84,7 +75,6 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
         mUnBinder = ButterKnife.bind(this, view);
         mPresenter = new VerificationPresenter(appDataManager);
         mPresenter.attachView(this);
-        smsReceiver = new SmsReceiver();
         if (getArguments() != null) {
             getArguments().putString(KEY_MOBILE_PHONE_NUMBER, mPresenter.getUserMobilePhoneNumber());
         }
@@ -93,24 +83,15 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated() called : autoReadOtp is not allowed");
+        mPresenter.observeVerificationCodeInput(RxTextView.textChangeEvents(verificationCodeEditText), getArguments().getString(KEY_MOBILE_PHONE_NUMBER));
 
+        mPresenter.observerCorrectButtonClicks(RxView.clicks(verificationCodeCorrectButtongi));
     }
 
     @Override
     public void showLoginStepTwoDialog() {
         sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_CORRECT_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_TWO));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == BaseActivity.PERMISSION_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                autoReadOtp = true;
-            } else {
-                autoReadOtp = false;
-            }
-        }
     }
 
 
@@ -123,35 +104,11 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     @Override
     public void onResume() {
         super.onResume();
-        if (autoReadOtp) {
-            smsReceiver.bindListener(smsListener);
-        } else {
-            Log.d(TAG, "onActivityCreated() called : autoReadOtp is not allowed");
-            mPresenter.observeVerificationCodeInput(RxTextView.textChangeEvents(verificationCodeEditText), getArguments().getString(KEY_MOBILE_PHONE_NUMBER));
-
-            Disposable buttonDisposable = RxView
-                    .clicks(verificationCodeSubmitButton)
-                    .throttleFirst(3, TimeUnit.SECONDS)
-                    .subscribe(new Consumer<Object>() {
-                        @Override
-                        public void accept(Object o) throws Exception {
-                        }
-                    });
-
-            Disposable editTextDisposable = RxView
-                    .clicks(verificationCodeCorrectButton)
-                    .subscribe(new Consumer<Object>() {
-                        @Override
-                        public void accept(Object o) throws Exception {
-                            Log.d("Correct Button", "accept: ");
-                            showLoginStepTwoDialog();
-                        }
-                    });
-        }
     }
 
     @Override
     public void onDestroyView() {
+//        getActivity().unregisterReceiver(smsReceiver);
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
@@ -159,8 +116,8 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
-        smsReceiver.unBindListener();
     }
 
     @Override
@@ -177,17 +134,14 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
         this.appDataManager = appDataManager;
     }
 
-    public SmsListener getSmsListener() {
-        return new SmsListener() {
-            @Override
-            public void onReceivedMessage(String message) {
-                if (getArguments() != null) {
-                    getArguments().putString(KEY_MESSAGE, message);
-                    String OTP = TextUtils.removeNonDigits(getArguments().getString(KEY_MESSAGE));
-                    Log.d(TAG, "onReceivedMessage(): removeNonDigits Returned : " + OTP);
-                }
-            }
-        };
+
+    @Subscribe
+    void receiveOneTimePasswordFromActivity(String otp) {
+        Log.d(TAG, "<<<<   OTP     >>>>    receiveOneTimePasswordFromActivity() called with: otp = [" + otp + "]");
+        mPresenter
+                .verifyUserWithPhoneNumberAndVerificationCode(
+                        getArguments().getString(KEY_MOBILE_PHONE_NUMBER),
+                        otp);
     }
 
     @Override
