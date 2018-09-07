@@ -42,7 +42,7 @@ ext {
     exoPlayerVersion = "2.7.3"
     eventBusVersion = "3.1.1"
     googleOAuthVersion = "16.0.0"
-    rxAndroidVersion = "2.0.1"
+    rxAndroidVersion = "2.0.2"
     rxJavaVersion = "2.1.10"
     rxBindingVersion = "2.1.1"
     rxRoomAdapterVersion = "1.1.1"
