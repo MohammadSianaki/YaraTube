@@ -31,11 +31,6 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
         productList = new ArrayList<>();
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
     public void setProductList(List<Product> newProductList) {
         ArrayList newProducts = new ArrayList();
         newProducts.addAll(productList);

@@ -24,7 +24,6 @@ import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +42,6 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
     private CategoryFragment categoryFragment;
 
     private AppDataManager appDataManager;
-    private CompositeDisposable compositeDisposable;
 
     //--------------------------------------------------------------------------------------------
 
@@ -233,8 +231,5 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
         this.appDataManager = appDataManager;
     }
 
-    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
-        this.compositeDisposable = compositeDisposable;
-    }
 }
 

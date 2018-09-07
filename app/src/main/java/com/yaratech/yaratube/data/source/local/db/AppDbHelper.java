@@ -23,16 +23,10 @@ public class AppDbHelper implements DbHelper {
     private final AppDatabase mAppDatabase;
     private static AppDbHelper INSTANCE = null;
 
-    private AppDbHelper(Context context) {
+    public AppDbHelper(Context context) {
         mAppDatabase = AppDatabase.getINSTANCE(context);
     }
 
-    public static AppDbHelper getINSTANCE(Context context) {
-        if (INSTANCE == null) {
-            INSTANCE = new AppDbHelper(context);
-        }
-        return INSTANCE;
-    }
 
     //------------------------------------------------------------------------------------------------------
     @Override
@@ -43,7 +37,7 @@ public class AppDbHelper implements DbHelper {
                     public Map<Boolean, String> call() throws Exception {
                         UserLoginInfo userLoginInfo = mAppDatabase.userDao().getUserLoginInfo();
                         Map<Boolean, String> map = new HashMap<>();
-                        if (userLoginInfo.getIsAuthorized() == 1) {
+                        if (userLoginInfo != null && userLoginInfo.getIsAuthorized() == 1) {
                             map.put(true, userLoginInfo.getUser().getToken());
                         } else {
                             map.put(false, null);
@@ -69,29 +63,22 @@ public class AppDbHelper implements DbHelper {
     }
 
     @Override
-    public Disposable saveUserLoginInfo(UserLoginInfo userLoginInfo, DataManager.LoginDatabaseResultCallback callback) {
+    public Disposable saveUserLoginInfo(UserLoginInfo userLoginInfo, DataManager.SaveUserDatabaseResultCallback callback) {
         return Single
-                .fromCallable(new Callable<Map<Boolean, String>>() {
+                .fromCallable(new Callable<Boolean>() {
                     @Override
-                    public Map<Boolean, String> call() throws Exception {
-                        UserLoginInfo userLoginInfo = mAppDatabase.userDao().getUserLoginInfo();
-                        Map<Boolean, String> map = new HashMap<>();
-                        if (userLoginInfo.getIsAuthorized() == 1) {
-                            map.put(true, userLoginInfo.getUser().getToken());
-                        } else {
-                            map.put(false, null);
-                        }
-
-                        return map;
+                    public Boolean call() throws Exception {
+                        mAppDatabase.userDao().insertUserLoginInfo(userLoginInfo);
+                        return true;
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<Map<Boolean, String>>() {
+                .subscribeWith(new DisposableSingleObserver<Boolean>() {
                     @Override
-                    public void onSuccess(Map<Boolean, String> map) {
-                        Log.d(TAG, "onSuccess() called with: token = [" + map.get(true) + "]");
-                        callback.onSuccess(map);
+                    public void onSuccess(Boolean flag) {
+                        Log.d(TAG, "onSuccess() called with: flag = [" + flag + "]");
+                        callback.onSuccess(flag);
                     }
 
                     @Override

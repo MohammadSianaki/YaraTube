@@ -96,7 +96,7 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
     public void fetchProductComments(int productId, int offset, int limit) {
         if (isAttached()) {
             mView.showCommentLoading();
-            appDataManager.fetchCommentListOfProductByProductId(productId, offset, limit, new DataManager.DashboardApiResultCallback() {
+            Disposable disposable = appDataManager.fetchCommentListOfProductByProductId(productId, offset, limit, new DataManager.DashboardApiResultCallback() {
                 @Override
                 public void onDataLoaded(Object response) {
                     List<Comment> commentList = (List<Comment>) response;
@@ -122,6 +122,7 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
                     }
                 }
             });
+            compositeDisposable.add(disposable);
         }
     }
 

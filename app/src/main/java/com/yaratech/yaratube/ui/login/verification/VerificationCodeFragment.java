@@ -28,8 +28,6 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -53,13 +51,11 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     private boolean autoReadOtp = false;
     private Unbinder mUnBinder;
     private AppDataManager appDataManager;
-    private CompositeDisposable compositeDisposable;
     private SmsListener smsListener;
     private SmsReceiver smsReceiver;
     //------------------------------------------------------------------------------------------
 
     public VerificationCodeFragment() {
-        this.compositeDisposable = new CompositeDisposable();
     }
 
     public static VerificationCodeFragment newInstance() {
@@ -72,7 +68,6 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "<<<<    lifecycle   >>>>    onCreate: VerificationCodeFragment");
         super.onCreate(savedInstanceState);
         smsListener = getSmsListener();
     }
@@ -80,13 +75,11 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "<<<<    lifecycle   >>>>    onCreateView: VerificationCodeFragment");
         return inflater.inflate(R.layout.fragment_verification_dialog, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "<<<<    lifecycle   >>>>    onViewCreated: VerificationCodeFragment");
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
         mPresenter = new VerificationPresenter(appDataManager);
@@ -103,7 +96,8 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
 
     }
 
-    private void showLoginStepTwoDialog() {
+    @Override
+    public void showLoginStepTwoDialog() {
         sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_CORRECT_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_TWO));
     }
 
@@ -119,22 +113,28 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
         }
     }
 
+
+    @Override
+    public void verifyButtonClickHandler(String verificationCode) {
+        mPresenter.observerSubmitButtonClicks(RxView.clicks(verificationCodeSubmitButton), getArguments().getString(KEY_MOBILE_PHONE_NUMBER),
+                verificationCode);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         if (autoReadOtp) {
-            Log.d(TAG, "onActivityCreated() called : autoReadOtp is allowed");
             smsReceiver.bindListener(smsListener);
         } else {
             Log.d(TAG, "onActivityCreated() called : autoReadOtp is not allowed");
-            Observable observable = RxTextView.textChangeEvents(verificationCodeEditText);
+            mPresenter.observeVerificationCodeInput(RxTextView.textChangeEvents(verificationCodeEditText), getArguments().getString(KEY_MOBILE_PHONE_NUMBER));
+
             Disposable buttonDisposable = RxView
                     .clicks(verificationCodeSubmitButton)
                     .throttleFirst(3, TimeUnit.SECONDS)
                     .subscribe(new Consumer<Object>() {
                         @Override
                         public void accept(Object o) throws Exception {
-                            mPresenter.observeVerificationCodeInput(observable, getArguments().getString(KEY_MOBILE_PHONE_NUMBER));
                         }
                     });
 
@@ -147,13 +147,11 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
                             showLoginStepTwoDialog();
                         }
                     });
-            compositeDisposable.addAll(buttonDisposable, editTextDisposable);
         }
     }
 
     @Override
     public void onDestroyView() {
-        Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroyView: VerificationCodeFragment");
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
@@ -161,14 +159,12 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroy: VerificationCodeFragment");
         super.onDestroy();
         smsReceiver.unBindListener();
     }
 
     @Override
     public void onDetach() {
-        Log.d(TAG, "<<<<    lifecycle   >>>>    onDetach: VerificationCodeFragment");
         super.onDetach();
     }
 
@@ -189,7 +185,6 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
                     getArguments().putString(KEY_MESSAGE, message);
                     String OTP = TextUtils.removeNonDigits(getArguments().getString(KEY_MESSAGE));
                     Log.d(TAG, "onReceivedMessage(): removeNonDigits Returned : " + OTP);
-                    mPresenter.observeAutoReadVerificationCode(getArguments().getString(KEY_MOBILE_PHONE_NUMBER), OTP);
                 }
             }
         };

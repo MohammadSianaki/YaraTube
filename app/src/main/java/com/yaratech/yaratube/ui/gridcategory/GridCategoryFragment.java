@@ -97,7 +97,6 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         mUnBinder = ButterKnife.bind(this, view);
         Log.i(TAG, "onViewCreated: GridCategoryFragment");
         gridCategoryAdapter = new GridCategoryAdapter(this);
-        gridCategoryAdapter.setHasStableIds(true);
         mPresenter = new GridCategoryPresenter(appDataManager);
         mPresenter.attachView(this);
         setupRecyclerView();

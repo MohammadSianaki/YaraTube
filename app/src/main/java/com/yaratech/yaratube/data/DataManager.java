@@ -47,6 +47,13 @@ public interface DataManager extends PreferencesHelper, DbHelper, ApiHelper {
 
     }
 
+    interface SaveUserDatabaseResultCallback {
+        void onSuccess(boolean aBoolean);
+
+        void onFailure(String message);
+
+    }
+
     //region Store Remote Api Access Methods
 
 

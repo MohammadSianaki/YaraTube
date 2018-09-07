@@ -59,8 +59,8 @@ public class BaseActivity extends AppCompatActivity implements
     private CompositeDisposable compositeDisposable;
     private AppDbHelper appDbHelper;
     private AppApiHelper appApiHelper;
-    private AppDataManager appDataManager;
     private AppPreferencesHelper appPreferencesHelper;
+    private AppDataManager appDataManager;
     //------------------------------------------------------------------------------------------------
 
     @Override
@@ -80,14 +80,18 @@ public class BaseActivity extends AppCompatActivity implements
             Log.i(TAG, "onCreate: content fragment is null");
             fragment = BaseFragment.newInstance();
             fragment.setAppDataManager(appDataManager);
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.fl_base_activity_content);
+            ActivityUtils
+                    .addFragmentToActivity(
+                            getSupportFragmentManager(),
+                            fragment,
+                            R.id.fl_base_activity_content);
         }
     }
 
     private void initDependencies() {
         this.compositeDisposable = new CompositeDisposable();
-        this.appPreferencesHelper = new AppPreferencesHelper(getApplicationContext());
-        this.appDbHelper = AppDbHelper.getINSTANCE(this);
+        this.appPreferencesHelper = new AppPreferencesHelper(this);
+        this.appDbHelper = new AppDbHelper(this);
         this.appApiHelper = new AppApiHelper(this);
         this.appDataManager = AppDataManager.getINSTANCE(appPreferencesHelper, appDbHelper, appApiHelper);
     }

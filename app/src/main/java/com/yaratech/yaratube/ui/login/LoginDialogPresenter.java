@@ -5,13 +5,13 @@ import com.yaratech.yaratube.data.model.other.Event;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public class LoginPresenter implements LoginContract.Presenter {
+public class LoginDialogPresenter implements LoginContract.Presenter {
 
     private LoginContract.View mView;
     private AppDataManager appDataManager;
     private CompositeDisposable compositeDisposable;
 
-    public LoginPresenter(AppDataManager appDataManager) {
+    public LoginDialogPresenter(AppDataManager appDataManager) {
         this.appDataManager = appDataManager;
         this.compositeDisposable = new CompositeDisposable();
     }

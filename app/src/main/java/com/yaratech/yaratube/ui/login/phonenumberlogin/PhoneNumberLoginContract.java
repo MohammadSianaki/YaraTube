@@ -11,12 +11,17 @@ public class PhoneNumberLoginContract {
         void showVerificationCodeDialog();
 
         void showToastError(String message);
+
+        void submitPhoneNumber(String phoneNumber);
+
     }
 
 
     interface Presenter extends BasePresenter<View> {
 
-        void observePhoneNumberInput(Observable observable);
+        void observePhoneNumberInput(Observable textViewObservable);
+
+        void observeSubmitButton(Observable buttonObservable, String phoneNumber);
     }
 
 

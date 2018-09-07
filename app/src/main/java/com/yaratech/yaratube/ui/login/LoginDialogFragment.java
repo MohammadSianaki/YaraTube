@@ -26,7 +26,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,13 +36,11 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
     private LoginContract.Presenter mPresenter;
     private Unbinder mUnBinder;
     private AppDataManager appDataManager;
-    private CompositeDisposable compositeDisposable;
 
     //---------------------------------------------------------------------------------------
 
     public LoginDialogFragment() {
         // Required empty public constructor
-        this.compositeDisposable = new CompositeDisposable();
     }
 
     public static LoginDialogFragment newInstance() {
@@ -59,14 +56,8 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, "<<<<    lifecycle   >>>>    onCreate    LoginDialogFragment: ");
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
-            initDependencies();
-        }
     }
 
-    private void initDependencies() {
-
-    }
 
     @NonNull
     @Override
@@ -91,7 +82,7 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
         Log.d(TAG, "<<<<    lifecycle   >>>>    onViewCreated: LoginDialogFragment");
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
-        mPresenter = new LoginPresenter(appDataManager);
+        mPresenter = new LoginDialogPresenter(appDataManager);
         mPresenter.attachView(this);
         mPresenter.checkUserStepLogin();
     }
@@ -111,7 +102,6 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
     @Override
     public void onDestroyView() {
         Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroyView() called");
-        compositeDisposable.clear();
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();

@@ -132,7 +132,7 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Disposable saveUserLoginInfo(UserLoginInfo userLoginInfo, LoginDatabaseResultCallback callback) {
+    public Disposable saveUserLoginInfo(UserLoginInfo userLoginInfo, SaveUserDatabaseResultCallback callback) {
         return dbHelper.saveUserLoginInfo(userLoginInfo, callback);
     }
 

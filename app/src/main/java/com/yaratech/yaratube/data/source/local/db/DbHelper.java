@@ -10,7 +10,7 @@ public interface DbHelper {
 
     Disposable isUserAuthorized(DataManager.LoginDatabaseResultCallback callback);
 
-    Disposable saveUserLoginInfo(UserLoginInfo userLoginInfo, DataManager.LoginDatabaseResultCallback callback);
+    Disposable saveUserLoginInfo(UserLoginInfo userLoginInfo, DataManager.SaveUserDatabaseResultCallback callback);
 
     Disposable clearDatabase(DataManager.LoginDatabaseResultCallback loginDatabaseResultCallback);
 

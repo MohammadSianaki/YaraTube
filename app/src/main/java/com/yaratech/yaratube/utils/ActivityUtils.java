@@ -19,7 +19,10 @@ public class ActivityUtils {
 
 
     public static void addFragmentToActivity(FragmentManager fragmentManager,
-                                             Fragment fragment, int frameId, boolean addToBackStack, String tag) {
+                                             Fragment fragment,
+                                             int frameId,
+                                             boolean addToBackStack,
+                                             String tag) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(frameId, fragment, tag);
         if (addToBackStack) {
@@ -28,7 +31,6 @@ public class ActivityUtils {
         transaction.commit();
 
     }
-
 
     public static void checkAndSetRtl(Activity activity) {
         if (activity.getWindow().getDecorView().getLayoutDirection() == View.LAYOUT_DIRECTION_LTR) {

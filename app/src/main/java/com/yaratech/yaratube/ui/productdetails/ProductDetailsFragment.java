@@ -36,7 +36,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +54,6 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     private Unbinder mUnBinder;
     private CommentAdapter commentAdapter;
     private AppDataManager appDataManager;
-    private CompositeDisposable compositeDisposable;
     private OnProductDetailsInteraction mListener;
 
     @BindView(R.id.iv_product_details_media)
@@ -89,7 +87,6 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     public ProductDetailsFragment() {
         // Required empty public constructor
-        this.compositeDisposable = new CompositeDisposable();
     }
 
     public static ProductDetailsFragment newInstance(Product product) {
@@ -276,7 +273,6 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         void showLoginDialogToInsertComment();
 
         void showCommentDialog(String token, int productId);
-
     }
 
 }

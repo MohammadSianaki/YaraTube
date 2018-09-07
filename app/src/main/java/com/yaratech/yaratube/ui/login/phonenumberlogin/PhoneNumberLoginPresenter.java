@@ -7,7 +7,6 @@ import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.DataManager;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -27,8 +26,8 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
     }
 
     @Override
-    public void observePhoneNumberInput(Observable observable) {
-        Observer observer = observable
+    public void observePhoneNumberInput(Observable textViewObservable) {
+        Disposable textViewDisposable = (Disposable) textViewObservable
                 .map(new Function<TextViewTextChangeEvent, String>() {
                     @Override
                     public String apply(TextViewTextChangeEvent textViewTextChangeEvent) throws Exception {
@@ -44,33 +43,10 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<String>() {
-
-
                     @Override
                     public void onNext(String phoneNumber) {
                         Log.d(TAG, "onNext() called with: phoneNumber = [" + phoneNumber + "]");
-                        Disposable disposable1 = appDataManager.registerUserWithThisPhoneNumber(phoneNumber, new DataManager.LoginApiResultCallback() {
-
-                            @Override
-                            public void onSuccess(String message, int responseCode, Object data) {
-                                Log.d(TAG, "onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
-                                mView.showVerificationCodeDialog();
-                                saveMobilePhoneNumber(phoneNumber);
-                            }
-
-                            @Override
-                            public void onError(String message, int responseCode) {
-                                Log.d(TAG, "onErrorMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
-                                mView.showToastError(message);
-                            }
-
-                            @Override
-                            public void onFailure(String message) {
-                                Log.d(TAG, "onFailure() called with: message = [" + message + "]");
-                            }
-
-                        });
-                        compositeDisposable.add(disposable1);
+                        mView.submitPhoneNumber(phoneNumber);
                     }
 
                     @Override
@@ -83,7 +59,55 @@ public class PhoneNumberLoginPresenter implements PhoneNumberLoginContract.Prese
                         Log.d(TAG, "onComplete() called");
                     }
                 });
-        compositeDisposable.add((Disposable) observer);
+        compositeDisposable.add(textViewDisposable);
+    }
+
+    @Override
+    public void observeSubmitButton(Observable buttonObservable, String phoneNumber) {
+        Disposable buttonDisposable =
+                (Disposable) buttonObservable
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableObserver() {
+                            @Override
+                            public void onNext(Object o) {
+                                Disposable disposable = appDataManager
+                                        .registerUserWithThisPhoneNumber(
+                                                phoneNumber,
+                                                new DataManager.LoginApiResultCallback() {
+                                                    @Override
+                                                    public void onSuccess(String message, int responseCode, Object data) {
+                                                        Log.d(TAG, "onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
+                                                        mView.showVerificationCodeDialog();
+                                                        saveMobilePhoneNumber(phoneNumber);
+                                                    }
+
+                                                    @Override
+                                                    public void onError(String message, int responseCode) {
+                                                        Log.d(TAG, "onErrorMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "]");
+                                                        mView.showToastError(message);
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(String message) {
+                                                        Log.d(TAG, "onFailure() called with: message = [" + message + "]");
+                                                    }
+
+                                                });
+                                compositeDisposable.add(disposable);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e(TAG, "onError: ", e);
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                Log.d(TAG, "onComplete() called");
+                            }
+                        });
+        compositeDisposable.add(buttonDisposable);
     }
 
     private void saveMobilePhoneNumber(String phoneNumber) {

@@ -24,10 +24,6 @@ import org.greenrobot.eventbus.EventBus;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLoginContract.View {
     //----------------------------------------------------------------------------------------------------------------------
@@ -43,13 +39,11 @@ public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLog
     private Unbinder mUnBinder;
     private PhoneNumberLoginContract.Presenter mPresenter;
     private AppDataManager appDataManager;
-    private CompositeDisposable compositeDisposable;
     //----------------------------------------------------------------------------------------------------------------------
 
 
     public PhoneNumberLoginFragment() {
         // Required empty public constructor
-        this.compositeDisposable = new CompositeDisposable();
     }
 
 
@@ -90,23 +84,21 @@ public class PhoneNumberLoginFragment extends Fragment implements PhoneNumberLog
         mUnBinder = ButterKnife.bind(this, view);
         mPresenter = new PhoneNumberLoginPresenter(appDataManager);
         mPresenter.attachView(this);
-        Observable observable = RxTextView.textChangeEvents(phoneNumberEditText);
-        Disposable disposable = RxView.clicks(submitPhoneNumberButton)
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        Log.d("Login", "accept() called with: Button Click ");
-                        mPresenter.observePhoneNumberInput(observable);
-                    }
-                });
-        compositeDisposable.add(disposable);
+        mPresenter.observePhoneNumberInput(
+                RxTextView.textChangeEvents(phoneNumberEditText)
+        );
+    }
+
+    @Override
+    public void submitPhoneNumber(String phoneNumber) {
+        mPresenter.observeSubmitButton(RxView.clicks(submitPhoneNumberButton), phoneNumber);
     }
 
     @Override
     public void onDestroyView() {
         Log.d(TAG, "<<<<    lifecycle   >>>>    onDestroyView: PhoneLoginFragment");
-        mPresenter.unSubscribe();
         mUnBinder.unbind();
+        mPresenter.unSubscribe();
         mPresenter.detachView();
         super.onDestroyView();
     }

@@ -15,7 +15,6 @@ import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.model.other.Event;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,12 +55,10 @@ public class LoginMethodFragment extends Fragment implements LoginMethodContract
         super.onCreate(savedInstanceState);
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "<<<<    lifecycle   >>>>    onCreateView: LoginMethodFragment");
-        EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.fragment_login_method, container, false);
     }
 
@@ -99,7 +96,6 @@ public class LoginMethodFragment extends Fragment implements LoginMethodContract
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
-        EventBus.getDefault().unregister(this);
     }
 
 
@@ -113,11 +109,6 @@ public class LoginMethodFragment extends Fragment implements LoginMethodContract
     public void onDetach() {
         Log.d(TAG, "<<<<    lifecycle   >>>>    onDetach: LoginMethodFragment");
         super.onDetach();
-    }
-
-    @Subscribe
-    public void getMessageFromParentFragment(Event.ParentChildMessage event) {
-
     }
 
     public void sendMessageToParentFragment(Event.ChildParentMessage event) {
