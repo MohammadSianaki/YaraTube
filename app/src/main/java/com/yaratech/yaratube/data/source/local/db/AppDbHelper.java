@@ -21,7 +21,6 @@ public class AppDbHelper implements DbHelper {
 
     private static final String TAG = "AppDbHelper";
     private final AppDatabase mAppDatabase;
-    private static AppDbHelper INSTANCE = null;
 
     public AppDbHelper(Context context) {
         mAppDatabase = AppDatabase.getINSTANCE(context);
@@ -93,4 +92,5 @@ public class AppDbHelper implements DbHelper {
     public Disposable clearDatabase(DataManager.LoginDatabaseResultCallback loginDatabaseResultCallback) {
         return null;
     }
+
 }

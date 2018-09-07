@@ -27,12 +27,12 @@ public class AppApiHelper implements ApiHelper {
     private static final String TAG = "AppApiHelper";
     private ApiService apiService;
     private Context context;
-    private static AppApiHelper INSTANCE = null;
 
     public AppApiHelper(Context context) {
         this.context = context;
         apiService = ApiClient.getClient().create(ApiService.class);
     }
+
 
     //-------------------------------------------------------------------------------------
 
@@ -308,5 +308,10 @@ public class AppApiHelper implements ApiHelper {
                         callback.onFailure(e.getMessage());
                     }
                 });
+    }
+
+    @Override
+    public void onStopActivity() {
+        context = null;
     }
 }

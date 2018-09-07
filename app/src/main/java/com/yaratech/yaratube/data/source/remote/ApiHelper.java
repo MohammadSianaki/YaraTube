@@ -36,4 +36,6 @@ public interface ApiHelper {
 
     //endregions
 
+    void onStopActivity();
+
 }

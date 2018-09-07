@@ -12,7 +12,6 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PREF_KEY_CURRENT_USER_MOBILE_PHONE_NUMBER = "PREF_KEY_CURRENT_USER_MOBILE_PHONE_NUMBER";
     private static final String PREF_KEY_CURRENT_USER_LOGIN_STEP = "PREF_KEY_CURRENT_USER_LOGIN_STEP";
     private static final String PREF_KEY_CURRENT_USER_PROFILE_IMAGE_AVATAR_PATH = "PREF_KEY_CURRENT_USER_PROFILE_IMAGE_AVATAR_PATH";
-    private static AppPreferencesHelper INSTANCE = null;
     private final SharedPreferences mPrefs;
 
 
@@ -61,4 +60,9 @@ public class AppPreferencesHelper implements PreferencesHelper {
     public String getUserProfileImageAvatarPath() {
         return mPrefs.getString(PREF_KEY_CURRENT_USER_PROFILE_IMAGE_AVATAR_PATH, null);
     }
+
+    public void onStopActivity() {
+
+    }
+
 }

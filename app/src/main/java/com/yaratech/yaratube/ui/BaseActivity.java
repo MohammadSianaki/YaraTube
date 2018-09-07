@@ -93,7 +93,7 @@ public class BaseActivity extends AppCompatActivity implements
         this.appPreferencesHelper = new AppPreferencesHelper(this);
         this.appDbHelper = new AppDbHelper(this);
         this.appApiHelper = new AppApiHelper(this);
-        this.appDataManager = AppDataManager.getINSTANCE(appPreferencesHelper, appDbHelper, appApiHelper);
+        this.appDataManager = new  AppDataManager(appPreferencesHelper, appDbHelper, appApiHelper);
     }
 
     private void requestPermissions() {

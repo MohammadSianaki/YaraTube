@@ -13,4 +13,6 @@ public interface PreferencesHelper {
     void setUserProfileImageAvatarPath(String imagePath);
 
     String getUserProfileImageAvatarPath();
+
+    void onStopActivity();
 }

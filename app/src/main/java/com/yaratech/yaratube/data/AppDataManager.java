@@ -16,21 +16,12 @@ public class AppDataManager implements DataManager {
     private DbHelper dbHelper;
     private ApiHelper apiHelper;
 
-    private AppDataManager(PreferencesHelper preferencesHelper,
-                           DbHelper dbHelper,
-                           ApiHelper apiHelper) {
+    public AppDataManager(PreferencesHelper preferencesHelper,
+                          DbHelper dbHelper,
+                          ApiHelper apiHelper) {
         this.preferencesHelper = preferencesHelper;
         this.dbHelper = dbHelper;
         this.apiHelper = apiHelper;
-    }
-
-    public static AppDataManager getINSTANCE(PreferencesHelper preferencesHelper,
-                                             DbHelper dbHelper,
-                                             ApiHelper apiHelper) {
-        if (INSTANCE == null) {
-            INSTANCE = new AppDataManager(preferencesHelper, dbHelper, apiHelper);
-        }
-        return INSTANCE;
     }
 
 //----------------------------------------------------------------------------------------------
@@ -115,6 +106,11 @@ public class AppDataManager implements DataManager {
     @Override
     public String getUserProfileImageAvatarPath() {
         return preferencesHelper.getUserProfileImageAvatarPath();
+    }
+
+    @Override
+    public void onStopActivity() {
+        apiHelper.onStopActivity();
     }
 
     @Override
