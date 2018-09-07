@@ -28,7 +28,6 @@ import butterknife.Unbinder;
 public class VerificationCodeFragment extends Fragment implements VerificationContract.View {
     //------------------------------------------------------------------------------------------
     private static final String TAG = "VerificationDialogFragm";
-    private static final String KEY_MESSAGE = "KEY_MESSAGE";
     private static final String KEY_MOBILE_PHONE_NUMBER = "KEY_MOBILE_PHONE_NUMBER";
 
 
@@ -83,10 +82,9 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "onActivityCreated() called : autoReadOtp is not allowed");
         mPresenter.observeVerificationCodeInput(RxTextView.textChangeEvents(verificationCodeEditText), getArguments().getString(KEY_MOBILE_PHONE_NUMBER));
 
-        mPresenter.observerCorrectButtonClicks(RxView.clicks(verificationCodeCorrectButtongi));
+        mPresenter.observerCorrectButtonClicks(RxView.clicks(verificationCodeCorrectButton));
     }
 
     @Override
@@ -108,7 +106,6 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
 
     @Override
     public void onDestroyView() {
-//        getActivity().unregisterReceiver(smsReceiver);
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
