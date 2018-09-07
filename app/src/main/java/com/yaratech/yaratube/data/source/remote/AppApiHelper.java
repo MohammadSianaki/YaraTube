@@ -30,7 +30,7 @@ public class AppApiHelper implements ApiHelper {
 
     public AppApiHelper(Context context) {
         this.context = context;
-        apiService = ApiClient.getClient().create(ApiService.class);
+        apiService = ApiClient.getClient(context.getCacheDir()).create(ApiService.class);
     }
 
 

@@ -4,6 +4,9 @@ package com.yaratech.yaratube.data.source.remote;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.yaratech.yaratube.BuildConfig;
 
+import java.io.File;
+
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -18,13 +21,18 @@ public class ApiClient {
         //no instance
     }
 
-    public static Retrofit getClient() {
+    public static Retrofit getClient(File cacheDir) {
         if (retrofit == null) {
             OkHttpClient client = null;
             if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
                 interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-                client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+                int cacheSize = 10 * 1024 * 1024; // 10 MiB
+                Cache cache = new Cache(cacheDir, cacheSize);
+                client = new OkHttpClient
+                        .Builder()
+                        .cache(cache)
+                        .addInterceptor(interceptor).build();
             }
 
             retrofit = new Retrofit.Builder()
@@ -37,5 +45,7 @@ public class ApiClient {
         return retrofit;
     }
 
+    void setCache(OkHttpClient client) {
 
+    }
 }
