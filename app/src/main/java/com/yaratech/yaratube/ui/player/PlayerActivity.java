@@ -20,8 +20,6 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 import com.yaratech.yaratube.R;
 
 import butterknife.BindView;
@@ -44,7 +42,7 @@ public class PlayerActivity extends AppCompatActivity {
         hideStatusBar();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
         if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().getString(KEY_PRODUCT_FILE) != null) {
@@ -69,14 +67,10 @@ public class PlayerActivity extends AppCompatActivity {
         // 2. Create a default LoadControl
         LoadControl loadControl = new DefaultLoadControl();
         playerView.requestFocus();
-        player = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector());
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(
-                this,
-                Util.getUserAgent(this, getResources().getString(R.string.app_name)));
-
+        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
         if (videoUrl != null) {
             HlsMediaSource mediaSource = new HlsMediaSource
-                    .Factory(dataSourceFactory)
+                    .Factory(new CacheDataSourceFactory(this))
                     .createMediaSource(Uri.parse(videoUrl));
             player.prepare(mediaSource);
 
