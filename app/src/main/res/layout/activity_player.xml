@@ -11,10 +11,13 @@
         android:id="@+id/player_fragment_player_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:fastforward_increment="5000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:resize_mode="fill" />
+        app:resize_mode="fill"
+        app:rewind_increment="5000"
+        app:show_timeout="5000" />
 </android.support.constraint.ConstraintLayout>
