@@ -30,7 +30,10 @@ import butterknife.ButterKnife;
 public class PlayerActivity extends AppCompatActivity {
     private static final String TAG = "PlayerActivity";
     private static final String KEY_PRODUCT_FILE = "KEY_PRODUCT_FILE";
+    private static final String KEY_CURRENT_POSITION = "KEY_CURRENT_POSITION";
+    private String videoUrl;
     private SimpleExoPlayer player;
+    private long currentPosition = 0;
 
     @BindView(R.id.player_fragment_player_view)
     PlayerView playerView;
@@ -44,9 +47,10 @@ public class PlayerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
-        String videoUrl = getIntent().getExtras().getString(KEY_PRODUCT_FILE);
+        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().getString(KEY_PRODUCT_FILE) != null) {
+            videoUrl = getIntent().getExtras().getString(KEY_PRODUCT_FILE);
+        }
         initExoPlayer(videoUrl);
-
 
     }
 
@@ -70,19 +74,21 @@ public class PlayerActivity extends AppCompatActivity {
                 this,
                 Util.getUserAgent(this, getResources().getString(R.string.app_name)));
 
+        if (videoUrl != null) {
+            HlsMediaSource mediaSource = new HlsMediaSource
+                    .Factory(dataSourceFactory)
+                    .createMediaSource(Uri.parse(videoUrl));
+            player.prepare(mediaSource);
 
-        HlsMediaSource mediaSource = new HlsMediaSource
-                .Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(videoUrl));
-        player.prepare(mediaSource);
-        player.setPlayWhenReady(true);
-        playerView.setPlayer(player);
+        }
     }
 
     @Override
     protected void onRestart() {
         Log.d(TAG, "onRestart: ");
         super.onRestart();
+        player.seekTo(currentPosition);
+
     }
 
     @Override
@@ -101,24 +107,33 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onResume() {
         Log.d(TAG, "onResume: ");
         super.onResume();
+        player.setPlayWhenReady(true);
+        playerView.setPlayer(player);
     }
+
 
     @Override
     protected void onPause() {
         Log.d(TAG, "onPause: ");
         super.onPause();
+        player.setPlayWhenReady(false);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         Log.d(TAG, "onSaveInstanceState: ");
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: player current pos = ["
+                + player.getCurrentPosition() + "]");
+        currentPosition = player.getCurrentPosition();
+        outState.putLong(KEY_CURRENT_POSITION, player.getCurrentPosition());
     }
 
     @Override
     protected void onStop() {
         Log.d(TAG, "onStop: ");
         super.onStop();
+        // player.stop(false);
     }
 
     @Override
