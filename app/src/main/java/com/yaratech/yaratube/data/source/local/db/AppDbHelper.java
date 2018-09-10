@@ -4,10 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.yaratech.yaratube.data.DataManager;
-import com.yaratech.yaratube.data.model.db.UserLoginInfo;
+import com.yaratech.yaratube.data.model.db.User;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Single;
@@ -31,26 +29,23 @@ public class AppDbHelper implements DbHelper {
     @Override
     public Disposable isUserAuthorized(DataManager.LoginDatabaseResultCallback callback) {
         return Single
-                .fromCallable(new Callable<Map<Boolean, String>>() {
+                .fromCallable(new Callable<String>() {
                     @Override
-                    public Map<Boolean, String> call() throws Exception {
-                        UserLoginInfo userLoginInfo = mAppDatabase.userDao().getUserLoginInfo();
-                        Map<Boolean, String> map = new HashMap<>();
-                        if (userLoginInfo != null && userLoginInfo.getIsAuthorized() == 1) {
-                            map.put(true, userLoginInfo.getUser().getToken());
-                        } else {
-                            map.put(false, null);
+                    public String call() throws Exception {
+                        User user = mAppDatabase.userDao().getUserFromDb();
+                        if (user != null && user.getToken() != null) {
+                            return user.getToken();
                         }
 
-                        return map;
+                        return "";
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<Map<Boolean, String>>() {
+                .subscribeWith(new DisposableSingleObserver<String>() {
                     @Override
-                    public void onSuccess(Map<Boolean, String> map) {
-                        callback.onSuccess(map);
+                    public void onSuccess(String token) {
+                        callback.onSuccess(token);
                     }
 
                     @Override
@@ -62,12 +57,12 @@ public class AppDbHelper implements DbHelper {
     }
 
     @Override
-    public Disposable saveUserLoginInfo(UserLoginInfo userLoginInfo, DataManager.SaveUserDatabaseResultCallback callback) {
+    public Disposable saveUserToDb(User user, DataManager.SaveUserDatabaseResultCallback callback) {
         return Single
                 .fromCallable(new Callable<Boolean>() {
                     @Override
                     public Boolean call() throws Exception {
-                        mAppDatabase.userDao().insertUserLoginInfo(userLoginInfo);
+                        mAppDatabase.userDao().saveUserToDb(user);
                         return true;
                     }
                 })
@@ -82,7 +77,7 @@ public class AppDbHelper implements DbHelper {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e(TAG, "onError <<<<    saveUserLoginInfo   >>>>: ", e);
+                        Log.e(TAG, "onError <<<<    saveuser   >>>>: ", e);
                         callback.onFailure(e.getMessage());
                     }
                 });

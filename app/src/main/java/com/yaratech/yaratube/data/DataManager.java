@@ -4,8 +4,6 @@ import com.yaratech.yaratube.data.source.local.db.DbHelper;
 import com.yaratech.yaratube.data.source.local.prefs.PreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.ApiHelper;
 
-import java.util.Map;
-
 import io.reactivex.disposables.Disposable;
 
 public interface DataManager extends PreferencesHelper, DbHelper, ApiHelper {
@@ -41,7 +39,7 @@ public interface DataManager extends PreferencesHelper, DbHelper, ApiHelper {
 
     interface LoginDatabaseResultCallback {
 
-        void onSuccess(Map<Boolean, String> map);
+        void onSuccess(String token);
 
         void onFailure(String message);
 

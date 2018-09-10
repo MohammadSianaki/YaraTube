@@ -37,8 +37,6 @@ import com.yaratech.yaratube.utils.TextUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
@@ -261,11 +259,12 @@ public class BaseActivity extends AppCompatActivity implements
         if (item.getItemId() == R.id.nav_profile_item) {
             Disposable disposable = appDataManager.isUserAuthorized(new DataManager.LoginDatabaseResultCallback() {
                 @Override
-                public void onSuccess(Map<Boolean, String> map) {
-                    if (map.containsKey(true)) {
-                        Log.d(TAG, "onUserLoginInfoLoaded: User Is Authorized ---> token =" + map.get(true));
+                public void onSuccess(String token) {
+                    if (!token.equals("")) {
+                        Log.d(TAG, "onSuccess: token is not null");
                         showProfileFragment();
                     } else {
+                        Log.d(TAG, "onSuccess: token is null");
                         showLoginDialog();
                     }
                 }

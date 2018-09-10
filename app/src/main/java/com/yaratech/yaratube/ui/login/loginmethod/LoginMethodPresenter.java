@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.DataManager;
+import com.yaratech.yaratube.data.model.api.GoogleLoginResponse;
+import com.yaratech.yaratube.data.model.db.User;
 import com.yaratech.yaratube.data.model.other.Event;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -22,18 +24,42 @@ public class LoginMethodPresenter implements LoginMethodContract.Presenter {
 
 
     @Override
+    public void saveUserLoginInfoIntoDatabase(User user) {
+        appDataManager.saveUserToDb(user, new DataManager.SaveUserDatabaseResultCallback() {
+            @Override
+            public void onSuccess(boolean aBoolean) {
+                Log.d(TAG, "onSuccess() called with: aBoolean = [" + aBoolean + "]");
+                mView.sendMessageToParentFragment
+                        (new Event.ChildParentMessage(Event.GOOGLE_SIGN_IN_SUCCESSFUL_MESSAGE, Event.LOGIN_STEP_FINISH));
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.d(TAG, "onFailure() called with: message = [" + message + "]");
+            }
+        });
+    }
+
+    @Override
     public void getMobilePhoneNumber() {
         mView.showEnterMobileNumberDialog();
     }
 
     @Override
-    public void performGoogleSignIn(String token) {
+    public void performGoogleSignIn(String token, String givenName, String email, String photoUrl) {
         Disposable disposable = appDataManager.registerUserWithThisGoogleApiToken(token, new DataManager.LoginApiResultCallback() {
             @Override
             public void onSuccess(String message, int responseCode, Object data) {
                 Log.d(TAG, "onSuccess() called with: message = [" + message + "], responseCode = [" + responseCode);
-                mView.sendMessageToParentFragment
-                        (new Event.ChildParentMessage(Event.GOOGLE_SIGN_IN_SUCCESSFUL_MESSAGE, Event.LOGIN_STEP_FINISH));
+                GoogleLoginResponse googleLoginResponse = (GoogleLoginResponse) data;
+                //  Creating User To Save in DB
+                User user = new User();
+                user.setEmail(email);
+                user.setNickName(givenName);
+                user.setPhotoUrl(photoUrl);
+                user.setToken(googleLoginResponse.getToken());
+                // Save User to Database
+                saveUserLoginInfoIntoDatabase(user);
             }
 
             @Override

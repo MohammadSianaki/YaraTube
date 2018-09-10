@@ -133,7 +133,19 @@ public class LoginMethodFragment extends Fragment implements
         if (result.isSuccess()) {
             googleSignInAccount = result.getSignInAccount();
             Log.d(TAG, "handleSignInResult() called with: result = [" + result.isSuccess() + "]");
-            mPresenter.performGoogleSignIn(googleSignInAccount.getIdToken());
+            if (googleSignInAccount.getPhotoUrl() != null) {
+                mPresenter.performGoogleSignIn(
+                        googleSignInAccount.getIdToken(),
+                        googleSignInAccount.getGivenName(),
+                        googleSignInAccount.getEmail(),
+                        googleSignInAccount.getPhotoUrl().toString());
+            } else {
+                mPresenter.performGoogleSignIn(
+                        googleSignInAccount.getIdToken(),
+                        googleSignInAccount.getGivenName(),
+                        googleSignInAccount.getEmail(),
+                        null);
+            }
         } else {
             Log.d(TAG, "handleSignInResult() called with: result = [" + result.isSuccess() + "]");
         }

@@ -1,11 +1,9 @@
 package com.yaratech.yaratube.data;
 
-import com.yaratech.yaratube.data.model.db.UserLoginInfo;
+import com.yaratech.yaratube.data.model.db.User;
 import com.yaratech.yaratube.data.source.local.db.DbHelper;
 import com.yaratech.yaratube.data.source.local.prefs.PreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.ApiHelper;
-
-import java.util.Map;
 
 import io.reactivex.disposables.Disposable;
 
@@ -133,15 +131,15 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Disposable saveUserLoginInfo(UserLoginInfo userLoginInfo, SaveUserDatabaseResultCallback callback) {
-        return dbHelper.saveUserLoginInfo(userLoginInfo, callback);
+    public Disposable saveUserToDb(User user, SaveUserDatabaseResultCallback callback) {
+        return dbHelper.saveUserToDb(user, callback);
     }
 
     @Override
     public Disposable clearDatabase(LoginDatabaseResultCallback loginDatabaseResultCallback) {
         return dbHelper.clearDatabase(new LoginDatabaseResultCallback() {
             @Override
-            public void onSuccess(Map<Boolean, String> map) {
+            public void onSuccess(String token) {
             }
 
             @Override

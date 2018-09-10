@@ -1,6 +1,6 @@
 package com.yaratech.yaratube.ui.login.verification;
 
-import com.yaratech.yaratube.data.model.db.UserLoginInfo;
+import com.yaratech.yaratube.data.model.db.User;
 import com.yaratech.yaratube.ui.base.BasePresenter;
 import com.yaratech.yaratube.ui.base.BaseView;
 
@@ -18,7 +18,7 @@ public interface VerificationContract {
 
 
     interface Presenter extends BasePresenter<View> {
-        void saveUserLoginInfoIntoDatabase(UserLoginInfo userLoginInfo);
+        void saveUserLoginInfoIntoDatabase(User user);
 
         void verifyUserWithPhoneNumberAndVerificationCode(String phoneNumber, String verificationCode);
 

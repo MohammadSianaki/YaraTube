@@ -7,7 +7,6 @@ import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.DataManager;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepTwoResponse;
 import com.yaratech.yaratube.data.model.db.User;
-import com.yaratech.yaratube.data.model.db.UserLoginInfo;
 import com.yaratech.yaratube.data.model.other.Event;
 import com.yaratech.yaratube.utils.TextUtils;
 
@@ -61,16 +60,11 @@ public class VerificationPresenter implements VerificationContract.Presenter {
             public void onSuccess(String message, int responseCode, Object response) {
                 ((VerificationCodeFragment) mView).sendMessageToParentFragment(new Event.ChildParentMessage(Event.MOBILE_PHONE_NUMBER_VERIFY_BUTTON_CLICK_MESSAGE, Event.LOGIN_STEP_FINISH));
                 MobileLoginStepTwoResponse mobileLoginStepTwoResponse = (MobileLoginStepTwoResponse) response;
-                UserLoginInfo userLoginInfo = new UserLoginInfo();
                 User user = new User();
                 user.setUserId(mobileLoginStepTwoResponse.getUserId());
                 user.setNickName(mobileLoginStepTwoResponse.getNickName());
                 user.setToken(mobileLoginStepTwoResponse.getToken());
-
-                userLoginInfo.setIsAuthorized(1);
-                userLoginInfo.setUser(user);
-
-                saveUserLoginInfoIntoDatabase(userLoginInfo);
+                saveUserLoginInfoIntoDatabase(user);
                 Log.d(TAG, "onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "], response = [" + response + "]");
                 mView.closeDialog();
             }
@@ -123,6 +117,7 @@ public class VerificationPresenter implements VerificationContract.Presenter {
 
                     }
                 });
+        compositeDisposable.add(disposable);
     }
 
     @Override
@@ -154,9 +149,9 @@ public class VerificationPresenter implements VerificationContract.Presenter {
     }
 
     @Override
-    public void saveUserLoginInfoIntoDatabase(UserLoginInfo userLoginInfo) {
-        Log.d(TAG, "saveUserLoginInfoIntoDatabase() called with: userLoginInfo = [" + userLoginInfo + "]");
-        Disposable disposable = appDataManager.saveUserLoginInfo(userLoginInfo, new DataManager.SaveUserDatabaseResultCallback() {
+    public void saveUserLoginInfoIntoDatabase(User user) {
+        Log.d(TAG, "saveUserLoginInfoIntoDatabase() called with: userLoginInfo = [" + user + "]");
+        Disposable disposable = appDataManager.saveUserToDb(user, new DataManager.SaveUserDatabaseResultCallback() {
             @Override
             public void onSuccess(boolean flag) {
                 Log.d(TAG, "onSuccess() called with: flag = [" + flag + "]");

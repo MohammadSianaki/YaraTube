@@ -5,19 +5,19 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import com.yaratech.yaratube.data.model.db.UserLoginInfo;
+import com.yaratech.yaratube.data.model.db.User;
 
 @Dao
 public interface UserDao {
 
 
-    @Query("SELECT * FROM userLoginInfo ")
-    UserLoginInfo getUserLoginInfo();
+    @Query("SELECT * FROM user ")
+    User getUserFromDb();
 
     @Insert
-    void insertUserLoginInfo(UserLoginInfo userLoginInfo);
+    void saveUserToDb(User user);
 
     @Delete
-    void deleteUserLoginInfo(UserLoginInfo userLoginInfo);
+    void deleteUserFromDb(User user);
 
 }

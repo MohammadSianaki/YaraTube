@@ -16,6 +16,11 @@ public class User {
     @ColumnInfo(name = "token")
     private String token;
 
+    @ColumnInfo(name = "photo_url")
+    private String photoUrl;
+
+    @ColumnInfo(name = "email")
+    private String email;
 
     public int getUserId() {
         return userId;
@@ -39,5 +44,21 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -9,7 +9,6 @@ import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.utils.AppConstants;
 
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -131,9 +130,9 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
     public void isUserLogin() {
         Disposable disposable = appDataManager.isUserAuthorized(new DataManager.LoginDatabaseResultCallback() {
             @Override
-            public void onSuccess(Map<Boolean, String> map) {
-                if (map.containsKey(true)) {
-                    mView.showCommentDialog(map.get(true));
+            public void onSuccess(String token) {
+                if (token != null) {
+                    mView.showCommentDialog(token);
                 } else {
                     mView.showLoginDialog();
                 }
@@ -152,8 +151,8 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
     public void isUserLoginToPlay() {
         Disposable disposable = appDataManager.isUserAuthorized(new DataManager.LoginDatabaseResultCallback() {
             @Override
-            public void onSuccess(Map<Boolean, String> map) {
-                if (map.containsKey(true)) {
+            public void onSuccess(String token) {
+                if (token != null) {
                     mView.goToPlayerActivity();
                 } else {
                     mView.showLoginDialog();
