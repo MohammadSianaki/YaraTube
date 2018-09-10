@@ -79,6 +79,11 @@ public class AppDataManager implements DataManager {
                         callback);
     }
 
+    @Override
+    public Disposable registerUserWithThisGoogleApiToken(String googleToken, LoginApiResultCallback callback) {
+        return apiHelper.registerUserWithThisGoogleApiToken(googleToken, callback);
+    }
+
     //endregion
 
     //region Local SharedPreferences Implementation

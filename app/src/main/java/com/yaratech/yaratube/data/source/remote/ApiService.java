@@ -1,6 +1,7 @@
 package com.yaratech.yaratube.data.source.remote;
 
 import com.yaratech.yaratube.data.model.api.CommentResponse;
+import com.yaratech.yaratube.data.model.api.GoogleLoginResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepOneResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepTwoResponse;
 import com.yaratech.yaratube.data.model.api.ProfileResponseOne;
@@ -88,4 +89,12 @@ public interface ApiService {
             @Part("device_model") RequestBody deviceModel,
             @Part("device_os") RequestBody deviceOs,
             @Part("password") RequestBody password);
+
+    @POST("login_google/" + STORE_ID)
+    @FormUrlEncoded
+    Single<Response<GoogleLoginResponse>> registerUserWithThisGoogleApiToken
+            (@Field("token_id") String googleToken,
+             @Field("device_id") String deviceId,
+             @Field("device_os") String deviceOs,
+             @Field("device_model") String deviceModel);
 }

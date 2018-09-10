@@ -34,6 +34,8 @@ public interface ApiHelper {
 
     Disposable verifyUserWithThisCode(String phoneNumber, String verificationCode, DataManager.LoginApiResultCallback callback);
 
+    Disposable registerUserWithThisGoogleApiToken(String googleToken, DataManager.LoginApiResultCallback callback);
+
     //endregions
 
     void onStopActivity();

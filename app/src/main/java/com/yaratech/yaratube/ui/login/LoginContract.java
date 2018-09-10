@@ -15,6 +15,8 @@ public interface LoginContract {
         void showLoginPhoneNumberDialog();
 
         void showLoginMethodDialog();
+
+        void showWelcomeToastToUser();
     }
 
 

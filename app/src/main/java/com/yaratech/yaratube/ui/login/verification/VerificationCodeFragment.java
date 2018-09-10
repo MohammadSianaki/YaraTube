@@ -46,6 +46,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     //------------------------------------------------------------------------------------------
 
     public VerificationCodeFragment() {
+
     }
 
     public static VerificationCodeFragment newInstance() {

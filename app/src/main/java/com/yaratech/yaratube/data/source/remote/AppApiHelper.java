@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.yaratech.yaratube.data.DataManager;
 import com.yaratech.yaratube.data.model.api.CommentResponse;
+import com.yaratech.yaratube.data.model.api.GoogleLoginResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepOneResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepTwoResponse;
 import com.yaratech.yaratube.data.model.api.StoreResponse;
@@ -305,6 +306,43 @@ public class AppApiHelper implements ApiHelper {
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "onError <<<<    verifyUserWithThisCode   >>>>: ", e);
+                        callback.onFailure(e.getMessage());
+                    }
+                });
+    }
+
+    @Override
+    public Disposable registerUserWithThisGoogleApiToken(String googleToken, DataManager.LoginApiResultCallback callback) {
+        return apiService
+                .registerUserWithThisGoogleApiToken(
+                        googleToken,
+                        DeviceUtils.getDeviceId(context),
+                        DeviceUtils.getDeviceOS(),
+                        DeviceUtils.getDeviceModel())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Response<GoogleLoginResponse>>() {
+                    @Override
+                    public void onSuccess(Response<GoogleLoginResponse> response) {
+                        if (response.isSuccessful()) {
+                            Log.d(TAG, "onSuccess: <<<<    registerUserWithThisGoogleApiToken    >>>> with :" +
+                                    " success code = [" + response + "]" + ", message = [" + response.message() + "]");
+                            callback.onSuccess(response.body().getMessage(), response.code(), response.body());
+                        } else {
+                            Log.d(TAG, "onSuccess: not successful");
+                            try {
+                                Log.d(TAG, "onSuccess: <<<<    registerUserWithThisGoogleApiToken    >>>> with : error body  [" + response.errorBody().string() + "]");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            callback.onError(response.message(), response.code());
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError <<<<    registerUserWithThisGoogleApiToken   >>>>: ", e);
                         callback.onFailure(e.getMessage());
                     }
                 });

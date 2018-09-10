@@ -155,12 +155,19 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
         }
         if (event.getMessage().equals(Event.MOBILE_PHONE_NUMBER_VERIFY_BUTTON_CLICK_MESSAGE)) {
             mPresenter.saveLoginStep(event.getLoginStep());
+            showWelcomeToastToUser();
             closeDialog();
         }
         if (event.getMessage().equals(Event.MOBILE_PHONE_NUMBER_CORRECT_BUTTON_CLICK_MESSAGE)) {
             Log.d("Correct Button", "getMessageFromChildFragment: Correct Button Clicked");
             mPresenter.saveLoginStep(event.getLoginStep());
             showLoginPhoneNumberDialog();
+        }
+        if (event.getMessage().equals(Event.GOOGLE_SIGN_IN_SUCCESSFUL_MESSAGE)) {
+            Log.d(TAG, "getMessageFromChildFragment: Google SignIn Successful");
+            mPresenter.saveLoginStep(event.getLoginStep());
+            showWelcomeToastToUser();
+            closeDialog();
         }
     }
 
@@ -185,9 +192,15 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
         if (loginMethodFragment == null) {
             loginMethodFragment = LoginMethodFragment.newInstance();
         }
+        loginMethodFragment.setAppDataManager(appDataManager);
         addFragment(loginMethodFragment,
                 false,
                 LoginMethodFragment.class.getSimpleName());
+    }
+
+    @Override
+    public void showWelcomeToastToUser() {
+        Toast.makeText(getContext(), "Weclome!!!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
