@@ -3,10 +3,12 @@ package com.yaratech.yaratube.ui.profile;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -126,17 +128,20 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == PICK_IMAGE_REQUEST_CODE &&
+                resultCode == Activity.RESULT_OK &&
+                data != null &&
+                data.getData() != null &&
+                getContext().getContentResolver() != null) {
             try {
-                InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
-                Log.d(TAG, "onActivityResult: <<<< profile >>>> data.getData() = " + data.getData());
-                Log.d(TAG, "onActivityResult: file decoded path is : " + data.getData().getPath());
-                Log.d(TAG, "onActivityResult: file  encoded path is : " + data.getData().getEncodedPath());
+                Uri selectedImage = data.getData();
+                InputStream inputStream = getContext().getContentResolver().openInputStream(selectedImage);
+                String filePath = getSelectedImageFilePath(selectedImage);
                 mPresenter.saveUserProfileImageAvatarPath(data.getData().toString());
+                mPresenter.uploadUserProfileImageAvatar(filePath);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 if (bitmap != null) {
                     Glide
-
                             .with(this)
                             .load(bitmap)
                             .apply(RequestOptions.encodeQualityOf(100))
@@ -147,6 +152,18 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String getSelectedImageFilePath(Uri selectedImage) {
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContext().getContentResolver().query(
+                selectedImage, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
     }
 
     @Override

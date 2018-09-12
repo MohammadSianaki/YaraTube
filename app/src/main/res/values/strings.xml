@@ -37,5 +37,9 @@
     <string name="details_fragment_toolbar_title">جزئیات محصول</string>
     <string name="nav_logout">خروج از حساب کاربری</string>
     <string name="logout_toast_message">خروج شما موفقیت آمیز بود</string>
+    <string name="botton_nav_more_item_title">بیشتر</string>
+    <string name="fragment_more_profile_tv">پروفایل</string>
+    <string name="fragment_more_about_us">درباره ما</string>
+    <string name="fragment_more_contact_us">تماس با ما</string>
 </resources>
 

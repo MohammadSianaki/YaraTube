@@ -4,7 +4,7 @@ import com.yaratech.yaratube.data.model.api.CommentResponse;
 import com.yaratech.yaratube.data.model.api.GoogleLoginResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepOneResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepTwoResponse;
-import com.yaratech.yaratube.data.model.api.ProfileResponseOne;
+import com.yaratech.yaratube.data.model.api.PostProfileResponse;
 import com.yaratech.yaratube.data.model.api.StoreResponse;
 import com.yaratech.yaratube.data.model.other.Category;
 import com.yaratech.yaratube.data.model.other.Comment;
@@ -14,7 +14,6 @@ import java.util.List;
 
 import io.reactivex.Single;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -76,19 +75,25 @@ public interface ApiService {
                                                              @Field("comment_text") String commentText, @Field("score") int score);
 
 
+    @POST("profile")
+    Single<Response<PostProfileResponse>> uploadUserProfileInformation(
+            @Field("nickname") String nickName,
+            @Field("date_of_birth") String dateOfBirth,
+            @Field("gender") String gender,
+            @Field("email") String email,
+            @Field("mobile") String mobile,
+            @Field("device_id") String deviceId,
+            @Field("device_model") String deviceModel,
+            @Field("device_os") String deviceOs,
+            @Field("password") String password);
+
+
     @Multipart
     @POST("profile")
-    Single<Response<ProfileResponseOne>> uploadUserProfileInformation(
+    Single<Response<PostProfileResponse>> uploadUserProfileImageAvatar(
             @Part MultipartBody.Part imageAvatar,
-            @Part("nickname") RequestBody nickName,
-            @Part("date_of_birth") RequestBody dateOfBirth,
-            @Part("gender") RequestBody gender,
-            @Part("email") RequestBody email,
-            @Part("mobile") RequestBody mobile,
-            @Part("device_id") RequestBody deviceId,
-            @Part("device_model") RequestBody deviceModel,
-            @Part("device_os") RequestBody deviceOs,
-            @Part("password") RequestBody password);
+            @Header("Authorization") String token);
+
 
     @POST("login_google/" + STORE_ID)
     @FormUrlEncoded

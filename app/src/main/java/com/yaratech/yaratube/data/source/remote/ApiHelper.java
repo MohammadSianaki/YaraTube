@@ -3,6 +3,7 @@ package com.yaratech.yaratube.data.source.remote;
 import com.yaratech.yaratube.data.DataManager;
 
 import io.reactivex.disposables.Disposable;
+import okhttp3.MultipartBody;
 
 public interface ApiHelper {
 
@@ -37,6 +38,22 @@ public interface ApiHelper {
     Disposable registerUserWithThisGoogleApiToken(String googleToken, DataManager.LoginApiResultCallback callback);
 
     //endregions
+
+    //region Profile Remote Api Access Methods
+
+
+    Disposable uploadUserProfileImageAvatar(MultipartBody.Part image, String token, DataManager.DashboardApiResultCallback callback);
+
+    Disposable uploadUserProfileInformation(String nickName,
+                                            String dateOfBirth,
+                                            String gender,
+                                            String email,
+                                            String mobile,
+                                            String deviceId,
+                                            String deviceModel,
+                                            String deviceOs,
+                                            String password);
+    // endregion
 
     void onStopActivity();
 

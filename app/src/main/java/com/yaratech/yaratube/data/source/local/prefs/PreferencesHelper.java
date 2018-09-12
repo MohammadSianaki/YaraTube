@@ -14,5 +14,7 @@ public interface PreferencesHelper {
 
     String getUserProfileImageAvatarPath();
 
-    void onStopActivity();
+    String getUserTokenApi();
+
+    void setUserTokenApi(String token);
 }

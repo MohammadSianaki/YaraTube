@@ -20,6 +20,7 @@ import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.ui.category.CategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
+import com.yaratech.yaratube.ui.more.MoreFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
@@ -40,7 +41,7 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
 
     private HomeFragment homeFragment;
     private CategoryFragment categoryFragment;
-
+    private MoreFragment moreFragment;
     private AppDataManager appDataManager;
 
     //--------------------------------------------------------------------------------------------
@@ -73,9 +74,15 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
         if (savedInstanceState == null) {
             homeFragment = HomeFragment.newInstance();
             categoryFragment = CategoryFragment.newInstance();
+            moreFragment = MoreFragment.newInstance();
             initHomeFragmentDependency();
             initCategoryFragmentDependency();
+            initMoreFragmentDependency();
         }
+    }
+
+    private void initMoreFragmentDependency() {
+        moreFragment.setAppDataManager(appDataManager);
     }
 
     private void setupToolbar() {
@@ -196,6 +203,12 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
                             .hide(homeFragment)
                             .commit();
                 }
+                if (moreFragment.isAdded()) {
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(moreFragment)
+                            .commit();
+                }
                 break;
             case R.id.bottom_nav_main_screen_item:
                 if (homeFragment.isAdded()) {
@@ -213,6 +226,36 @@ public class BaseFragment extends Fragment implements BottomNavigationView.OnNav
                     fragmentManager
                             .beginTransaction()
                             .hide(categoryFragment)
+                            .commit();
+                }
+                if (moreFragment.isAdded()) {
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(moreFragment)
+                            .commit();
+                }
+                break;
+
+            case R.id.bottom_nav_more_item:
+                if (moreFragment.isAdded()) {
+                    fragmentManager
+                            .beginTransaction()
+                            .show(moreFragment)
+                            .commit();
+                } else {
+                    addFragment(moreFragment, false, MoreFragment.class.getSimpleName());
+                }
+                if (categoryFragment.isAdded()) {
+                    Log.i(TAG, "chooseFragment <<<< bottom_nav_category_item >>>> : <<<< categoryFragment is added before >>>>");
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(categoryFragment)
+                            .commit();
+                }
+                if (homeFragment.isAdded()) {
+                    fragmentManager
+                            .beginTransaction()
+                            .hide(homeFragment)
                             .commit();
                 }
                 break;

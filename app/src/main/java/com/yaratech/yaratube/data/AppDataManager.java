@@ -6,6 +6,8 @@ import com.yaratech.yaratube.data.source.local.prefs.PreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.ApiHelper;
 
 import io.reactivex.disposables.Disposable;
+import okhttp3.MultipartBody;
+
 
 public class AppDataManager implements DataManager {
     //----------------------------------------------------------------------------------------------
@@ -82,6 +84,16 @@ public class AppDataManager implements DataManager {
         return apiHelper.registerUserWithThisGoogleApiToken(googleToken, callback);
     }
 
+    @Override
+    public Disposable uploadUserProfileImageAvatar(MultipartBody.Part image, String token, DashboardApiResultCallback callback) {
+        return apiHelper.uploadUserProfileImageAvatar(image, token, callback);
+    }
+
+    @Override
+    public Disposable uploadUserProfileInformation(String nickName, String dateOfBirth, String gender, String email, String mobile, String deviceId, String deviceModel, String deviceOs, String password) {
+        return apiHelper.uploadUserProfileInformation(nickName, dateOfBirth, gender, email, mobile, deviceId, deviceModel, deviceOs, password);
+    }
+
     //endregion
 
     //region Local SharedPreferences Implementation
@@ -109,6 +121,16 @@ public class AppDataManager implements DataManager {
     @Override
     public String getUserProfileImageAvatarPath() {
         return preferencesHelper.getUserProfileImageAvatarPath();
+    }
+
+    @Override
+    public String getUserTokenApi() {
+        return preferencesHelper.getUserTokenApi();
+    }
+
+    @Override
+    public void setUserTokenApi(String token) {
+        preferencesHelper.setUserTokenApi(token);
     }
 
     @Override

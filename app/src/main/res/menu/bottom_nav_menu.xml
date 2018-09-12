@@ -16,4 +16,12 @@
         android:orderInCategory="100"
         android:title="@string/bottom_nav__main_screen_item"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/bottom_nav_more_item"
+        android:enabled="true"
+        android:icon="@drawable/ic_more_vert"
+        android:orderInCategory="102"
+        android:title="@string/botton_nav_more_item_title"
+        app:showAsAction="ifRoom" />
 </menu>

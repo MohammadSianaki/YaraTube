@@ -25,7 +25,7 @@ public class LoginMethodPresenter implements LoginMethodContract.Presenter {
 
     @Override
     public void saveUserLoginInfoIntoDatabase(User user) {
-        appDataManager.saveUserToDb(user, new DataManager.SaveUserDatabaseResultCallback() {
+        Disposable disposable = appDataManager.saveUserToDb(user, new DataManager.SaveUserDatabaseResultCallback() {
             @Override
             public void onSuccess(boolean aBoolean) {
                 Log.d(TAG, "onSuccess() called with: aBoolean = [" + aBoolean + "]");
@@ -38,6 +38,12 @@ public class LoginMethodPresenter implements LoginMethodContract.Presenter {
                 Log.d(TAG, "onFailure() called with: message = [" + message + "]");
             }
         });
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void saveUserTokenToSharedPref(String token) {
+        appDataManager.setUserTokenApi(token);
     }
 
     @Override
@@ -60,6 +66,7 @@ public class LoginMethodPresenter implements LoginMethodContract.Presenter {
                 user.setToken(googleLoginResponse.getToken());
                 // Save User to Database
                 saveUserLoginInfoIntoDatabase(user);
+                saveUserTokenToSharedPref(user.getToken());
             }
 
             @Override

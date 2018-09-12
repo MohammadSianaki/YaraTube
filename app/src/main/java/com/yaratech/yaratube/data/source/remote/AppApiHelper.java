@@ -8,6 +8,7 @@ import com.yaratech.yaratube.data.model.api.CommentResponse;
 import com.yaratech.yaratube.data.model.api.GoogleLoginResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepOneResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepTwoResponse;
+import com.yaratech.yaratube.data.model.api.PostProfileResponse;
 import com.yaratech.yaratube.data.model.api.StoreResponse;
 import com.yaratech.yaratube.data.model.other.Category;
 import com.yaratech.yaratube.data.model.other.Comment;
@@ -21,6 +22,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MultipartBody;
 import retrofit2.Response;
 
 public class AppApiHelper implements ApiHelper {
@@ -346,6 +348,35 @@ public class AppApiHelper implements ApiHelper {
                         callback.onFailure(e.getMessage());
                     }
                 });
+    }
+
+    @Override
+    public Disposable uploadUserProfileImageAvatar(MultipartBody.Part image, String token, DataManager.DashboardApiResultCallback callback) {
+        Log.d(TAG, "uploadUserProfileImageAvatar() called with: image = [" + image + "], token = [" + token + "], callback = [" + callback + "]");
+        return apiService
+                .uploadUserProfileImageAvatar(image, "Token " + token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Response<PostProfileResponse>>() {
+                    @Override
+                    public void onSuccess(Response<PostProfileResponse> response) {
+                        Log.d(TAG, "onSuccess() called with: response = [" + response.isSuccessful() + "]");
+                        Log.d(TAG, "onSuccess() called with: response message = [" + response.message() + "]");
+                        if (response.isSuccessful()) {
+                            callback.onDataLoaded(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: ", e);
+                    }
+                });
+    }
+
+    @Override
+    public Disposable uploadUserProfileInformation(String nickName, String dateOfBirth, String gender, String email, String mobile, String deviceId, String deviceModel, String deviceOs, String password) {
+        return null;
     }
 
     @Override

@@ -106,7 +106,7 @@ public class BaseActivity extends AppCompatActivity implements
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1 &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
                         != PackageManager.PERMISSION_GRANTED) {
-            String[] permissions = new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS};
+            String[] permissions = new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
             ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
         }
     }

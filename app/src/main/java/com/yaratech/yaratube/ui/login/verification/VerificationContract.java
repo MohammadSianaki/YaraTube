@@ -20,6 +20,8 @@ public interface VerificationContract {
     interface Presenter extends BasePresenter<View> {
         void saveUserLoginInfoIntoDatabase(User user);
 
+        void saveUserTokenToSharedPref(String token);
+
         void verifyUserWithPhoneNumberAndVerificationCode(String phoneNumber, String verificationCode);
 
         String getUserMobilePhoneNumber();

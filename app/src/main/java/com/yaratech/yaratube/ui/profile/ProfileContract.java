@@ -17,6 +17,8 @@ public interface ProfileContract {
         void saveUserProfileImageAvatarPath(String imagePath);
 
         void uploadUserProfileInfo();
+
+        void uploadUserProfileImageAvatar(String filePath);
     }
 
 }

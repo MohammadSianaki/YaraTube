@@ -22,6 +22,8 @@ public interface LoginMethodContract {
     interface Presenter extends BasePresenter<View> {
         void saveUserLoginInfoIntoDatabase(User user);
 
+        void saveUserTokenToSharedPref(String token);
+
         void getMobilePhoneNumber();
 
         void performGoogleSignIn(String token, String givenName, String email, String photoUrl);

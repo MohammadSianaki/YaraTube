@@ -12,6 +12,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
     private static final String PREF_KEY_CURRENT_USER_MOBILE_PHONE_NUMBER = "PREF_KEY_CURRENT_USER_MOBILE_PHONE_NUMBER";
     private static final String PREF_KEY_CURRENT_USER_LOGIN_STEP = "PREF_KEY_CURRENT_USER_LOGIN_STEP";
     private static final String PREF_KEY_CURRENT_USER_PROFILE_IMAGE_AVATAR_PATH = "PREF_KEY_CURRENT_USER_PROFILE_IMAGE_AVATAR_PATH";
+    private static final String PREF_KEY_CURRENT_USER_TOKEN = "PREF_KEY_CURRENT_USER_TOKEN";
     private final SharedPreferences mPrefs;
 
 
@@ -61,7 +62,17 @@ public class AppPreferencesHelper implements PreferencesHelper {
         return mPrefs.getString(PREF_KEY_CURRENT_USER_PROFILE_IMAGE_AVATAR_PATH, null);
     }
 
-    public void onStopActivity() {
+    @Override
+    public String getUserTokenApi() {
+        return mPrefs.getString(PREF_KEY_CURRENT_USER_TOKEN, null);
+    }
+
+    @Override
+    public void setUserTokenApi(String token) {
+        mPrefs
+                .edit()
+                .putString(PREF_KEY_CURRENT_USER_TOKEN, token)
+                .commit();
 
     }
 

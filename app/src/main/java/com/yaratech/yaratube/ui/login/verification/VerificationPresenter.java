@@ -53,6 +53,11 @@ public class VerificationPresenter implements VerificationContract.Presenter {
     }
 
     @Override
+    public void saveUserTokenToSharedPref(String token) {
+        appDataManager.setUserTokenApi(token);
+    }
+
+    @Override
     public void verifyUserWithPhoneNumberAndVerificationCode(String phoneNumber, String verificationCode) {
         Disposable disposable = appDataManager.verifyUserWithThisCode(phoneNumber, verificationCode, new AppDataManager.LoginApiResultCallback() {
 
@@ -65,6 +70,7 @@ public class VerificationPresenter implements VerificationContract.Presenter {
                 user.setNickName(mobileLoginStepTwoResponse.getNickName());
                 user.setToken(mobileLoginStepTwoResponse.getToken());
                 saveUserLoginInfoIntoDatabase(user);
+                saveUserTokenToSharedPref(user.getToken());
                 Log.d(TAG, "onSuccessMessage() called with: message = [" + message + "], responseCode = [" + responseCode + "], response = [" + response + "]");
                 mView.closeDialog();
             }

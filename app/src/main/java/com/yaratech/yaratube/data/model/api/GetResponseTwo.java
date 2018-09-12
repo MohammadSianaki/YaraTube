@@ -1,4 +1,4 @@
 package com.yaratech.yaratube.data.model.api;
 
-public class ProfileResponseTwo {
+public class GetResponseTwo {
 }
