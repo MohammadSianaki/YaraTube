@@ -1,5 +1,6 @@
 package com.yaratech.yaratube.ui.profile;
 
+import com.yaratech.yaratube.data.model.api.GetProfileResponse;
 import com.yaratech.yaratube.ui.base.BasePresenter;
 import com.yaratech.yaratube.ui.base.BaseView;
 
@@ -7,6 +8,11 @@ public interface ProfileContract {
 
     interface View extends BaseView {
 
+        void showDataNotAvailableMessage();
+
+        void showSubmitSuccessfulMessage();
+
+        void showLoadedUserProfileInformation(GetProfileResponse getProfileResponse);
     }
 
 
@@ -16,9 +22,11 @@ public interface ProfileContract {
 
         void saveUserProfileImageAvatarPath(String imagePath);
 
-        void uploadUserProfileInfo();
+        void uploadUserProfileInfo(String name, String birthday, String gender);
 
         void uploadUserProfileImageAvatar(String filePath);
+
+        void loadUserProfileInfo();
     }
 
 }

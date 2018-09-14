@@ -95,5 +95,8 @@ dependencies {
 
     // if you use the support libraries
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+
+    // Persian Date Picker
+    implementation "com.github.aliab:Persian-Date-Picker-Dialog:$rootProject.persianDatePickerVersion"
 }
 apply plugin: "com.google.gms.google-services"

@@ -90,8 +90,13 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Disposable uploadUserProfileInformation(String nickName, String dateOfBirth, String gender, String email, String mobile, String deviceId, String deviceModel, String deviceOs, String password) {
-        return apiHelper.uploadUserProfileInformation(nickName, dateOfBirth, gender, email, mobile, deviceId, deviceModel, deviceOs, password);
+    public Disposable uploadUserProfileInformation(String nickName, String dateOfBirth, String gender, String token, DashboardApiResultCallback callback) {
+        return apiHelper.uploadUserProfileInformation(nickName, dateOfBirth, gender, token, callback);
+    }
+
+    @Override
+    public Disposable loadUserProfileInformation(String token, DashboardApiResultCallback callback) {
+        return apiHelper.loadUserProfileInformation(token, callback);
     }
 
     //endregion

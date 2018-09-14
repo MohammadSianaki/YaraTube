@@ -46,13 +46,9 @@ public interface ApiHelper {
 
     Disposable uploadUserProfileInformation(String nickName,
                                             String dateOfBirth,
-                                            String gender,
-                                            String email,
-                                            String mobile,
-                                            String deviceId,
-                                            String deviceModel,
-                                            String deviceOs,
-                                            String password);
+                                            String gender, String token, DataManager.DashboardApiResultCallback callback);
+
+    Disposable loadUserProfileInformation(String token, DataManager.DashboardApiResultCallback callback);
     // endregion
 
     void onStopActivity();

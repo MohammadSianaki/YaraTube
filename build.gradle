@@ -18,6 +18,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        maven { url "https://jitpack.io" }
         jcenter()
     }
 }
@@ -49,6 +50,7 @@ ext {
     rxRetrofitAdapterVersion = "2.1.1"
     leakCanaryVersion = "1.6.1"
     okHttpLoggerVersion = "3.9.1"
+    persianDatePickerVersion = "1.4"
 
 }
 

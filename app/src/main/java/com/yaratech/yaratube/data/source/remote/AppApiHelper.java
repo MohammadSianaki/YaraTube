@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.yaratech.yaratube.data.DataManager;
 import com.yaratech.yaratube.data.model.api.CommentResponse;
+import com.yaratech.yaratube.data.model.api.GetProfileResponse;
 import com.yaratech.yaratube.data.model.api.GoogleLoginResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepOneResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepTwoResponse;
@@ -375,8 +376,54 @@ public class AppApiHelper implements ApiHelper {
     }
 
     @Override
-    public Disposable uploadUserProfileInformation(String nickName, String dateOfBirth, String gender, String email, String mobile, String deviceId, String deviceModel, String deviceOs, String password) {
-        return null;
+    public Disposable uploadUserProfileInformation(String nickName, String dateOfBirth, String gender, String token, DataManager.DashboardApiResultCallback callback) {
+        return apiService
+                .uploadUserProfileInformation(
+                        nickName,
+                        dateOfBirth,
+                        gender,
+                        "Token " + token,
+                        DeviceUtils.getDeviceId(context),
+                        DeviceUtils.getDeviceModel(),
+                        DeviceUtils.getDeviceOS())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Response<PostProfileResponse>>() {
+                    @Override
+                    public void onSuccess(Response<PostProfileResponse> response) {
+                        Log.d(TAG, "onSuccess() called with: response = [" + response.isSuccessful() + "]");
+                        if (response.isSuccessful()) {
+                            callback.onDataLoaded(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage(), e);
+                    }
+                });
+    }
+
+    @Override
+    public Disposable loadUserProfileInformation(String token, DataManager.DashboardApiResultCallback callback) {
+        return apiService
+                .loadUserProfileInfo("Token " + token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<Response<GetProfileResponse>>() {
+                    @Override
+                    public void onSuccess(Response<GetProfileResponse> response) {
+                        Log.d(TAG, "onSuccess() called with: response = [" + response.isSuccessful() + "]");
+                        if (response.isSuccessful()) {
+                            callback.onDataLoaded(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: " + e.getMessage(), e);
+                    }
+                });
     }
 
     @Override

@@ -1,9 +1,9 @@
-package com.yaratech.yaratube.data.model.api;
+package com.yaratech.yaratube.data.model.other;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ProfileResponseOneData {
+public class PostProfileResponseData {
 
     @SerializedName("nickname")
     @Expose
@@ -30,7 +30,7 @@ public class ProfileResponseOneData {
     /**
      * No args constructor for use in serialization
      */
-    public ProfileResponseOneData() {
+    public PostProfileResponseData() {
     }
 
     /**
@@ -42,7 +42,7 @@ public class ProfileResponseOneData {
      * @param avatar
      * @param mobile
      */
-    public ProfileResponseOneData(String nickname, String email, Object mobile, Object avatar, Object gender, Object dateOfBirth, boolean isOfficial) {
+    public PostProfileResponseData(String nickname, String email, Object mobile, Object avatar, Object gender, Object dateOfBirth, boolean isOfficial) {
         super();
         this.nickname = nickname;
         this.email = email;

@@ -41,5 +41,16 @@
     <string name="fragment_more_profile_tv">پروفایل</string>
     <string name="fragment_more_about_us">درباره ما</string>
     <string name="fragment_more_contact_us">تماس با ما</string>
+    <string name="date_picker_dialog_positive_button">تایید</string>
+    <string name="date_picker_dialog_negative_button">لغو</string>
+    <string name="date_picker_dialog_today_button">امروز</string>
+    <string name="successful_post_profile_information_message">اطلاعات شما با موفقیت ثبت گردید</string>
+    <string name="failure_server_connection_message">خطا در برقراری ارتباط با سرور!</string>
+
+    <string-array name="profile_fragment_gender_spinner">
+        <item>مرد</item>
+        <item>زن</item>
+    </string-array>
+
 </resources>
 

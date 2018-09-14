@@ -2,12 +2,13 @@ package com.yaratech.yaratube.data.model.api;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.yaratech.yaratube.data.model.other.PostProfileResponseData;
 
 public class PostProfileResponse {
 
     @SerializedName("data")
     @Expose
-    private ProfileResponseOneData data;
+    private PostProfileResponseData data;
     @SerializedName("error")
     @Expose
     private boolean error;
@@ -26,18 +27,18 @@ public class PostProfileResponse {
      * @param error
      * @param data
      */
-    public PostProfileResponse(ProfileResponseOneData data, boolean error, String message) {
+    public PostProfileResponse(PostProfileResponseData data, boolean error, String message) {
         super();
         this.data = data;
         this.error = error;
         this.message = message;
     }
 
-    public ProfileResponseOneData getData() {
+    public PostProfileResponseData getData() {
         return data;
     }
 
-    public void setData(ProfileResponseOneData data) {
+    public void setData(PostProfileResponseData data) {
         this.data = data;
     }
 

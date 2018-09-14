@@ -1,6 +1,7 @@
 package com.yaratech.yaratube.data.source.remote;
 
 import com.yaratech.yaratube.data.model.api.CommentResponse;
+import com.yaratech.yaratube.data.model.api.GetProfileResponse;
 import com.yaratech.yaratube.data.model.api.GoogleLoginResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepOneResponse;
 import com.yaratech.yaratube.data.model.api.MobileLoginStepTwoResponse;
@@ -71,21 +72,21 @@ public interface ApiService {
 
     @POST("comment/{product_id}")
     @FormUrlEncoded
-    Single<Response<CommentResponse>> submitCommentToProduct(@Path("product_id") int productId, @Header("Authorization") String token, @Field("title") String title,
-                                                             @Field("comment_text") String commentText, @Field("score") int score);
+    Single<Response<CommentResponse>> submitCommentToProduct(
+            @Path("product_id") int productId,
+            @Header("Authorization") String token,
+            @Field("title") String title,
+            @Field("comment_text") String commentText,
+            @Field("score") int score);
 
 
     @POST("profile")
+    @FormUrlEncoded
     Single<Response<PostProfileResponse>> uploadUserProfileInformation(
-            @Field("nickname") String nickName,
-            @Field("date_of_birth") String dateOfBirth,
-            @Field("gender") String gender,
-            @Field("email") String email,
-            @Field("mobile") String mobile,
+            @Field("nickname") String nickName, @Field("date_of_birth") String dateOfBirth, @Field("gender") String gender, @Header("Authorization") String token,
             @Field("device_id") String deviceId,
             @Field("device_model") String deviceModel,
-            @Field("device_os") String deviceOs,
-            @Field("password") String password);
+            @Field("device_os") String deviceOs);
 
 
     @Multipart
@@ -102,4 +103,8 @@ public interface ApiService {
              @Field("device_id") String deviceId,
              @Field("device_os") String deviceOs,
              @Field("device_model") String deviceModel);
+
+    @GET("profile")
+    Single<Response<GetProfileResponse>> loadUserProfileInfo(
+            @Header("Authorization") String token);
 }
