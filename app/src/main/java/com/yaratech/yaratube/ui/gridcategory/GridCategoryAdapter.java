@@ -3,6 +3,7 @@ package com.yaratech.yaratube.ui.gridcategory;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ public class GridCategoryAdapter extends RecyclerView.Adapter<GridCategoryAdapte
         newProducts.addAll(newProductList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ProductDiffUtilCallback(productList, newProducts), true);
         this.productList = newProducts;
+        Log.d(TAG, "setProductList() called with: list size = [" + productList.size() + "]");
+
         diffResult.dispatchUpdatesTo(this);
 //        notifyDataSetChanged();
     }

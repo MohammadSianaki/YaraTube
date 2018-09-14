@@ -9,13 +9,19 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
@@ -25,7 +31,7 @@ import com.yaratech.yaratube.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PlayerActivity extends AppCompatActivity {
+public class PlayerActivity extends AppCompatActivity implements Player.EventListener {
     private static final String TAG = "PlayerActivity";
     private static final String KEY_PRODUCT_FILE = "KEY_PRODUCT_FILE";
     private static final String KEY_CURRENT_POSITION = "KEY_CURRENT_POSITION";
@@ -58,7 +64,7 @@ public class PlayerActivity extends AppCompatActivity {
     }
 
     private void initExoPlayer(String videoUrl) {
-
+        Log.d(TAG, "initExoPlayer() called with: videoUrl = [" + videoUrl + "]");
         Handler mainHandler = new Handler();
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
@@ -102,6 +108,7 @@ public class PlayerActivity extends AppCompatActivity {
         Log.d(TAG, "onResume: ");
         super.onResume();
         player.setPlayWhenReady(true);
+        player.addListener(this);
         playerView.setPlayer(player);
     }
 
@@ -143,5 +150,55 @@ public class PlayerActivity extends AppCompatActivity {
             player.release();
             player = null;
         }
+    }
+
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
+
+    }
+
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+    }
+
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
+
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+
+    }
+
+    @Override
+    public void onRepeatModeChanged(int repeatMode) {
+
+    }
+
+    @Override
+    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+        Log.d(TAG, "onPlayerError() called with: error = [" + error.getMessage() + "]");
+    }
+
+    @Override
+    public void onPositionDiscontinuity(int reason) {
+
+    }
+
+    @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+    }
+
+    @Override
+    public void onSeekProcessed() {
+
     }
 }
