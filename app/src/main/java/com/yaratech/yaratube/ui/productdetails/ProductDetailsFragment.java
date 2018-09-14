@@ -26,7 +26,6 @@ import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Comment;
 import com.yaratech.yaratube.data.model.other.Product;
-import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.EndlessRecyclerViewScrollListener;
 import com.yaratech.yaratube.ui.player.PlayerActivity;
 
@@ -47,7 +46,6 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     private static final String KEY_PRODUCT_FILE = "KEY_PRODUCT_FILE";
     private static final int LIMIT = 3;
     private static final int BASE_OFFSET = 0;
-    private BaseActivity baseActivity;
     //------------------------------------------------------------------------------------------------------
     private LinearLayoutManager linearLayoutManager;
     private DetailsContract.Presenter mPresenter;
@@ -131,10 +129,6 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     private void setupToolbar() {
         toolbar.setTitle(R.string.details_fragment_toolbar_title);
-        baseActivity = (BaseActivity) getActivity();
-        baseActivity.setSupportActionBar(toolbar);
-        baseActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        baseActivity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
     }
 
     private void setRecyclerView() {
@@ -226,8 +220,6 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
-        baseActivity.setSupportActionBar(null);
-        baseActivity = null;
     }
 
     @Override
