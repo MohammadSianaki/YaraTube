@@ -167,4 +167,20 @@ public class GetProfileResponse {
         this.credit = credit;
     }
 
+    @Override
+    public String toString() {
+        return "GetProfileResponse{" +
+                "friends=" + friends +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", magicCredit=" + magicCredit +
+                ", mobile=" + mobile +
+                ", email='" + email + '\'' +
+                ", error=" + error +
+                ", id=" + id +
+                ", nickname='" + nickname + '\'' +
+                ", avatar=" + avatar +
+                ", gender='" + gender + '\'' +
+                ", credit=" + credit +
+                '}';
+    }
 }
