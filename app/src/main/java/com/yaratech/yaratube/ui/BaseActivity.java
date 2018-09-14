@@ -6,17 +6,12 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
-import com.yaratech.yaratube.data.DataManager;
 import com.yaratech.yaratube.data.model.other.Category;
 import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.data.source.local.db.AppDbHelper;
@@ -31,41 +26,29 @@ import com.yaratech.yaratube.ui.login.LoginDialogFragment;
 import com.yaratech.yaratube.ui.login.verification.SmsListener;
 import com.yaratech.yaratube.ui.login.verification.SmsReceiver;
 import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
-import com.yaratech.yaratube.ui.profile.ProfileFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 import com.yaratech.yaratube.utils.TextUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 public class BaseActivity extends AppCompatActivity implements
         CategoryFragment.OnCategoryFragmentInteractionListener,
         OnRequestedProductItemClickListener,
         HeaderItemsFragment.OnHeaderItemsInteractionListener,
-        NavigationView.OnNavigationItemSelectedListener,
         ProductDetailsFragment.OnProductDetailsInteraction {
 
     public static final int PERMISSION_REQUEST_CODE = 1234;
     private static final String TAG = "BaseActivity";
     //------------------------------------------------------------------------------------------------
 
-
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
-
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
-
     private CompositeDisposable compositeDisposable;
     private AppDbHelper appDbHelper;
     private AppApiHelper appApiHelper;
     private AppPreferencesHelper appPreferencesHelper;
     private AppDataManager appDataManager;
-    private boolean autoReadOtp;
     private SmsReceiver smsReceiver;
 
     //------------------------------------------------------------------------------------------------
@@ -79,7 +62,6 @@ public class BaseActivity extends AppCompatActivity implements
         ActivityUtils.checkAndSetRtl(this);
         requestPermissions();
         initDependencies();
-        navigationView.setNavigationItemSelectedListener(this);
 
         BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
         if (fragment == null) {
@@ -114,13 +96,6 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == BaseActivity.PERMISSION_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                autoReadOtp = true;
-            } else {
-                autoReadOtp = false;
-            }
-        }
     }
 
     @Override
@@ -189,27 +164,6 @@ public class BaseActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-
-    @Override
     public void showProductsOfRequestedCategoryItem(Category item) {
         int categoryId = item.getId();
         getSupportFragmentManager()
@@ -253,48 +207,6 @@ public class BaseActivity extends AppCompatActivity implements
                 true, ProductDetailsFragment.class.getSimpleName());
 
     }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.nav_profile_item) {
-            Disposable disposable = appDataManager.isUserAuthorized(new DataManager.LoginDatabaseResultCallback() {
-                @Override
-                public void onSuccess(String token) {
-                    if (!token.equals("")) {
-                        Log.d(TAG, "onSuccess: token is not null");
-                        showProfileFragment();
-                    } else {
-                        Log.d(TAG, "onSuccess: token is null");
-                        showLoginDialog();
-                    }
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    Log.d(TAG, "onFailure() called with: message = [" + message + "]");
-                }
-            });
-            compositeDisposable.add(disposable);
-        }
-        if (item.getItemId() == R.id.nav_logout_item) {
-            // TODO: 9/6/2018  add logout item
-        }
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private void showProfileFragment() {
-        ProfileFragment profileFragment = ProfileFragment.newInstance();
-        profileFragment.setAppDataManager(appDataManager);
-        ActivityUtils
-                .addFragmentToActivity(
-                        getSupportFragmentManager(),
-                        profileFragment,
-                        R.id.fl_base_activity_content,
-                        true,
-                        ProfileFragment.class.getSimpleName());
-    }
-
 
     @Override
     public void showLoginDialogToInsertComment() {

@@ -12,26 +12,31 @@ import android.widget.TextView;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.ui.login.LoginDialogFragment;
 import com.yaratech.yaratube.ui.profile.ProfileFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MoreFragment extends Fragment {
+public class MoreFragment extends Fragment implements MoreContract.View {
     //--------------------------------------------------------------------------------------------------------
+    private static final String TAG = "MoreFragment";
+
 
     @BindView(R.id.fragment_more_profile_tv)
     TextView profileFragmentTextView;
 
-
+    private MoreContract.Presenter mPresenter;
     private Unbinder mUnBinder;
     private ProfileFragment profileFragment;
     private AppDataManager appDataManager;
+    private CompositeDisposable compositeDisposable;
     //--------------------------------------------------------------------------------------------------------
 
     public MoreFragment() {
@@ -72,6 +77,8 @@ public class MoreFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUnBinder = ButterKnife.bind(this, view);
+        mPresenter = new MorePresenter(appDataManager, new CompositeDisposable());
+        mPresenter.attachView(this);
 
     }
 
@@ -82,20 +89,29 @@ public class MoreFragment extends Fragment {
         profileFragmentTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFragment(profileFragment,
-                        true,
-                        ProfileFragment.class.getSimpleName());
-
+                mPresenter.isUserAuthorized();
             }
         });
     }
 
-    private void addFragment(Fragment fragment, boolean addToBackStack, String tag) {
+    @Override
+    public void showProfileFragment() {
+        ProfileFragment profileFragment = ProfileFragment.newInstance();
+        profileFragment.setAppDataManager(appDataManager);
         ActivityUtils
                 .addFragmentToActivity(
-                        getActivity().getSupportFragmentManager(),
-                        fragment, R.id.fl_base_activity_content,
-                        addToBackStack, tag);
+                        getFragmentManager(),
+                        profileFragment,
+                        R.id.fl_base_activity_content,
+                        true,
+                        ProfileFragment.class.getSimpleName());
+    }
+
+    @Override
+    public void showLoginDialog() {
+        LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
+        loginFragment.setAppDataManager(appDataManager);
+        loginFragment.show(getFragmentManager(), LoginDialogFragment.class.getSimpleName());
     }
 
     @Override
@@ -122,6 +138,8 @@ public class MoreFragment extends Fragment {
     @Override
     public void onDestroyView() {
         mUnBinder.unbind();
+        mPresenter.unSubscribe();
+        mPresenter.detachView();
         super.onDestroyView();
     }
 
@@ -137,5 +155,9 @@ public class MoreFragment extends Fragment {
 
     public void setAppDataManager(AppDataManager appDataManager) {
         this.appDataManager = appDataManager;
+    }
+
+    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
+        this.compositeDisposable = compositeDisposable;
     }
 }

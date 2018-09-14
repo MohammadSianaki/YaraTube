@@ -7,11 +7,14 @@ public class MoreContract {
 
     interface View extends BaseView {
 
+        void showProfileFragment();
+
+        void showLoginDialog();
     }
 
 
     interface Presenter extends BasePresenter<View> {
-
+        void isUserAuthorized();
     }
 
 

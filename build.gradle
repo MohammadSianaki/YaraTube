@@ -51,7 +51,7 @@ ext {
     leakCanaryVersion = "1.6.1"
     okHttpLoggerVersion = "3.9.1"
     persianDatePickerVersion = "1.4"
-
+    databaseDebugVersion = "1.0.4"
 }
 
 task clean(type: Delete) {
