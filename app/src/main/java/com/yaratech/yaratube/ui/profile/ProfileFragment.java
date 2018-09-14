@@ -324,6 +324,6 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     public void showLoadedUserProfileInformation(GetProfileResponse getProfileResponse) {
         nameEditText.setText(getProfileResponse.getNickname());
         nameEditText.setEnabled(false);
-        birthdayTextView.setText(getProfileResponse.getDateOfBirth());
+        birthdayTextView.setText(getProfileResponse.getDateOfBirth().replace("-", "/"));
     }
 }
