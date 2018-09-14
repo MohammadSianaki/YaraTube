@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,7 +42,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProductDetailsFragment extends Fragment implements DetailsContract.View {
+public class ProductDetailsFragment extends Fragment implements DetailsContract.View, SwipeRefreshLayout.OnRefreshListener {
     private final static String KEY_ID = "KEY_ID";
     private static final String TAG = "ProductDetailsFragment";
     private static final String KEY_PRODUCT = "KEY_PRODUCT";
@@ -86,6 +87,8 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
     @BindView(R.id.product_details_fragment_coordinator)
     CoordinatorLayout coordinatorLayout;
 
+    @BindView(R.id.product_details_fragment_swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
     //------------------------------------------------------------------------------------------------------
 
     public ProductDetailsFragment() {
@@ -130,6 +133,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         mPresenter.attachView(this);
         commentAdapter = new CommentAdapter();
         setRecyclerView();
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     private void setupToolbar() {
@@ -189,7 +193,9 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     @Override
     public void showCommentLoading() {
-        commentProgressBar.setVisibility(View.VISIBLE);
+        if (!swipeRefreshLayout.isRefreshing()) {
+            commentProgressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -217,7 +223,8 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     @Override
     public void showProgressBarLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (!swipeRefreshLayout.isRefreshing())
+            progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -271,6 +278,21 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         bundle.putString(KEY_PRODUCT_FILE, getArguments().getString(KEY_PRODUCT_FILE));
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public void onRefresh() {
+        //check if previous loading is finished
+        if (progressBar.getVisibility() != View.VISIBLE && commentProgressBar.getVisibility() != View.VISIBLE) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                    mPresenter.fetchProductDetails(getArguments().getInt(KEY_ID));
+                    mPresenter.fetchProductComments(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+                }
+            });
+        }
     }
 
     public interface OnProductDetailsInteraction {

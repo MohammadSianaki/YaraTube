@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,7 +36,7 @@ import butterknife.Unbinder;
  */
 public class HomeFragment extends Fragment implements
         HomeContract.View,
-        HomeItemsAdapter.OnHomeItemsClickListener {
+        HomeItemsAdapter.OnHomeItemsClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     //----------------------------------------------------------------------------------------
     private static final String TAG = "HomeFragment";
@@ -54,6 +55,10 @@ public class HomeFragment extends Fragment implements
 
     @BindView(R.id.home_fragment_coordinator)
     CoordinatorLayout coordinatorLayout;
+
+    @BindView(R.id.fragment_home_swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     //----------------------------------------------------------------------------------------
 
     public HomeFragment() {
@@ -105,6 +110,7 @@ public class HomeFragment extends Fragment implements
         mPresenter = new HomePresenter(appDataManager);
         mPresenter.attachView(this);
         setupRecyclerView();
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
 
@@ -176,6 +182,7 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void showLoadedData(StoreResponse storeResponse) {
+        swipeRefreshLayout.setRefreshing(false);
         mStoreItemsAdapter.setHeaderItems(storeResponse.getHeaderItems());
         mStoreItemsAdapter.setHomeItems(storeResponse.getHomeItems());
     }
@@ -198,7 +205,9 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void showProgressBarLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (!swipeRefreshLayout.isRefreshing()) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -223,5 +232,19 @@ public class HomeFragment extends Fragment implements
         recyclerViewStoreItems.setLayoutAnimation(controller);
         recyclerViewStoreItems.getAdapter().notifyDataSetChanged();
         recyclerViewStoreItems.scheduleLayoutAnimation();
+    }
+
+    @Override
+    public void onRefresh() {
+        //check if previous loading is finished
+        if (progressBar.getVisibility() != View.VISIBLE) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                    mPresenter.fetchStoreItems();
+                }
+            });
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +35,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GridCategoryFragment extends Fragment implements GridCategoryContract.View, GridCategoryAdapter.OnCategoryGridClickListener {
+public class GridCategoryFragment extends Fragment implements GridCategoryContract.View, GridCategoryAdapter.OnCategoryGridClickListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String KEY_ID = "KEY_ID";
     private static final String TAG = "GridCategoryFragment";
     private static final int SPAN_COUNT = 2;
@@ -57,6 +58,9 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @BindView(R.id.pb_loading_products_of_category)
     ProgressBar progressBar;
+
+    @BindView(R.id.grid_catgory_fragment_swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     //-------------------------------------------------------------------------------------------
     public GridCategoryFragment() {
@@ -104,7 +108,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         mPresenter = new GridCategoryPresenter(appDataManager);
         mPresenter.attachView(this);
         setupRecyclerView();
-
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     private void setupRecyclerView() {
@@ -154,12 +158,14 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void showProgressBarLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (!swipeRefreshLayout.isRefreshing()) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void finishProgressBarLoading() {
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -196,5 +202,19 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     public void setAppDataManager(AppDataManager appDataManager) {
         this.appDataManager = appDataManager;
+    }
+
+    @Override
+    public void onRefresh() {
+        //check if previous loading is finished
+        if (progressBar.getVisibility() != View.VISIBLE) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                    mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+                }
+            });
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecyclerViewInteractionListener, CategoryContract.View {
+public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecyclerViewInteractionListener, CategoryContract.View, SwipeRefreshLayout.OnRefreshListener {
 
     //------------------------------------------------------------------------------------------------
 
@@ -45,6 +46,9 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     @BindView(R.id.category_fragment_coordinator)
     CoordinatorLayout coordinatorLayout;
+
+    @BindView(R.id.category_fragment_swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private CategoryAdapter categoryAdapter;
     private CategoryContract.Presenter mPresenter;
@@ -101,7 +105,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
         mPresenter = new CategoryPresenter(appDataManager);
         mPresenter.attachView(this);
         setupRecyclerView();
-
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
 
@@ -200,7 +204,9 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     @Override
     public void showProgressBarLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+        if (!swipeRefreshLayout.isRefreshing()) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -210,6 +216,20 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     public void setAppDataManager(AppDataManager appDataManager) {
         this.appDataManager = appDataManager;
+    }
+
+    @Override
+    public void onRefresh() {
+        //check if previous loading is finished
+        if (progressBar.getVisibility() != View.VISIBLE) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                    mPresenter.fetchCategoriesFromRemoteDataSource();
+                }
+            });
+        }
     }
 
     public interface OnCategoryFragmentInteractionListener {
