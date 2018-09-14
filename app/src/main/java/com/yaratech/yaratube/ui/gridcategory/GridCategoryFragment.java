@@ -131,6 +131,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void showLoadedData(List list) {
+        swipeRefreshLayout.setRefreshing(false);
         gridCategoryAdapter.setProductList(list);
     }
 

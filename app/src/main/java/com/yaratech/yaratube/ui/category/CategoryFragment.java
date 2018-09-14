@@ -183,6 +183,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     @Override
     public void showLoadedData(List list) {
+        swipeRefreshLayout.setRefreshing(false);
         categoryAdapter.setCategoryList(list);
     }
 

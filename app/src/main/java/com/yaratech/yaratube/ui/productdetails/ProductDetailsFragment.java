@@ -180,6 +180,7 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     @Override
     public void showLoadedData(Product product) {
+        swipeRefreshLayout.setRefreshing(false);
         getArguments().putString(KEY_PRODUCT_FILE, product.getFiles().get(0).getFile());
         Glide.with(this).load(product.getFeatureAvatar().getXxxDpiUrl()).into(productDetailsMedia);
         productDetailsTitle.setText(product.getName());
