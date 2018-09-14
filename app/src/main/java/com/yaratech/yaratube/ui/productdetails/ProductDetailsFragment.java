@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,7 @@ import com.yaratech.yaratube.data.model.other.Comment;
 import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.ui.EndlessRecyclerViewScrollListener;
 import com.yaratech.yaratube.ui.player.PlayerActivity;
+import com.yaratech.yaratube.utils.SnackbarUtils;
 
 import java.util.List;
 
@@ -80,6 +82,9 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     @BindView(R.id.details_toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.product_details_fragment_coordinator)
+    CoordinatorLayout coordinatorLayout;
 
     //------------------------------------------------------------------------------------------------------
 
@@ -194,7 +199,14 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
 
     @Override
     public void showDataNotAvailableToast() {
-        Toast.makeText(getContext(), "Data is not available now...", Toast.LENGTH_SHORT).show();
+        SnackbarUtils
+                .showServerConnectionFailureSnackbar(coordinatorLayout, new SnackbarUtils.SnackbarCallback() {
+                    @Override
+                    public void onRetryAgainPressed() {
+                        mPresenter.fetchProductDetails(getArguments().getInt(KEY_ID));
+                        mPresenter.fetchProductComments(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+                    }
+                });
     }
 
     @Override

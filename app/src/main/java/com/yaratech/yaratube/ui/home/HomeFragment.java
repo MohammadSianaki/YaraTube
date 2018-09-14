@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import com.yaratech.yaratube.data.model.api.StoreResponse;
 import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
+import com.yaratech.yaratube.utils.SnackbarUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +52,8 @@ public class HomeFragment extends Fragment implements
     @BindView(R.id.rv_store_items)
     RecyclerView recyclerViewStoreItems;
 
+    @BindView(R.id.home_fragment_coordinator)
+    CoordinatorLayout coordinatorLayout;
     //----------------------------------------------------------------------------------------
 
     public HomeFragment() {
@@ -178,7 +182,13 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void showDataNotAvailableToast() {
-        Toast.makeText(getContext(), "Data is not available now...", Toast.LENGTH_SHORT).show();
+        SnackbarUtils
+                .showServerConnectionFailureSnackbar(coordinatorLayout, new SnackbarUtils.SnackbarCallback() {
+                    @Override
+                    public void onRetryAgainPressed() {
+                        mPresenter.fetchStoreItems();
+                    }
+                });
     }
 
     @Override

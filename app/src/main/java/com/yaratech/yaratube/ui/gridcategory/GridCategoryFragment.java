@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.EndlessRecyclerViewScrollListener;
 import com.yaratech.yaratube.ui.OnRequestedProductItemClickListener;
+import com.yaratech.yaratube.utils.SnackbarUtils;
 
 import java.util.List;
 
@@ -47,6 +49,8 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     private Unbinder mUnBinder;
     private AppDataManager appDataManager;
 
+    @BindView(R.id.grid_catgory_fragment_coordinator)
+    CoordinatorLayout coordinatorLayout;
 
     @BindView(R.id.rv_products_of_category)
     RecyclerView recyclerViewOfProducts;
@@ -133,7 +137,14 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void showDataNotAvailableToast() {
-        Toast.makeText(getContext(), "Data is not available now...", Toast.LENGTH_SHORT).show();
+        SnackbarUtils
+                .showServerConnectionFailureSnackbar(coordinatorLayout, new SnackbarUtils.SnackbarCallback() {
+                    @Override
+                    public void onRetryAgainPressed() {
+                        mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+
+                    }
+                });
     }
 
     @Override

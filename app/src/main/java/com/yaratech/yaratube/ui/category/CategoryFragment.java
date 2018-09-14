@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Category;
+import com.yaratech.yaratube.utils.SnackbarUtils;
 
 import java.util.List;
 
@@ -40,6 +42,9 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     @BindView(R.id.pb_category_loading)
     ProgressBar progressBar;
+
+    @BindView(R.id.category_fragment_coordinator)
+    CoordinatorLayout coordinatorLayout;
 
     private CategoryAdapter categoryAdapter;
     private CategoryContract.Presenter mPresenter;
@@ -179,7 +184,13 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.OnRecy
 
     @Override
     public void showDataNotAvailableToast() {
-        Toast.makeText(getContext(), "Data is not available now...", Toast.LENGTH_SHORT).show();
+        SnackbarUtils
+                .showServerConnectionFailureSnackbar(coordinatorLayout, new SnackbarUtils.SnackbarCallback() {
+                    @Override
+                    public void onRetryAgainPressed() {
+                        mPresenter.fetchCategoriesFromRemoteDataSource();
+                    }
+                });
     }
 
     @Override

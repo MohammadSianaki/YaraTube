@@ -19,11 +19,13 @@ public class SnackbarUtils {
 
     public static void showServerConnectionFailureSnackbar(View view, SnackbarCallback callback) {
         Snackbar snackbar = Snackbar
-                .make(view, R.string.failure_server_connection_message, Snackbar.LENGTH_LONG)
-                .setAction("RETRY", new View.OnClickListener() {
+                .make(view, R.string.failure_server_connection_message, Snackbar.LENGTH_LONG);
+        snackbar
+                .setAction(R.string.failure_server_connection_snackbar_action_button_text, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         callback.onRetryAgainPressed();
+                        snackbar.dismiss();
                     }
                 });
 
