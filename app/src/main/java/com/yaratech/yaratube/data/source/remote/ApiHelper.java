@@ -42,7 +42,9 @@ public interface ApiHelper {
     //region Profile Remote Api Access Methods
 
 
-    Disposable uploadUserProfileImageAvatar(MultipartBody.Part image, String token, DataManager.DashboardApiResultCallback callback);
+    Disposable uploadUserProfileImageAvatar(MultipartBody.Part image,
+                                            String token,
+                                            DataManager.DashboardApiResultCallback callback);
 
     Disposable uploadUserProfileInformation(String nickName,
                                             String dateOfBirth,

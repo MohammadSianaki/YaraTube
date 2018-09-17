@@ -1,11 +1,8 @@
 package com.yaratech.yaratube.ui.profile;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,17 +24,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.api.GetProfileResponse;
 import com.yaratech.yaratube.utils.SnackbarUtils;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.Date;
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +41,9 @@ import ir.hamsaa.persiandatepicker.Listener;
 import ir.hamsaa.persiandatepicker.PersianDatePickerDialog;
 import ir.hamsaa.persiandatepicker.util.PersianCalendar;
 
+import static android.app.Activity.RESULT_OK;
+import static com.yaratech.yaratube.utils.AppConstants.BASE_URL;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -54,6 +51,9 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     //-------------------------------------------------------------------------------------------
     private static final String TAG = "ProfileFragment";
     private static final int PICK_IMAGE_REQUEST_CODE = 100;
+    private static final int CROP_IMAGE_REQUEST_CODE = 101;
+    public static final int xAspectRatio = 16;
+    public static final int yAspectRatio = 9;
 
     private ProfileContract.Presenter mPresenter;
     private Unbinder mUnBinder;
@@ -112,27 +112,48 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+        Log.d(TAG, "onCreate: +++++ <<<< test >>>>");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.d(TAG, "onCreateView: +++++ <<<< test >>>>");
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "onViewCreated() +++++ called <<<< Test >>>>");
         mUnBinder = ButterKnife.bind(this, view);
         nameEditText.setEnabled(false);
         genderSpinner.setEnabled(false);
         mPresenter = new ProfilePresenter(appDataManager, new CompositeDisposable());
         mPresenter.attachView(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated: +++++ <<<< test >>>>");
         mPresenter.loadUserProfileInfo();
         String avatarPath = mPresenter.getUserProfileImageAvatarPath();
         loadDefaultImageAvatar(avatarPath);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: +++++ <<<< test >>>>");
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "onResume: +++++ <<<< test >>>>");
+        super.onResume();
         avatarImageView.setOnClickListener(v -> {
             loadImageAvatarFromGallery();
         });
@@ -164,8 +185,104 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
                     nameEditText.getText().toString(),
                     birthdayTextView.getText().toString(), genderSpinner.getSelectedItem().toString()
             );
-
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: +++++ <<<< test >>>>");
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: +++++ <<<< test >>>>");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: +++++ <<<< test >>>>");
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView: +++++ <<<< test >>>>");
+        mPresenter.unSubscribe();
+        mUnBinder.unbind();
+        mPresenter.detachView();
+        super.onDestroyView();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy: +++++ <<<< test >>>>");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach: +++++ <<<< test >>>>");
+        super.onDetach();
+    }
+
+    @Override
+    public void showDataNotAvailableMessage() {
+        SnackbarUtils.showServerConnectionFailureSnackbar(coordinatorLayout, new SnackbarUtils.SnackbarCallback() {
+            @Override
+            public void onRetryAgainPressed() {
+                mPresenter.uploadUserProfileInfo(
+                        nameEditText.getText().toString(),
+                        birthdayTextView.getText().toString(), genderSpinner.getSelectedItem().toString());
+            }
+        });
+    }
+
+    @Override
+    public void showSubmitSuccessfulMessage() {
+        SnackbarUtils
+                .showSuccessfulMessage(coordinatorLayout, getString(R.string.successful_post_profile_information_message));
+    }
+
+    @Override
+    public void showLoadedUserProfileInformation(GetProfileResponse getProfileResponse) {
+        Log.d(TAG, "showLoadedUserProfileInformation() called with: getProfileResponse = [" + getProfileResponse + "]");
+        nameEditText.setText(getProfileResponse.getNickname());
+        nameEditText.setEnabled(false);
+        if (getProfileResponse.getDateOfBirth() != null) {
+            birthdayTextView.setText(getProfileResponse.getDateOfBirth().replace("-", "/"));
+        }
+        mPresenter.saveUserProfileImageAvatarPath(BASE_URL + getProfileResponse.getAvatar());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST_CODE)
+            if (resultCode == RESULT_OK &&
+                    data != null &&
+                    data.getData() != null &&
+                    getContext().getContentResolver() != null) {
+                Log.d(TAG, "onActivityResult: <<<< pick image >>>>");
+                Uri selectedImage = data.getData();
+                showCropperDialog(selectedImage);
+            }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Log.d(TAG, "onActivityResult: <<<< crop image >>> with result = ok");
+                Uri resultUri = result.getUri();
+                Log.d(TAG, "onActivityResult: resultUri = [" + resultUri.getPath() + "]");
+                mPresenter.saveUserProfileImageAvatarPath(resultUri.getPath());
+                mPresenter.uploadUserProfileImageAvatar(new File(resultUri.getPath()));
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Log.d(TAG, "onActivityResult: <<<< crop image >>> with result = error");
+                Exception error = result.getError();
+                Log.e(TAG, "onActivityResult: ", error);
+            }
+        }
     }
 
     private void loadDefaultImageAvatar(String avatarPath) {
@@ -208,11 +325,11 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
                         Log.d(TAG, "onDismissed() called");
                     }
                 });
-
         datePickerDialog.show();
     }
 
     private void loadImageAvatarFromGallery() {
+        Log.d(TAG, "loadImageAvatarFromGallery() called");
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getIntent.setType("image/*");
 
@@ -225,47 +342,17 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST_CODE);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        Log.d(TAG, "onDestroy: ProfileFragment");
-        mPresenter.unSubscribe();
-        mUnBinder.unbind();
-        mPresenter.detachView();
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST_CODE &&
-                resultCode == Activity.RESULT_OK &&
-                data != null &&
-                data.getData() != null &&
-                getContext().getContentResolver() != null) {
-            try {
-                Uri selectedImage = data.getData();
-                InputStream inputStream = getContext().getContentResolver().openInputStream(selectedImage);
-                String filePath = getSelectedImageFilePath(selectedImage);
-                mPresenter.saveUserProfileImageAvatarPath(data.getData().toString());
-                mPresenter.uploadUserProfileImageAvatar(filePath);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                if (bitmap != null) {
-                    Glide
-                            .with(this)
-                            .load(bitmap)
-                            .apply(RequestOptions.encodeQualityOf(100))
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(avatarImageView);
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+    private void showCropperDialog(Uri filePath) {
+        Log.d(TAG, "showCropperDialog: source uri = [" + filePath.toString() + "]");
+        Log.d(TAG, "showCropperDialog: destination uri = [" + Uri.parse(filePath.toString() + System.currentTimeMillis()) + "]");
+        CropImage
+                .activity(filePath)
+                .setAllowFlipping(true)
+                .setAllowRotation(true)
+                .setCropShape(CropImageView.CropShape.OVAL)
+                .setNoOutputImage(false)
+                .setMaxCropResultSize(1024, 1024)
+                .start(getContext(), this);
     }
 
     private String getSelectedImageFilePath(Uri selectedImage) {
@@ -280,53 +367,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         return filePath;
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy: ProfileFragment");
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-
-    @Subscribe
-    void getSelectedDataFromDataPickerDialog(Date date) {
-        Log.d(TAG, "getSelectedDataFromDataPickerDialog() called with: date = [" + date + "]");
-    }
-
     public void setAppDataManager(AppDataManager appDataManager) {
         this.appDataManager = appDataManager;
-    }
-
-    @Override
-    public void showDataNotAvailableMessage() {
-        SnackbarUtils.showServerConnectionFailureSnackbar(coordinatorLayout, new SnackbarUtils.SnackbarCallback() {
-            @Override
-            public void onRetryAgainPressed() {
-                mPresenter.uploadUserProfileInfo(
-                        nameEditText.getText().toString(),
-                        birthdayTextView.getText().toString(), genderSpinner.getSelectedItem().toString());
-            }
-        });
-    }
-
-    @Override
-    public void showSubmitSuccessfulMessage() {
-        SnackbarUtils
-                .showSuccessfulMessage(coordinatorLayout, getString(R.string.successful_post_profile_information_message));
-    }
-
-    @Override
-    public void showLoadedUserProfileInformation(GetProfileResponse getProfileResponse) {
-        Log.d(TAG, "showLoadedUserProfileInformation() called with: getProfileResponse = [" + getProfileResponse + "]");
-        nameEditText.setText(getProfileResponse.getNickname());
-        nameEditText.setEnabled(false);
-        if (getProfileResponse.getDateOfBirth() != null) {
-            birthdayTextView.setText(getProfileResponse.getDateOfBirth().replace("-", "/"));
-        }
     }
 }

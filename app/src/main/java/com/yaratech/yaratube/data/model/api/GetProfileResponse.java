@@ -1,11 +1,12 @@
 
 package com.yaratech.yaratube.data.model.api;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.yaratech.yaratube.data.model.other.Credit;
 import com.yaratech.yaratube.data.model.other.MagicCredit;
+
+import java.util.List;
 
 public class GetProfileResponse {
 
@@ -20,7 +21,7 @@ public class GetProfileResponse {
     private MagicCredit magicCredit;
     @SerializedName("mobile")
     @Expose
-    private Object mobile;
+    private String mobile;
     @SerializedName("email")
     @Expose
     private String email;
@@ -35,7 +36,7 @@ public class GetProfileResponse {
     private String nickname;
     @SerializedName("avatar")
     @Expose
-    private Object avatar;
+    private String avatar;
     @SerializedName("gender")
     @Expose
     private String gender;
@@ -45,13 +46,11 @@ public class GetProfileResponse {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public GetProfileResponse() {
     }
 
     /**
-     * 
      * @param id
      * @param dateOfBirth
      * @param magicCredit
@@ -64,7 +63,17 @@ public class GetProfileResponse {
      * @param avatar
      * @param mobile
      */
-    public GetProfileResponse(List<Object> friends, String dateOfBirth, MagicCredit magicCredit, Object mobile, String email, boolean error, int id, String nickname, Object avatar, String gender, Credit credit) {
+    public GetProfileResponse(List<Object> friends,
+                              String dateOfBirth,
+                              MagicCredit magicCredit,
+                              String mobile,
+                              String email,
+                              boolean error,
+                              int id,
+                              String nickname,
+                              String avatar,
+                              String gender,
+                              Credit credit) {
         super();
         this.friends = friends;
         this.dateOfBirth = dateOfBirth;
@@ -103,11 +112,11 @@ public class GetProfileResponse {
         this.magicCredit = magicCredit;
     }
 
-    public Object getMobile() {
+    public String getMobile() {
         return mobile;
     }
 
-    public void setMobile(Object mobile) {
+    public void setMobile(String mobile) {
         this.mobile = mobile;
     }
 
@@ -143,11 +152,11 @@ public class GetProfileResponse {
         this.nickname = nickname;
     }
 
-    public Object getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Object avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 

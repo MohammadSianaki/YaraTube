@@ -101,5 +101,8 @@ dependencies {
 
     // Database Debug
     debugImplementation "com.amitshekhar.android:debug-db:$rootProject.databaseDebugVersion"
+
+    // uCrop library for image cropping
+    implementation "com.theartofdev.edmodo:android-image-cropper:2.7.0"
 }
 apply plugin: "com.google.gms.google-services"

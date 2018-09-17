@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,6 @@ public class MoreFragment extends Fragment implements MoreContract.View {
     private Unbinder mUnBinder;
     private ProfileFragment profileFragment;
     private AppDataManager appDataManager;
-    private CompositeDisposable compositeDisposable;
     //--------------------------------------------------------------------------------------------------------
 
     public MoreFragment() {
@@ -137,6 +137,7 @@ public class MoreFragment extends Fragment implements MoreContract.View {
 
     @Override
     public void onDestroyView() {
+        Log.d(TAG, "onDestroyView() called <<<<Test>>>");
         mUnBinder.unbind();
         mPresenter.unSubscribe();
         mPresenter.detachView();
@@ -145,8 +146,10 @@ public class MoreFragment extends Fragment implements MoreContract.View {
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy() called  <<<<Test>>>");
         super.onDestroy();
     }
+
 
     @Override
     public void onDetach() {
@@ -155,9 +158,5 @@ public class MoreFragment extends Fragment implements MoreContract.View {
 
     public void setAppDataManager(AppDataManager appDataManager) {
         this.appDataManager = appDataManager;
-    }
-
-    public void setCompositeDisposable(CompositeDisposable compositeDisposable) {
-        this.compositeDisposable = compositeDisposable;
     }
 }

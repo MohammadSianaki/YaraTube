@@ -92,7 +92,7 @@ public interface ApiService {
     @Multipart
     @POST("profile")
     Single<Response<PostProfileResponse>> uploadUserProfileImageAvatar(
-            @Part MultipartBody.Part imageAvatar,
+            @Part MultipartBody.Part avatar,
             @Header("Authorization") String token);
 
 

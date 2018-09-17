@@ -4,6 +4,8 @@ import com.yaratech.yaratube.data.model.api.GetProfileResponse;
 import com.yaratech.yaratube.ui.base.BasePresenter;
 import com.yaratech.yaratube.ui.base.BaseView;
 
+import java.io.File;
+
 public interface ProfileContract {
 
     interface View extends BaseView {
@@ -24,7 +26,7 @@ public interface ProfileContract {
 
         void uploadUserProfileInfo(String name, String birthday, String gender);
 
-        void uploadUserProfileImageAvatar(String filePath);
+        void uploadUserProfileImageAvatar(File file);
 
         void loadUserProfileInfo();
     }

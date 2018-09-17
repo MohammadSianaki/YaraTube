@@ -88,15 +88,15 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     }
 
     @Override
-    public void uploadUserProfileImageAvatar(String filePath) {
-        Log.d(TAG, "uploadUserProfileImageAvatar() called with: filePath = [" + filePath + "]");
-        File file = new File(filePath);
+    public void uploadUserProfileImageAvatar(File file) {
+        Log.d(TAG, "uploadUserProfileImageAvatar() called with: file = [" + file.getAbsolutePath() + "]");
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("upload", file.getName(), requestBody);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", file.getName(), requestBody);
         Disposable disposable = appDataManager.uploadUserProfileImageAvatar(body, token, new DataManager.DashboardApiResultCallback() {
             @Override
             public void onDataLoaded(Object response) {
                 PostProfileResponse profileResponse = (PostProfileResponse) response;
+                Log.i(TAG, "onDataLoaded: avatar>>> " + profileResponse.getData().getAvatar());
                 Log.d(TAG, "onDataLoaded() called with: response = [" + profileResponse.getMessage() + "]");
             }
 
