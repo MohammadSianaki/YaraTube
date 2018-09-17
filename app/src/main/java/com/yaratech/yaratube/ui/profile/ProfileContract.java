@@ -15,6 +15,8 @@ public interface ProfileContract {
         void showSubmitSuccessfulMessage();
 
         void showLoadedUserProfileInformation(GetProfileResponse getProfileResponse);
+
+        void loadImageAvatarAfterUpload(String path);
     }
 
 

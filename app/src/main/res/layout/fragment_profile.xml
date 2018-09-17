@@ -35,9 +35,8 @@
 
             <ImageView
                 android:id="@+id/profile_fragment_avatar_image_view"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/images_avatar_circular" />
+                android:layout_width="72dp"
+                android:layout_height="72dp" />
 
         </LinearLayout>
 

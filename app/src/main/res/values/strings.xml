@@ -47,6 +47,7 @@
     <string name="successful_post_profile_information_message">اطلاعات شما با موفقیت ثبت گردید</string>
     <string name="failure_server_connection_message">خطا در برقراری ارتباط با سرور!</string>
     <string name="failure_server_connection_snackbar_action_button_text">تلاش مجدد</string>
+    <string name="pick_image_intent_text">انتخاب تصویر</string>
 
     <string-array name="profile_fragment_gender_spinner">
         <item>مرد</item>

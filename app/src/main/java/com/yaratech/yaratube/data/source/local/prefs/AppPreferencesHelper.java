@@ -54,7 +54,7 @@ public class AppPreferencesHelper implements PreferencesHelper {
         mPrefs
                 .edit()
                 .putString(PREF_KEY_CURRENT_USER_PROFILE_IMAGE_AVATAR_PATH, imagePath)
-                .apply();
+                .commit();
     }
 
     @Override

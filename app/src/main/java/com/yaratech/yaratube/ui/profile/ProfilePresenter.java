@@ -6,6 +6,7 @@ import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.DataManager;
 import com.yaratech.yaratube.data.model.api.GetProfileResponse;
 import com.yaratech.yaratube.data.model.api.PostProfileResponse;
+import com.yaratech.yaratube.utils.AppConstants;
 
 import java.io.File;
 
@@ -98,6 +99,7 @@ public class ProfilePresenter implements ProfileContract.Presenter {
                 PostProfileResponse profileResponse = (PostProfileResponse) response;
                 Log.i(TAG, "onDataLoaded: avatar>>> " + profileResponse.getData().getAvatar());
                 Log.d(TAG, "onDataLoaded() called with: response = [" + profileResponse.getMessage() + "]");
+                mView.loadImageAvatarAfterUpload(AppConstants.BASE_URL + profileResponse.getData().getAvatar());
             }
 
             @Override
@@ -115,6 +117,7 @@ public class ProfilePresenter implements ProfileContract.Presenter {
 
     @Override
     public void loadUserProfileInfo() {
+        Log.d(TAG, "loadUserProfileInfo() called");
         Disposable disposable = appDataManager.loadUserProfileInformation(token, new DataManager.DashboardApiResultCallback() {
             @Override
             public void onDataLoaded(Object response) {

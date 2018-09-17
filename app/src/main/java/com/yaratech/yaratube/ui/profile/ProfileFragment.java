@@ -1,11 +1,13 @@
 package com.yaratech.yaratube.ui.profile;
 
 
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,9 +31,12 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.api.GetProfileResponse;
+import com.yaratech.yaratube.utils.AppConstants;
 import com.yaratech.yaratube.utils.SnackbarUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +47,8 @@ import ir.hamsaa.persiandatepicker.PersianDatePickerDialog;
 import ir.hamsaa.persiandatepicker.util.PersianCalendar;
 
 import static android.app.Activity.RESULT_OK;
-import static com.yaratech.yaratube.utils.AppConstants.BASE_URL;
+
+;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,14 +57,11 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     //-------------------------------------------------------------------------------------------
     private static final String TAG = "ProfileFragment";
     private static final int PICK_IMAGE_REQUEST_CODE = 100;
-    private static final int CROP_IMAGE_REQUEST_CODE = 101;
-    public static final int xAspectRatio = 16;
-    public static final int yAspectRatio = 9;
 
     private ProfileContract.Presenter mPresenter;
     private Unbinder mUnBinder;
     private AppDataManager appDataManager;
-    private PersianDatePickerDialog datePickerDialog;
+    private PersianDatePickerDialog datePickerDia;
 
     private String birthday;
 
@@ -110,52 +113,62 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.d(TAG, "onAttach() called with: context = [" + context + "]");
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: +++++ <<<< test >>>>");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.d(TAG, "onCreateView: +++++ <<<< test >>>>");
+        Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onViewCreated() called");
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated() +++++ called <<<< Test >>>>");
         mUnBinder = ButterKnife.bind(this, view);
         nameEditText.setEnabled(false);
         genderSpinner.setEnabled(false);
         mPresenter = new ProfilePresenter(appDataManager, new CompositeDisposable());
         mPresenter.attachView(this);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "onActivityCreated: +++++ <<<< test >>>>");
         mPresenter.loadUserProfileInfo();
-        String avatarPath = mPresenter.getUserProfileImageAvatarPath();
-        loadDefaultImageAvatar(avatarPath);
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart: +++++ <<<< test >>>>");
+        Log.d(TAG, "onStart() called");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
     }
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume: +++++ <<<< test >>>>");
         super.onResume();
+        Log.d(TAG, "onResume() called with visible = [" + isVisible() + "]");
+        Log.d(TAG, "onResume() called with hidden = [" + isHidden() + "]");
+        Log.d(TAG, "onResume() called with resumed = [" + isResumed() + "]");
         avatarImageView.setOnClickListener(v -> {
-            loadImageAvatarFromGallery();
+            loadImageFromGalleryOrCamera();
         });
         editNameImageView.setOnClickListener(v -> {
             if (nameEditText.isEnabled()) {
@@ -186,123 +199,135 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
                     birthdayTextView.getText().toString(), genderSpinner.getSelectedItem().toString()
             );
         });
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: +++++ <<<< test >>>>");
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState: +++++ <<<< test >>>>");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop: +++++ <<<< test >>>>");
     }
 
     @Override
     public void onDestroyView() {
-        Log.d(TAG, "onDestroyView: +++++ <<<< test >>>>");
+        Log.d(TAG, "onDestroyView() called");
         mPresenter.unSubscribe();
         mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
     }
 
-
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy: +++++ <<<< test >>>>");
         super.onDestroy();
+        Log.d(TAG, "onDestroy() called");
     }
 
     @Override
     public void onDetach() {
-        Log.d(TAG, "onDetach: +++++ <<<< test >>>>");
         super.onDetach();
+        Log.d(TAG, "onDetach() called");
     }
 
-    @Override
-    public void showDataNotAvailableMessage() {
-        SnackbarUtils.showServerConnectionFailureSnackbar(coordinatorLayout, new SnackbarUtils.SnackbarCallback() {
-            @Override
-            public void onRetryAgainPressed() {
-                mPresenter.uploadUserProfileInfo(
-                        nameEditText.getText().toString(),
-                        birthdayTextView.getText().toString(), genderSpinner.getSelectedItem().toString());
-            }
-        });
-    }
-
-    @Override
-    public void showSubmitSuccessfulMessage() {
-        SnackbarUtils
-                .showSuccessfulMessage(coordinatorLayout, getString(R.string.successful_post_profile_information_message));
-    }
-
-    @Override
-    public void showLoadedUserProfileInformation(GetProfileResponse getProfileResponse) {
-        Log.d(TAG, "showLoadedUserProfileInformation() called with: getProfileResponse = [" + getProfileResponse + "]");
-        nameEditText.setText(getProfileResponse.getNickname());
-        nameEditText.setEnabled(false);
-        if (getProfileResponse.getDateOfBirth() != null) {
-            birthdayTextView.setText(getProfileResponse.getDateOfBirth().replace("-", "/"));
-        }
-        mPresenter.saveUserProfileImageAvatarPath(BASE_URL + getProfileResponse.getAvatar());
+    private void loadImageFromGalleryOrCamera() {
+        Intent pickImageIntent = getPickImageIntent(getContext());
+        startActivityForResult(pickImageIntent, PICK_IMAGE_REQUEST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST_CODE)
-            if (resultCode == RESULT_OK &&
-                    data != null &&
-                    data.getData() != null &&
-                    getContext().getContentResolver() != null) {
-                Log.d(TAG, "onActivityResult: <<<< pick image >>>>");
-                Uri selectedImage = data.getData();
-                showCropperDialog(selectedImage);
+        if (requestCode == PICK_IMAGE_REQUEST_CODE &&
+                resultCode == RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                Uri pickedImage = data.getData();
+                showCropperDialog(pickedImage);
             }
+        }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                Log.d(TAG, "onActivityResult: <<<< crop image >>> with result = ok");
                 Uri resultUri = result.getUri();
-                Log.d(TAG, "onActivityResult: resultUri = [" + resultUri.getPath() + "]");
-                mPresenter.saveUserProfileImageAvatarPath(resultUri.getPath());
-                mPresenter.uploadUserProfileImageAvatar(new File(resultUri.getPath()));
+                Log.d(TAG, "onActivityResult: <<<< before upload >>>>");
+                mPresenter.uploadUserProfileImageAvatar(
+                        new File(resultUri.getPath())
+                );
+                Log.d(TAG, "onActivityResult: <<<< after upload >>>>");
+                Log.d(TAG, "onActivityResult: <<<< before set image >>>>");
+                Log.d(TAG, "onActivityResult: <<<< after set image >>>>");
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Log.d(TAG, "onActivityResult: <<<< crop image >>> with result = error");
                 Exception error = result.getError();
                 Log.e(TAG, "onActivityResult: ", error);
             }
         }
     }
 
-    private void loadDefaultImageAvatar(String avatarPath) {
-        if (avatarPath != null) {
-            Log.d(TAG, "onViewCreated: Uri.parse : " + Uri.parse(avatarPath));
-            Glide
-                    .with(this)
-                    .load(Uri.parse(avatarPath))
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(avatarImageView);
-        } else {
+    public Intent getPickImageIntent(Context context) {
+        Intent chooserIntent = null;
+
+        List<Intent> intentList = new ArrayList<>();
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takePhotoIntent.putExtra("return-data", true);
+        intentList = addIntentsToList(context, intentList, pickIntent);
+        intentList = addIntentsToList(context, intentList, takePhotoIntent);
+
+        if (intentList.size() > 0) {
+            chooserIntent = Intent.createChooser(intentList.remove(intentList.size() - 1),
+                    context.getString(R.string.pick_image_intent_text));
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(new Parcelable[]{}));
+        }
+
+        return chooserIntent;
+    }
+
+    private List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
+        List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo resolveInfo : resInfo) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            Intent targetedIntent = new Intent(intent);
+            targetedIntent.setPackage(packageName);
+            list.add(targetedIntent);
+        }
+        return list;
+    }
+
+
+    @Override
+    public void showLoadedUserProfileInformation(GetProfileResponse response) {
+        Log.d(TAG, "showLoadedUserProfileInformation() called with: response = [" + response.getNickname() + "]");
+        nameEditText.setText(response.getNickname());
+        nameEditText.setEnabled(false);
+        if (response.getDateOfBirth() != null) {
+            birthdayTextView.setText(response.getDateOfBirth().replace("-", "/"));
+        }
+        loadUserProfileAvatar(response.getAvatar());
+    }
+
+    @Override
+    public void loadImageAvatarAfterUpload(String path) {
+        Glide
+                .with(this)
+                .load(path)
+                .apply(RequestOptions.circleCropTransform())
+                .into(avatarImageView);
+    }
+
+    private void loadUserProfileAvatar(String avatarPath) {
+        Log.d(TAG, "loadUserProfileAvatar() called with: avatarPath = [" + avatarPath + "]");
+        if (avatarPath == null) {
             Glide
                     .with(this)
                     .load(R.drawable.images_avatar_circular)
+                    .into(avatarImageView);
+
+        } else {
+            Glide
+                    .with(this)
+                    .load(AppConstants.BASE_URL + avatarPath)
+                    .apply(RequestOptions.circleCropTransform())
                     .into(avatarImageView);
         }
     }
 
     private void showDatePickerDialog() {
-        datePickerDialog = new PersianDatePickerDialog(getContext())
+        datePickerDia = new PersianDatePickerDialog(getContext())
                 .setPositiveButtonResource(R.string.date_picker_dialog_positive_button)
                 .setNegativeButtonResource(R.string.date_picker_dialog_negative_button)
                 .setTodayButtonResource(R.string.date_picker_dialog_today_button)
@@ -325,46 +350,35 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
                         Log.d(TAG, "onDismissed() called");
                     }
                 });
-        datePickerDialog.show();
-    }
-
-    private void loadImageAvatarFromGallery() {
-        Log.d(TAG, "loadImageAvatarFromGallery() called");
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
-
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/*");
-
-        Intent chooserIntent = Intent.createChooser(getIntent, "Select Picture");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-
-        startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST_CODE);
+        datePickerDia.show();
     }
 
     private void showCropperDialog(Uri filePath) {
-        Log.d(TAG, "showCropperDialog: source uri = [" + filePath.toString() + "]");
-        Log.d(TAG, "showCropperDialog: destination uri = [" + Uri.parse(filePath.toString() + System.currentTimeMillis()) + "]");
         CropImage
                 .activity(filePath)
                 .setAllowFlipping(true)
                 .setAllowRotation(true)
                 .setCropShape(CropImageView.CropShape.OVAL)
-                .setNoOutputImage(false)
                 .setMaxCropResultSize(1024, 1024)
                 .start(getContext(), this);
     }
 
-    private String getSelectedImageFilePath(Uri selectedImage) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+    @Override
+    public void showDataNotAvailableMessage() {
+        SnackbarUtils.showServerConnectionFailureSnackbar(coordinatorLayout, new SnackbarUtils.SnackbarCallback() {
+            @Override
+            public void onRetryAgainPressed() {
+                mPresenter.uploadUserProfileInfo(
+                        nameEditText.getText().toString(),
+                        birthdayTextView.getText().toString(), genderSpinner.getSelectedItem().toString());
+            }
+        });
+    }
 
-        Cursor cursor = getContext().getContentResolver().query(
-                selectedImage, filePathColumn, null, null, null);
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String filePath = cursor.getString(columnIndex);
-        cursor.close();
-        return filePath;
+    @Override
+    public void showSubmitSuccessfulMessage() {
+        SnackbarUtils
+                .showSuccessfulMessage(coordinatorLayout, getString(R.string.successful_post_profile_information_message));
     }
 
     public void setAppDataManager(AppDataManager appDataManager) {
