@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/login_dialog_shape"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <TextView
+        android:id="@+id/tv_verification_code_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/verification_code_dialog_title"
+        android:textColor="@color/dark_jungle_green_color"
+        android:textSize="21.33sp" />
+
+    <EditText
+        android:id="@+id/et_code_number_verification_code_dialog_input"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/edit_text_shape"
+        android:hint="@string/verification_code_dialog_edit_text_hint"
+        android:inputType="number"
+        android:paddingBottom="24dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="24dp"
+        android:textColor="#99000000"
+        android:textDirection="rtl"
+        android:textIsSelectable="false" />
+
+    <TextView
+        android:id="@+id/tv_verification_code_dialog_not_received_code_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:text="@string/tv_verification_code_dialog_not_recieved_code_link"
+        android:textAlignment="viewStart"
+        android:textColor="#99000000"
+        android:textSize="16.0sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:baselineAligned="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_verification_code_dialog_submit_code"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/filled_button_shape"
+            android:text="@string/btn_verification_code_dialog_submit_text"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_verification_code_dialog_corrent_phone_number"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_shape"
+            android:text="@string/btn_verification_code_dialog_corrent_phone_number_text"
+            android:textAlignment="center"
+            android:textColor="@color/celestialblue"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+</LinearLayout>

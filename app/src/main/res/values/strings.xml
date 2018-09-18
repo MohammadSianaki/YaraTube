@@ -1,3 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="app_name">YaraTube</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nav_profile">پروفایل</string>
+    <string name="nav_about_us">درباره ما</string>
+    <string name="nav_contact_us">تماس با ما</string>
+    <string name="bottom_nav_category_item">دسته بندی ها</string>
+    <string name="bottom_nav__main_screen_item">صفحه اصلی</string>
+    <string name="btn_submit_comment_text">نظر دهید</string>
+    <string name="login_dialog_title">ورود</string>
+    <string name="login_method_dialog_mobile_phone_number_sign_in_button_text">از طریق شماره موبایل</string>
+    <string name="subtitle1">شماره موبایل خود را وارد کنید</string>
+    <string name="phone_number_login_edit_text_hint">شماره موبایل خود را وارد کنید</string>
+    <string name="phone_number_login_sumbit_button_text">ثبت</string>
+    <string name="phone_number_login_title">ورود از طریق شماره موبایل</string>
+    <string name="resource">کد فعال سازی را وارد کنید</string>
+    <string name="verification_code_dialog_edit_text_hint">کد فعال سازی را وارد کنید</string>
+    <string name="verification_code_dialog_title">کد فعال سازی را وارد کنید</string>
+    <string name="btn_verification_code_dialog_corrent_phone_number_text">تصحیح شماره</string>
+    <string name="btn_verification_code_dialog_submit_text">ثبت</string>
+    <string name="tv_verification_code_dialog_not_recieved_code_link">کد را دریافت نکردید؟</string>
+    <string name="login_method_dialog_google_sign_in_button_text">از طریق حساب google</string>
+    <string name="dialog_fragment_edit_text_hint">نظر</string>
+    <string name="comment_dialog_fragment_submit_button_text">ثبت</string>
+    <string name="title_activity_player">YaraTube</string>
+    <string name="action_settings">Settings</string>
+    <string name="profile_fragment_cancel_button_text">انصراف</string>
+    <string name="profile_fragment_submit_changes_button_text">ثبت تغییرات</string>
+    <string name="profile_fragment_shown_name">نام نمایشی</string>
+    <string name="profile_fragment_first_and_last_name">نام و نام خانوادگی</string>
+    <string name="profile_fragment_gender">جنسیت</string>
+    <string name="profile_fragment_gender_value">مرد</string>
+    <string name="profile_fragment_birthday_title">تاریخ تولد</string>
+    <string name="profile_fragment_toolbar_title">پروفایل</string>
+    <string name="details_fragment_toolbar_title">جزئیات محصول</string>
+    <string name="nav_logout">خروج از حساب کاربری</string>
+    <string name="logout_toast_message">خروج شما موفقیت آمیز بود</string>
+    <string name="botton_nav_more_item_title">بیشتر</string>
+    <string name="fragment_more_profile_tv">پروفایل</string>
+    <string name="fragment_more_about_us">درباره ما</string>
+    <string name="fragment_more_contact_us">تماس با ما</string>
+    <string name="date_picker_dialog_positive_button">تایید</string>
+    <string name="date_picker_dialog_negative_button">لغو</string>
+    <string name="date_picker_dialog_today_button">امروز</string>
+    <string name="successful_post_profile_information_message">اطلاعات شما با موفقیت ثبت گردید</string>
+    <string name="failure_server_connection_message">خطا در برقراری ارتباط با سرور!</string>
+    <string name="failure_server_connection_snackbar_action_button_text">تلاش مجدد</string>
+    <string name="pick_image_intent_text">انتخاب تصویر</string>
+
+    <string-array name="profile_fragment_gender_spinner">
+        <item>مرد</item>
+        <item>زن</item>
+    </string-array>
+
 </resources>
+

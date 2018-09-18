@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_dialog_shape"
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_phone_number_login_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:text="@string/phone_number_login_title"
+        android:textColor="@color/dark_jungle_green_color"
+        android:textSize="21.33sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/et_phone_number_login_dialog_input"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_marginBottom="48dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/edit_text_shape"
+        android:hint="@string/phone_number_login_edit_text_hint"
+        android:inputType="phone"
+        android:padding="8dp"
+        android:textAlignment="viewStart"
+        android:textColor="#99000000"
+        android:textDirection="rtl"
+        android:textIsSelectable="false" />
+
+    <Button
+        android:id="@+id/btn_phone_number_login_dialog_submit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/filled_button_shape"
+        android:text="@string/phone_number_login_sumbit_button_text"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+</LinearLayout>
