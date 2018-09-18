@@ -1,18 +1,24 @@
 package com.yaratech.yaratube.ui.profile;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -32,11 +39,17 @@ import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.api.GetProfileResponse;
 import com.yaratech.yaratube.utils.AppConstants;
+import com.yaratech.yaratube.utils.FileUtils;
 import com.yaratech.yaratube.utils.SnackbarUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +61,6 @@ import ir.hamsaa.persiandatepicker.util.PersianCalendar;
 
 import static android.app.Activity.RESULT_OK;
 
-;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -57,14 +68,17 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     //-------------------------------------------------------------------------------------------
     private static final String TAG = "ProfileFragment";
     private static final int PICK_IMAGE_REQUEST_CODE = 100;
-
+    private static final int PICK_IMAGE_PERMISSION_REQUEST_CODE = 102;
+    private static final String[] PICK_IMAGE_PERMISSIONS = {
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    public static final String GALLERY_IMAGE_SOURCE = "GALLERY_IMAGE_SOURCE";
     private ProfileContract.Presenter mPresenter;
     private Unbinder mUnBinder;
-    private AppDataManager appDataManager;
     private PersianDatePickerDialog datePickerDia;
-
-    private String birthday;
-
+    private AppDataManager appDataManager;
+    private Uri cropPictureUri;
     @BindView(R.id.profile_fragment_toolbar)
     Toolbar toolbar;
 
@@ -97,6 +111,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
 
     @BindView(R.id.profile_fragment_coordinator)
     CoordinatorLayout coordinatorLayout;
+    private Uri cameraUri;
     //-------------------------------------------------------------------------------------------
 
     public ProfileFragment() {
@@ -144,31 +159,20 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume() called with visible = [" + isVisible() + "]");
-        Log.d(TAG, "onResume() called with hidden = [" + isHidden() + "]");
-        Log.d(TAG, "onResume() called with resumed = [" + isResumed() + "]");
         avatarImageView.setOnClickListener(v -> {
-            loadImageFromGalleryOrCamera();
+            if (checkMarshMellowPermission()) {
+                // check if camera and gallery permission are granted
+                if (isAllPermissionsGranted()) {
+                    loadImageFromGalleryOrCamera();
+                } else {
+                    // request denied permission
+                    requestPermissions(PICK_IMAGE_PERMISSIONS, PICK_IMAGE_PERMISSION_REQUEST_CODE);
+                }
+            } else {
+                loadImageFromGalleryOrCamera();
+            }
         });
         editNameImageView.setOnClickListener(v -> {
             if (nameEditText.isEnabled()) {
@@ -202,6 +206,30 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
 
     }
 
+    private boolean isAllPermissionsGranted() {
+        // Gallery Permission
+        return ActivityCompat
+                .checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                // Camera Permissions
+                ActivityCompat
+                        .checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat
+                        .checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat
+                        .checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean checkMarshMellowPermission() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    }
+
     @Override
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView() called");
@@ -211,21 +239,22 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         super.onDestroyView();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy() called");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d(TAG, "onDetach() called");
-    }
-
     private void loadImageFromGalleryOrCamera() {
-        Intent pickImageIntent = getPickImageIntent(getContext());
-        startActivityForResult(pickImageIntent, PICK_IMAGE_REQUEST_CODE);
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType("image/*");
+        galleryIntent.putExtra(MediaStore.EXTRA_OUTPUT, true);
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            cameraIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        }
+        cameraUri = FileUtils.createImageUri(getContext());
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
+        Intent[] intents = new Intent[]{cameraIntent};
+
+        Intent chooserIntent = Intent.createChooser(galleryIntent, "انتخاب تصویر");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents);
+        startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST_CODE);
     }
 
     @Override
@@ -233,22 +262,24 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST_CODE &&
                 resultCode == RESULT_OK) {
-            if (data != null && data.getData() != null) {
-                Uri pickedImage = data.getData();
-                showCropperDialog(pickedImage);
+            if (data != null) {
+                Log.d(TAG, "onActivityResult: data not null");
+                if (data.getData() != null) {
+                    Log.d(TAG, "onActivityResult: getData() not null");
+                    handleGalleryResult(data);
+                }
+            } else {
+                Log.d(TAG, "onActivityResult: camera result");
+                handleCameraResult(cameraUri);
             }
         }
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-                Log.d(TAG, "onActivityResult: <<<< before upload >>>>");
                 mPresenter.uploadUserProfileImageAvatar(
                         new File(resultUri.getPath())
                 );
-                Log.d(TAG, "onActivityResult: <<<< after upload >>>>");
-                Log.d(TAG, "onActivityResult: <<<< before set image >>>>");
-                Log.d(TAG, "onActivityResult: <<<< after set image >>>>");
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Log.e(TAG, "onActivityResult: ", error);
@@ -256,38 +287,106 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         }
     }
 
-    public Intent getPickImageIntent(Context context) {
-        Intent chooserIntent = null;
-
-        List<Intent> intentList = new ArrayList<>();
-
-        Intent pickIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePhotoIntent.putExtra("return-data", true);
-        intentList = addIntentsToList(context, intentList, pickIntent);
-        intentList = addIntentsToList(context, intentList, takePhotoIntent);
-
-        if (intentList.size() > 0) {
-            chooserIntent = Intent.createChooser(intentList.remove(intentList.size() - 1),
-                    context.getString(R.string.pick_image_intent_text));
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(new Parcelable[]{}));
+    // Change this method(edited)
+    public void handleGalleryResult(Intent data) {
+        File sourceFile = null;
+        File destinationFile = null;
+        try {
+            String realPathFromURI = FileUtils.getRealPathFromURI(getContext(), data.getData());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                sourceFile = new File(realPathFromURI == null ? getImageUrlWithAuthority(getContext(), (data.getData())) : realPathFromURI);
+            } else {
+            }
+        } catch (Exception e) {
+            Log.v(TAG, "GENERAL ERROR");
+            Toast.makeText(getContext(), "Error on Read Image", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            return;
         }
+        try {
+            destinationFile = FileUtils.createImageTempFile();
+            Log.d(TAG, "handleGalleryResult() called with: data = [" + data + "]");
+            cropPictureUri = Uri.fromFile(destinationFile);
 
-        return chooserIntent;
+            if (sourceFile.exists()) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                    showCropperDialog(FileProvider.getUriForFile(
+                            getContext(),
+                            getContext().getPackageName() + ".provider",
+                            sourceFile),
+                            cropPictureUri);
+                } else {
+                    showCropperDialog(Uri.fromFile(sourceFile), cropPictureUri);
+                }
+
+            } else {
+                showCropperDialog(data.getData(), cropPictureUri);
+            }
+
+        } catch (Exception e) {
+            if (destinationFile != null) {
+                destinationFile.delete();
+            }
+            Toast.makeText(getContext(), "Error on Write Image", Toast.LENGTH_SHORT).show();
+            Log.v(TAG, "GENERAL ERROR");
+            e.printStackTrace();
+        }
     }
 
-    private List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
-        List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
-        for (ResolveInfo resolveInfo : resInfo) {
-            String packageName = resolveInfo.activityInfo.packageName;
-            Intent targetedIntent = new Intent(intent);
-            targetedIntent.setPackage(packageName);
-            list.add(targetedIntent);
+    public void handleCameraResult(Uri cameraPictureUrl) {
+        try {
+            cropPictureUri = Uri.fromFile(createImageFile());
+            showCropperDialog(cameraPictureUrl, cropPictureUri);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return list;
     }
 
+    public static String getImageUrlWithAuthority(Context context, Uri uri) {
+        InputStream is = null;
+        if (uri.getAuthority() != null) {
+            try {
+                is = context.getContentResolver().openInputStream(uri);
+                Bitmap bmp = BitmapFactory.decodeStream(is);
+                return writeToTempImageAndGetPathUri(context, bmp).toString();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Uri writeToTempImageAndGetPathUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+    //---------------------------------------------------------------------------------------------
+
+
+    //---------------------------------------------------------------------------------------------
+
+    private File createImageFile() throws IOException {
+        String timeStamp =
+                new SimpleDateFormat("yyyyMMdd_HHmmss",
+                        Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir =
+                getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        return File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+    }
 
     @Override
     public void showLoadedUserProfileInformation(GetProfileResponse response) {
@@ -353,12 +452,14 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         datePickerDia.show();
     }
 
-    private void showCropperDialog(Uri filePath) {
+    private void showCropperDialog(Uri sourceImage, Uri destinationImage) {
         CropImage
-                .activity(filePath)
+                .activity(sourceImage)
                 .setAllowFlipping(true)
                 .setAllowRotation(true)
-                .setCropShape(CropImageView.CropShape.OVAL)
+                .setAllowCounterRotation(true)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
+                .setOutputCompressFormat(Bitmap.CompressFormat.JPEG)
                 .setMaxCropResultSize(1024, 1024)
                 .start(getContext(), this);
     }

@@ -154,8 +154,8 @@ public class HomeFragment extends Fragment implements
     @Override
     public void onDestroyView() {
         Log.i(TAG, "onDestroyView: HomeFragment");
-        mUnBinder.unbind();
         mPresenter.unSubscribe();
+        mUnBinder.unbind();
         mPresenter.detachView();
         super.onDestroyView();
     }
