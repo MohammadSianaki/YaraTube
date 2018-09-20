@@ -16,7 +16,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.AppCompatSpinner;
@@ -40,6 +39,7 @@ import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.api.GetProfileResponse;
 import com.yaratech.yaratube.utils.AppConstants;
 import com.yaratech.yaratube.utils.FileUtils;
+import com.yaratech.yaratube.utils.PermissionUtils;
 import com.yaratech.yaratube.utils.SnackbarUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -73,7 +73,6 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    public static final String GALLERY_IMAGE_SOURCE = "GALLERY_IMAGE_SOURCE";
     private ProfileContract.Presenter mPresenter;
     private Unbinder mUnBinder;
     private PersianDatePickerDialog datePickerDia;
@@ -162,15 +161,21 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     public void onResume() {
         super.onResume();
         avatarImageView.setOnClickListener(v -> {
-            if (checkMarshMellowPermission()) {
+
+            // check runtime permissions for Api 23 and higher
+            if (PermissionUtils.checkMarshmallowPermission()) {
+
                 // check if camera and gallery permission are granted
-                if (isAllPermissionsGranted()) {
+                if (
+                        PermissionUtils.checkCameraPermissions(getContext())
+                                && PermissionUtils.checkGalleryPermissions(getContext())) {
                     loadImageFromGalleryOrCamera();
                 } else {
-                    // request denied permission
+                    // Permissions is not granted
                     requestPermissions(PICK_IMAGE_PERMISSIONS, PICK_IMAGE_PERMISSION_REQUEST_CODE);
                 }
             } else {
+                // Api 22 and lower don't need runtime permissions
                 loadImageFromGalleryOrCamera();
             }
         });
@@ -206,28 +211,16 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
 
     }
 
-    private boolean isAllPermissionsGranted() {
-        // Gallery Permission
-        return ActivityCompat
-                .checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                // Camera Permissions
-                ActivityCompat
-                        .checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat
-                        .checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat
-                        .checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private boolean checkMarshMellowPermission() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PICK_IMAGE_PERMISSION_REQUEST_CODE
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
+            loadImageFromGalleryOrCamera();
+        }
     }
 
     @Override
@@ -251,7 +244,6 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         cameraUri = FileUtils.createImageUri(getContext());
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri);
         Intent[] intents = new Intent[]{cameraIntent};
-
         Intent chooserIntent = Intent.createChooser(galleryIntent, "انتخاب تصویر");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents);
         startActivityForResult(chooserIntent, PICK_IMAGE_REQUEST_CODE);

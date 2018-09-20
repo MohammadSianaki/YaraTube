@@ -1,12 +1,7 @@
 package com.yaratech.yaratube.ui;
 
-import android.Manifest;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -23,13 +18,8 @@ import com.yaratech.yaratube.ui.gridcategory.GridCategoryFragment;
 import com.yaratech.yaratube.ui.home.HomeFragment;
 import com.yaratech.yaratube.ui.home.header.HeaderItemsFragment;
 import com.yaratech.yaratube.ui.login.LoginDialogFragment;
-import com.yaratech.yaratube.ui.login.verification.SmsListener;
-import com.yaratech.yaratube.ui.login.verification.SmsReceiver;
 import com.yaratech.yaratube.ui.productdetails.ProductDetailsFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
-import com.yaratech.yaratube.utils.TextUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
 import io.reactivex.disposables.CompositeDisposable;
@@ -40,7 +30,6 @@ public class BaseActivity extends AppCompatActivity implements
         HeaderItemsFragment.OnHeaderItemsInteractionListener,
         ProductDetailsFragment.OnProductDetailsInteraction {
 
-    public static final int PERMISSION_REQUEST_CODE = 1234;
     private static final String TAG = "BaseActivity";
     //------------------------------------------------------------------------------------------------
 
@@ -49,7 +38,6 @@ public class BaseActivity extends AppCompatActivity implements
     private AppApiHelper appApiHelper;
     private AppPreferencesHelper appPreferencesHelper;
     private AppDataManager appDataManager;
-    private SmsReceiver smsReceiver;
 
     //------------------------------------------------------------------------------------------------
 
@@ -60,7 +48,6 @@ public class BaseActivity extends AppCompatActivity implements
         Log.i(TAG, "onCreate: BaseActivity");
         ButterKnife.bind(this);
         ActivityUtils.checkAndSetRtl(this);
-        requestPermissions();
         initDependencies();
 
         BaseFragment fragment = (BaseFragment) getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content);
@@ -82,15 +69,6 @@ public class BaseActivity extends AppCompatActivity implements
         this.appDbHelper = new AppDbHelper(this);
         this.appApiHelper = new AppApiHelper(this);
         this.appDataManager = new AppDataManager(appPreferencesHelper, appDbHelper, appApiHelper);
-    }
-
-    private void requestPermissions() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1 &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
-                        != PackageManager.PERMISSION_GRANTED) {
-            String[] permissions = new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE);
-        }
     }
 
     @Override
@@ -117,10 +95,6 @@ public class BaseActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         Log.i(TAG, "onStart: BaseActivity");
-        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
-        smsReceiver = new SmsReceiver();
-        SmsReceiver.bindListener(getSmsListener());
-        registerReceiver(smsReceiver, filter);
     }
 
     @Override
@@ -151,8 +125,6 @@ public class BaseActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         compositeDisposable.clear();
-        SmsReceiver.unBindListener();
-        unregisterReceiver(smsReceiver);
         super.onStop();
         Log.i(TAG, "onStop: BaseActivity");
     }
@@ -224,22 +196,6 @@ public class BaseActivity extends AppCompatActivity implements
         LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
         loginFragment.setAppDataManager(appDataManager);
         loginFragment.show(getSupportFragmentManager(), LoginDialogFragment.class.getSimpleName());
-    }
-
-    public SmsListener getSmsListener() {
-        return new SmsListener() {
-            @Override
-            public void onReceivedMessage(String message) {
-                String OTP = TextUtils.removeNonDigits(message);
-                sendOneTimePasswordToVerificationFragment(OTP);
-                Log.d(TAG, "<<<<   OTP     >>>>    onReceivedMessage(): removeNonDigits Returned : " + OTP);
-            }
-        };
-    }
-
-    private void sendOneTimePasswordToVerificationFragment(String otp) {
-        Log.d(TAG, "<<<<   OTP     >>>>    sendOneTimePasswordToVerificationFragment() called with: otp = [" + otp + "]");
-        EventBus.getDefault().post(otp);
     }
 
 }

@@ -30,7 +30,9 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginDialogFragment extends DialogFragment implements LoginContract.View {
+public class LoginDialogFragment extends DialogFragment
+        implements LoginContract.View,
+        LoginMethodFragment.OnLoginMethodFragmentInteraction {
     //---------------------------------------------------------------------------------------
     private static final String TAG = "LoginDialogFragment";
     private LoginContract.Presenter mPresenter;
@@ -226,5 +228,10 @@ public class LoginDialogFragment extends DialogFragment implements LoginContract
         addFragment(verificationCodeFragment,
                 false,
                 VerificationCodeFragment.class.getSimpleName());
+    }
+
+    @Override
+    public void dismissParentDialog() {
+        closeDialog();
     }
 }

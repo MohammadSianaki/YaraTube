@@ -26,7 +26,7 @@ public class ApiClient {
             OkHttpClient client = null;
             if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-                interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+                interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
                 int cacheSize = 20 * 1024 * 1024; // 20 MiB
                 Cache cache = new Cache(cacheDir, cacheSize);
                 client = new OkHttpClient

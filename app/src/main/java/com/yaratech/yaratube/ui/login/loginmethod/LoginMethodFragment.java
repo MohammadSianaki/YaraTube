@@ -66,6 +66,7 @@ public class LoginMethodFragment extends Fragment implements
         super.onAttach(context);
     }
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.d(TAG, "<<<<    lifecycle   >>>>    onCreate: LoginMethodFragment");
@@ -209,5 +210,9 @@ public class LoginMethodFragment extends Fragment implements
 
     public void setAppDataManager(AppDataManager appDataManager) {
         this.appDataManager = appDataManager;
+    }
+
+    public interface OnLoginMethodFragmentInteraction {
+        void dismissParentDialog();
     }
 }
