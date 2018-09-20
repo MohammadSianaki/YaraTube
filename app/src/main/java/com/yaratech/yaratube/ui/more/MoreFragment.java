@@ -20,6 +20,7 @@ import com.yaratech.yaratube.ui.aboutus.AboutFragment;
 import com.yaratech.yaratube.ui.login.LoginDialogFragment;
 import com.yaratech.yaratube.ui.profile.ProfileFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
+import com.yaratech.yaratube.utils.SnackbarUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -127,6 +128,12 @@ public class MoreFragment extends Fragment implements
         LoginDialogFragment loginFragment = LoginDialogFragment.newInstance();
         loginFragment.setAppDataManager(appDataManager);
         loginFragment.show(getFragmentManager(), LoginDialogFragment.class.getSimpleName());
+    }
+
+    @Override
+    public void showSuccessfulLogoutMessage() {
+        SnackbarUtils
+                .showSuccessfulMessage(getView(), getString(R.string.successful_logout_message));
     }
 
     @Override

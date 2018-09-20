@@ -10,6 +10,8 @@ public class MoreContract {
         void showProfileFragment();
 
         void showLoginDialog();
+
+        void showSuccessfulLogoutMessage();
     }
 
 

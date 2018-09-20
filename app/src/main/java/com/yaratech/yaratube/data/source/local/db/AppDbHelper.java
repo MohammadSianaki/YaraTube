@@ -8,9 +8,11 @@ import com.yaratech.yaratube.data.model.db.User;
 
 import java.util.concurrent.Callable;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -84,8 +86,29 @@ public class AppDbHelper implements DbHelper {
     }
 
     @Override
-    public Disposable clearDatabase(DataManager.LoginDatabaseResultCallback loginDatabaseResultCallback) {
-        return null;
+    public Disposable clearDatabase() {
+        return Completable
+                .fromCallable(new Callable<Boolean>() {
+                    @Override
+                    public Boolean call() throws Exception {
+                        User user = mAppDatabase.userDao().getUserFromDb();
+                        mAppDatabase.userDao().deleteUserFromDb(user);
+                        return true;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete: <<<< logout : delete user from database successful >>>>");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, "onError: <<< logout : delete user from database >>>>", e);
+                    }
+                });
     }
 
 }

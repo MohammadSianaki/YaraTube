@@ -66,6 +66,9 @@ public class MorePresenter implements MoreContract.Presenter {
 
     @Override
     public void logout() {
-
+        Disposable disposable = appDataManager.clearDatabase();
+        appDataManager.clearPreferences();
+        compositeDisposable.add(disposable);
+        mView.showSuccessfulLogoutMessage();
     }
 }

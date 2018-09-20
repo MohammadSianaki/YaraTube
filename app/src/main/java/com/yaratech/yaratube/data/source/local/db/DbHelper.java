@@ -12,6 +12,6 @@ public interface DbHelper {
 
     Disposable saveUserToDb(User user, DataManager.SaveUserDatabaseResultCallback callback);
 
-    Disposable clearDatabase(DataManager.LoginDatabaseResultCallback loginDatabaseResultCallback);
+    Disposable clearDatabase();
 
 }

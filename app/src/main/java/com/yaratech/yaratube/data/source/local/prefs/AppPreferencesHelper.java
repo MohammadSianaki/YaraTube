@@ -72,8 +72,16 @@ public class AppPreferencesHelper implements PreferencesHelper {
         mPrefs
                 .edit()
                 .putString(PREF_KEY_CURRENT_USER_TOKEN, token)
-                .commit();
+                .apply();
 
+    }
+
+    @Override
+    public void clearPreferences() {
+        setUserTokenApi(null);
+        setUserMobilePhoneNumber(null);
+        setUserLoginStep(Event.LOGIN_STEP_ONE);
+        setUserProfileImageAvatarPath(null);
     }
 
 }

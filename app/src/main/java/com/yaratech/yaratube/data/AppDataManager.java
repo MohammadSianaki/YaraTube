@@ -139,6 +139,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public void clearPreferences() {
+        preferencesHelper.clearPreferences();
+    }
+
+    @Override
     public void onStopActivity() {
         apiHelper.onStopActivity();
     }
@@ -163,16 +168,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Disposable clearDatabase(LoginDatabaseResultCallback loginDatabaseResultCallback) {
-        return dbHelper.clearDatabase(new LoginDatabaseResultCallback() {
-            @Override
-            public void onSuccess(String token) {
-            }
-
-            @Override
-            public void onFailure(String message) {
-            }
-        });
+    public Disposable clearDatabase() {
+        return dbHelper.clearDatabase();
     }
 
     //endregion

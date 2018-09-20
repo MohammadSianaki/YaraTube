@@ -17,4 +17,6 @@ public interface PreferencesHelper {
     String getUserTokenApi();
 
     void setUserTokenApi(String token);
+
+    void clearPreferences();
 }
