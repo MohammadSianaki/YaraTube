@@ -23,29 +23,23 @@ public class ApiClient {
 
     public static Retrofit getClient(File cacheDir) {
         if (retrofit == null) {
-            OkHttpClient client = null;
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            HttpLoggingInterceptor interceptor = null;
             if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+                interceptor = new HttpLoggingInterceptor();
                 interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-                int cacheSize = 20 * 1024 * 1024; // 20 MiB
-                Cache cache = new Cache(cacheDir, cacheSize);
-                client = new OkHttpClient
-                        .Builder()
-                        .cache(cache)
-                        .addInterceptor(interceptor).build();
+                builder.addInterceptor(interceptor);
             }
-
+            int cacheSize = 20 * 1024 * 1024; // 20 MiB
+            Cache cache = new Cache(cacheDir, cacheSize);
+            builder.cache(cache);
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .client(client)
+                    .client(builder.build())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
         return retrofit;
-    }
-
-    void setCache(OkHttpClient client) {
-
     }
 }
