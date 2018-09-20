@@ -49,7 +49,6 @@ dependencies {
 
     // Butter Knife
     implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
-    implementation 'com.android.support:support-v4:27.1.1'
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
 
     // Glide
@@ -103,6 +102,9 @@ dependencies {
     debugImplementation "com.amitshekhar.android:debug-db:$rootProject.databaseDebugVersion"
 
     // uCrop library for image cropping
-    implementation "com.theartofdev.edmodo:android-image-cropper:2.7.0"
+    implementation "com.theartofdev.edmodo:android-image-cropper:$rootProject.androidImageCropperVersion"
+
+    // about us library
+    implementation "com.github.medyo:android-about-page:$rootProject.aboutPageVersion"
 }
 apply plugin: "com.google.gms.google-services"

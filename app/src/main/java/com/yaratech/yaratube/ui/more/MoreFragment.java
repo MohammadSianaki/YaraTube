@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.ui.aboutus.AboutFragment;
 import com.yaratech.yaratube.ui.login.LoginDialogFragment;
 import com.yaratech.yaratube.ui.profile.ProfileFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
@@ -32,6 +33,9 @@ public class MoreFragment extends Fragment implements MoreContract.View {
 
     @BindView(R.id.fragment_more_profile_tv)
     TextView profileFragmentTextView;
+
+    @BindView(R.id.fragment_more_about_us_tv)
+    TextView aboutFragmentTextView;
 
     private MoreContract.Presenter mPresenter;
     private Unbinder mUnBinder;
@@ -92,6 +96,24 @@ public class MoreFragment extends Fragment implements MoreContract.View {
                 mPresenter.isUserAuthorized();
             }
         });
+
+        aboutFragmentTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAboutFragment();
+            }
+        });
+    }
+
+    private void showAboutFragment() {
+        AboutFragment aboutFragment = AboutFragment.newInstance();
+        ActivityUtils
+                .addFragmentToActivity(
+                        getFragmentManager(),
+                        aboutFragment,
+                        R.id.fl_base_activity_content,
+                        true,
+                        AboutFragment.class.getSimpleName());
     }
 
     @Override
