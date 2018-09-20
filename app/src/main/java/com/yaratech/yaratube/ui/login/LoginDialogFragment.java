@@ -74,6 +74,7 @@ public class LoginDialogFragment extends DialogFragment
         Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = ["
                 + container + "], savedInstanceState = [" + savedInstanceState + "]");
         // Inflate the layout for this fragment
+        getDialog().setCanceledOnTouchOutside(false);
         Log.d(TAG, "<<<<    lifecycle   >>>>    onCreateView: LoginDialogFragment");
         EventBus.getDefault().register(this);
         return inflater.inflate(R.layout.fragment_login, container, false);
