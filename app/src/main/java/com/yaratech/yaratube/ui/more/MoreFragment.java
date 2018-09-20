@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
@@ -26,21 +29,21 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MoreFragment extends Fragment implements MoreContract.View {
+public class MoreFragment extends Fragment implements
+        MoreContract.View,
+        MoreAdapter.OnMorePageItemClickListener {
     //--------------------------------------------------------------------------------------------------------
     private static final String TAG = "MoreFragment";
 
 
-    @BindView(R.id.fragment_more_profile_tv)
-    TextView profileFragmentTextView;
-
-    @BindView(R.id.fragment_more_about_us_tv)
-    TextView aboutFragmentTextView;
+    @BindView(R.id.more_fragment_list_item)
+    RecyclerView recyclerView;
 
     private MoreContract.Presenter mPresenter;
     private Unbinder mUnBinder;
     private ProfileFragment profileFragment;
     private AppDataManager appDataManager;
+    private MoreAdapter moreAdapter;
     //--------------------------------------------------------------------------------------------------------
 
     public MoreFragment() {
@@ -83,26 +86,16 @@ public class MoreFragment extends Fragment implements MoreContract.View {
         mUnBinder = ButterKnife.bind(this, view);
         mPresenter = new MorePresenter(appDataManager, new CompositeDisposable());
         mPresenter.attachView(this);
+        setupRecyclerView();
 
     }
 
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        profileFragmentTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.isUserAuthorized();
-            }
-        });
-
-        aboutFragmentTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showAboutFragment();
-            }
-        });
+    private void setupRecyclerView() {
+        moreAdapter = new MoreAdapter(this);
+        recyclerView.setAdapter(moreAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     private void showAboutFragment() {
@@ -137,27 +130,6 @@ public class MoreFragment extends Fragment implements MoreContract.View {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView() called <<<<Test>>>");
         mUnBinder.unbind();
@@ -166,19 +138,24 @@ public class MoreFragment extends Fragment implements MoreContract.View {
         super.onDestroyView();
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy() called  <<<<Test>>>");
-        super.onDestroy();
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
     public void setAppDataManager(AppDataManager appDataManager) {
         this.appDataManager = appDataManager;
+    }
+
+    @Override
+    public void onClick(String title) {
+        switch (title) {
+            case "پروفایل":
+                mPresenter.isUserAuthorized();
+                break;
+            case "درباره ما":
+                showAboutFragment();
+                break;
+            case "تماس با ما":
+                break;
+            case "خروج از حساب کاربری":
+                mPresenter.logout();
+                break;
+        }
     }
 }

@@ -63,4 +63,9 @@ public class MorePresenter implements MoreContract.Presenter {
         });
         compositeDisposable.add(disposable);
     }
+
+    @Override
+    public void logout() {
+
+    }
 }
