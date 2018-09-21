@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.ui.aboutus.AboutFragment;
+import com.yaratech.yaratube.ui.contactus.ContactWithUsFragment;
 import com.yaratech.yaratube.ui.login.LoginDialogFragment;
 import com.yaratech.yaratube.ui.profile.ProfileFragment;
 import com.yaratech.yaratube.utils.ActivityUtils;
@@ -159,10 +160,19 @@ public class MoreFragment extends Fragment implements
                 showAboutFragment();
                 break;
             case "تماس با ما":
-                break;
-            case "خروج از حساب کاربری":
-                mPresenter.logout();
+                showContactWithUsFragment();
                 break;
         }
+    }
+
+    private void showContactWithUsFragment() {
+        ContactWithUsFragment contactWithUsFragment = ContactWithUsFragment.newInstance();
+        ActivityUtils
+                .addFragmentToActivity(
+                        getFragmentManager(),
+                        contactWithUsFragment,
+                        R.id.fl_base_activity_content,
+                        true,
+                        ContactWithUsFragment.class.getSimpleName());
     }
 }

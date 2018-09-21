@@ -64,14 +64,5 @@ public class MorePresenter implements MoreContract.Presenter {
         compositeDisposable.add(disposable);
     }
 
-    @Override
-    public void logout() {
-        String tokenApi = appDataManager.getUserTokenApi();
-        if (tokenApi != null) {
-            Disposable disposable = appDataManager.clearDatabase();
-            appDataManager.clearPreferences();
-            compositeDisposable.add(disposable);
-            mView.showSuccessfulLogoutMessage();
-        }
-    }
+
 }

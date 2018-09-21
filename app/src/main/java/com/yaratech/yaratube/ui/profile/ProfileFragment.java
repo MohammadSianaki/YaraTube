@@ -64,6 +64,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
+
 public class ProfileFragment extends Fragment implements ProfileContract.View {
     //-------------------------------------------------------------------------------------------
     private static final String TAG = "ProfileFragment";
@@ -154,7 +155,20 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         genderSpinner.setEnabled(false);
         mPresenter = new ProfilePresenter(appDataManager, new CompositeDisposable());
         mPresenter.attachView(this);
+        setHasOptionsMenu(true);
+        setupToolbar();
         mPresenter.loadUserProfileInfo();
+    }
+
+    private void setupToolbar() {
+        toolbar.setTitle("پروفایل");
+        toolbar.setNavigationIcon(R.drawable.ic_logout);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.logout();
+            }
+        });
     }
 
     @Override
@@ -198,9 +212,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
             }
         });
         cancelButton.setOnClickListener(v -> {
-            getActivity()
-                    .getSupportFragmentManager()
-                    .popBackStack();
+            closeProfileFragment();
         });
         submitChangeButton.setOnClickListener(v -> {
             mPresenter.uploadUserProfileInfo(
@@ -398,6 +410,19 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
                 .load(path)
                 .apply(RequestOptions.circleCropTransform())
                 .into(avatarImageView);
+    }
+
+    @Override
+    public void showSuccessfulLogoutMessage() {
+        SnackbarUtils
+                .showSuccessfulMessage(getView(), getString(R.string.successful_logout_message));
+    }
+
+    @Override
+    public void closeProfileFragment() {
+        getActivity()
+                .getSupportFragmentManager()
+                .popBackStack();
     }
 
     private void loadUserProfileAvatar(String avatarPath) {

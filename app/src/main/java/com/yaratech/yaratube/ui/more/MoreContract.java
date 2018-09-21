@@ -18,7 +18,6 @@ public class MoreContract {
     interface Presenter extends BasePresenter<View> {
         void isUserAuthorized();
 
-        void logout();
     }
 
 

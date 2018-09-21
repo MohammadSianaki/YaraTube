@@ -20,6 +20,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.BaseActivity"
+            android:windowSoftInputMode="adjustPan"
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -17,14 +17,15 @@ public interface ProfileContract {
         void showLoadedUserProfileInformation(GetProfileResponse getProfileResponse);
 
         void loadImageAvatarAfterUpload(String path);
+
+        void showSuccessfulLogoutMessage();
+
+        void closeProfileFragment();
     }
 
 
     interface Presenter extends BasePresenter<View> {
-
-        String getUserProfileImageAvatarPath();
-
-        void saveUserProfileImageAvatarPath(String imagePath);
+        void logout();
 
         void uploadUserProfileInfo(String name, String birthday, String gender);
 

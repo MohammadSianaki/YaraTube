@@ -26,7 +26,6 @@ public class MoreAdapter extends RecyclerView.Adapter<MoreAdapter.ViewHolder> {
         this.items.add("پروفایل");
         this.items.add("درباره ما");
         this.items.add("تماس با ما");
-        this.items.add("خروج از حساب کاربری");
 
 
     }

@@ -52,16 +52,6 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     }
 
     @Override
-    public String getUserProfileImageAvatarPath() {
-        return appDataManager.getUserProfileImageAvatarPath();
-    }
-
-    @Override
-    public void saveUserProfileImageAvatarPath(String imagePath) {
-        appDataManager.setUserProfileImageAvatarPath(imagePath);
-    }
-
-    @Override
     public void uploadUserProfileInfo(String name, String birthday, String gender) {
         Log.d(TAG, "uploadUserProfileInfo() called with: name = [" + name + "], gender = [" + gender + "], birthday = [" + birthday + "]");
         Disposable disposable = appDataManager
@@ -162,6 +152,18 @@ public class ProfilePresenter implements ProfileContract.Presenter {
             return "male";
         } else {
             return "female";
+        }
+    }
+
+    @Override
+    public void logout() {
+        String tokenApi = appDataManager.getUserTokenApi();
+        if (tokenApi != null) {
+            Disposable disposable = appDataManager.clearDatabase();
+            appDataManager.clearPreferences();
+            compositeDisposable.add(disposable);
+            mView.closeProfileFragment();
+            mView.showSuccessfulLogoutMessage();
         }
     }
 }
