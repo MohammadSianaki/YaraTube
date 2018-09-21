@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +36,8 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GridCategoryFragment extends Fragment implements GridCategoryContract.View, GridCategoryAdapter.OnCategoryGridClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class GridCategoryFragment extends Fragment implements GridCategoryContract.View,
+        GridCategoryAdapter.OnCategoryGridClickListener {
     private static final String KEY_CATEGORY = "KEY_CATEGORY";
     private static final String TAG = "GridCategoryFragment";
     private static final int SPAN_COUNT = 2;
@@ -61,9 +61,6 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @BindView(R.id.pb_loading_products_of_category)
     ProgressBar progressBar;
-
-    @BindView(R.id.grid_catgory_fragment_swipe_refresh_layout)
-    SwipeRefreshLayout swipeRefreshLayout;
 
     @BindView(R.id.grid_category_toolbar)
     Toolbar toolbar;
@@ -117,7 +114,6 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         mPresenter.attachView(this);
         setupToolbar();
         setupRecyclerView();
-        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     private void setupToolbar() {
@@ -149,7 +145,6 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void showLoadedData(List list) {
-        swipeRefreshLayout.setRefreshing(false);
         gridCategoryAdapter.setProductList(list);
     }
 
@@ -181,9 +176,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     @Override
     public void showProgressBarLoading() {
-        if (!swipeRefreshLayout.isRefreshing()) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -229,19 +222,4 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         this.appDataManager = appDataManager;
     }
 
-    @Override
-    public void onRefresh() {
-        //check if previous loading is finished
-        if (progressBar.getVisibility() != View.VISIBLE) {
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                    if (getArguments() != null) {
-                        mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
-                    }
-                }
-            });
-        }
-    }
 }

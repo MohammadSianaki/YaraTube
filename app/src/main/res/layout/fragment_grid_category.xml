@@ -9,39 +9,32 @@
     android:layoutDirection="rtl"
     tools:context=".ui.gridcategory.GridCategoryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/grid_catgory_fragment_swipe_refresh_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/grid_category_toolbar"
+            style="@style/ToolbarTheme"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:titleTextColor="@color/white" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/grid_category_toolbar"
-                style="@style/ToolbarTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                app:titleTextColor="@color/white" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_products_of_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/grid_category_toolbar" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_products_of_category"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/grid_category_toolbar" />
+        <ProgressBar
+            android:id="@+id/pb_loading_products_of_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+    </RelativeLayout>
 
-            <ProgressBar
-                android:id="@+id/pb_loading_products_of_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone" />
-        </RelativeLayout>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>
