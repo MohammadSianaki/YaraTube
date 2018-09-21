@@ -141,7 +141,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         recyclerViewOfProducts.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.d(TAG, "<<<<    addOnScrollListener     >>>>     onLoadMore: ");
+                Log.d(TAG, "onLoadMore: <<<< debug paginate >>>>");
                 loadNextDataFromApi(view.getAdapter().getItemCount());
             }
         });
@@ -154,7 +154,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     }
 
     private void loadNextDataFromApi(int offset) {
-        Log.d(TAG, "loadNextDataFromApi() called with: offset = [" + offset + "]");
+        Log.d(TAG, " <<<< debug paginate >>>> loadNextDataFromApi() called with: offset = [" + offset + "]");
         if (getArguments() != null) {
             mPresenter.fetchProducts(getArguments().getInt(KEY_ID), offset, LIMIT);
         }
