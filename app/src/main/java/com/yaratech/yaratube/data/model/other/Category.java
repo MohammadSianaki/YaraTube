@@ -1,13 +1,16 @@
 
 package com.yaratech.yaratube.data.model.other;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.yaratech.yaratube.utils.AppConstants;
 
 import java.util.List;
 
-public class Category {
+public class Category implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -66,6 +69,29 @@ public class Category {
         this.parent = parent;
         this.childs = childs;
     }
+
+    protected Category(Parcel in) {
+        id = in.readInt();
+        isDefault = in.readByte() != 0;
+        title = in.readString();
+        avatar = in.readString();
+        position = in.readInt();
+        isEnable = in.readByte() != 0;
+        isVisible = in.readByte() != 0;
+        parent = in.readInt();
+    }
+
+    public static final Creator<Category> CREATOR = new Creator<Category>() {
+        @Override
+        public Category createFromParcel(Parcel in) {
+            return new Category(in);
+        }
+
+        @Override
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -141,5 +167,22 @@ public class Category {
 
     public String getAvatarUrl() {
         return AppConstants.BASE_URL + getAvatar();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeByte((byte) (isDefault ? 1 : 0));
+        dest.writeString(title);
+        dest.writeString(avatar);
+        dest.writeInt(position);
+        dest.writeByte((byte) (isEnable ? 1 : 0));
+        dest.writeByte((byte) (isVisible ? 1 : 0));
+        dest.writeInt(parent);
     }
 }

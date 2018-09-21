@@ -150,6 +150,7 @@ public class VerificationCodeFragment extends Fragment implements VerificationCo
     @Override
     public void onResume() {
         super.onResume();
+        mPresenter.observeVerificationCodeInput(RxTextView.textChangeEvents(verificationCodeEditText), getArguments().getString(KEY_MOBILE_PHONE_NUMBER));
         mPresenter.observerCorrectButtonClicks(RxView.clicks(verificationCodeCorrectButton));
     }
 

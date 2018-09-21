@@ -28,7 +28,6 @@ import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
 import com.yaratech.yaratube.data.model.other.Comment;
 import com.yaratech.yaratube.data.model.other.Product;
-import com.yaratech.yaratube.ui.EndlessRecyclerViewScrollListener;
 import com.yaratech.yaratube.ui.player.PlayerActivity;
 import com.yaratech.yaratube.utils.SnackbarUtils;
 
@@ -144,16 +143,6 @@ public class ProductDetailsFragment extends Fragment implements DetailsContract.
         linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         listOfComments.setLayoutManager(linearLayoutManager);
         listOfComments.setAdapter(commentAdapter);
-        listOfComments.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                loadNextDataFromApi(view.getAdapter().getItemCount());
-            }
-        });
-    }
-
-    private void loadNextDataFromApi(int offset) {
-        mPresenter.fetchProductComments(getArguments().getInt(KEY_ID), offset, LIMIT);
     }
 
     @Override

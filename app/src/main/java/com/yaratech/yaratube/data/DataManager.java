@@ -5,7 +5,6 @@ import com.yaratech.yaratube.data.source.local.prefs.PreferencesHelper;
 import com.yaratech.yaratube.data.source.remote.ApiHelper;
 
 import io.reactivex.disposables.Disposable;
-import okhttp3.MultipartBody;
 
 public interface DataManager extends PreferencesHelper, DbHelper, ApiHelper {
 

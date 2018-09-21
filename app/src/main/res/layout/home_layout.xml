@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="21.33dp"
         android:layout_marginRight="10.67dp"
+        android:fontFamily="@font/iran_sans_mobile_medium"
         android:layout_marginTop="32dp"
         android:textSize="15sp"
         android:textStyle="bold" />

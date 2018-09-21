@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.yaratech.yaratube.R;
 import com.yaratech.yaratube.data.AppDataManager;
+import com.yaratech.yaratube.data.model.other.Category;
 import com.yaratech.yaratube.data.model.other.Product;
 import com.yaratech.yaratube.ui.BaseActivity;
 import com.yaratech.yaratube.ui.EndlessRecyclerViewScrollListener;
@@ -36,11 +38,12 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  */
 public class GridCategoryFragment extends Fragment implements GridCategoryContract.View, GridCategoryAdapter.OnCategoryGridClickListener, SwipeRefreshLayout.OnRefreshListener {
-    private static final String KEY_ID = "KEY_ID";
+    private static final String KEY_CATEGORY = "KEY_CATEGORY";
     private static final String TAG = "GridCategoryFragment";
     private static final int SPAN_COUNT = 2;
     private static final int LIMIT = 10;
     private static final int BASE_OFFSET = 0;
+    public static final String KEY_ID = "KEY_ID";
     //-------------------------------------------------------------------------------------------
 
     private GridCategoryContract.Presenter mPresenter;
@@ -62,15 +65,19 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     @BindView(R.id.grid_catgory_fragment_swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @BindView(R.id.grid_category_toolbar)
+    Toolbar toolbar;
+
     //-------------------------------------------------------------------------------------------
     public GridCategoryFragment() {
         // Required empty public constructor
     }
 
-    public static GridCategoryFragment newInstance(int categoryId) {
+    public static GridCategoryFragment newInstance(Category category) {
 
         Bundle args = new Bundle();
-        args.putInt(KEY_ID, categoryId);
+        args.putParcelable(KEY_CATEGORY, category);
+        args.putInt(KEY_ID, category.getId());
         GridCategoryFragment fragment = new GridCategoryFragment();
         fragment.setArguments(args);
         return fragment;
@@ -96,6 +103,7 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.i(TAG, "onCreateView: GridCategoryFragment");
+
         return inflater.inflate(R.layout.fragment_grid_category, container, false);
     }
 
@@ -107,8 +115,18 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
         gridCategoryAdapter = new GridCategoryAdapter(this);
         mPresenter = new GridCategoryPresenter(appDataManager);
         mPresenter.attachView(this);
+        setupToolbar();
         setupRecyclerView();
         swipeRefreshLayout.setOnRefreshListener(this);
+    }
+
+    private void setupToolbar() {
+        if (getArguments() != null) {
+            Category category = getArguments().getParcelable(KEY_CATEGORY);
+            if (category != null) {
+                toolbar.setTitle(category.getTitle());
+            }
+        }
     }
 
     private void setupRecyclerView() {
@@ -137,7 +155,9 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
 
     private void loadNextDataFromApi(int offset) {
         Log.d(TAG, "loadNextDataFromApi() called with: offset = [" + offset + "]");
-        mPresenter.fetchProducts(getArguments().getInt(KEY_ID), offset, LIMIT);
+        if (getArguments() != null) {
+            mPresenter.fetchProducts(getArguments().getInt(KEY_ID), offset, LIMIT);
+        }
     }
 
     @Override
@@ -146,7 +166,9 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
                 .showServerConnectionFailureSnackbar(coordinatorLayout, new SnackbarUtils.SnackbarCallback() {
                     @Override
                     public void onRetryAgainPressed() {
-                        mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+                        if (getArguments() != null) {
+                            mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+                        }
 
                     }
                 });
@@ -172,7 +194,9 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+        if (getArguments() != null) {
+            mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+        }
     }
 
     @Override
@@ -213,7 +237,9 @@ public class GridCategoryFragment extends Fragment implements GridCategoryContra
                 @Override
                 public void run() {
                     swipeRefreshLayout.setRefreshing(true);
-                    mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+                    if (getArguments() != null) {
+                        mPresenter.fetchProducts(getArguments().getInt(KEY_ID), BASE_OFFSET, LIMIT);
+                    }
                 }
             });
         }

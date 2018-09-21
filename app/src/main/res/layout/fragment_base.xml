@@ -9,6 +9,7 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
+        style="@style/ToolbarTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -44,7 +45,7 @@
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"
-        style="@style/Widget.Design.BottomNavigationView"
+        style="@style/Widget.BottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:itemIconTint="@drawable/bottom_navigation_colors"

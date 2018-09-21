@@ -137,11 +137,10 @@ public class BaseActivity extends AppCompatActivity implements
 
     @Override
     public void showProductsOfRequestedCategoryItem(Category item) {
-        int categoryId = item.getId();
         getSupportFragmentManager()
                 .beginTransaction()
                 .hide(getSupportFragmentManager().findFragmentById(R.id.fl_base_activity_content));
-        GridCategoryFragment gridCategoryFragment = GridCategoryFragment.newInstance(categoryId);
+        GridCategoryFragment gridCategoryFragment = GridCategoryFragment.newInstance(item);
         gridCategoryFragment.setAppDataManager(appDataManager);
         ActivityUtils.addFragmentToActivity(
                 getSupportFragmentManager(),

@@ -17,6 +17,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/profile_fragment_toolbar"
+            style="@style/ToolbarTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -35,8 +36,8 @@
 
             <ImageView
                 android:id="@+id/profile_fragment_avatar_image_view"
-                android:layout_width="72dp"
-                android:layout_height="72dp" />
+                android:layout_width="96dp"
+                android:layout_height="96dp" />
 
         </LinearLayout>
 
@@ -61,6 +62,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/iran_sans_mobile"
                     android:text="@string/profile_fragment_shown_name"
                     android:textColor="@color/dark_jungle_green_color"
                     android:textSize="16sp" />
@@ -84,6 +86,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/iran_sans_mobile"
                 android:hint="@string/profile_fragment_first_and_last_name"
                 android:textColor="@color/dark_jungle_green_color"
                 android:textSize="16sp" />
@@ -107,6 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/iran_sans_mobile"
                     android:text="@string/profile_fragment_gender"
                     android:textColor="@color/dark_jungle_green_color"
                     android:textSize="16sp" />
@@ -130,6 +134,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+
                 android:entries="@array/profile_fragment_gender_spinner"
                 android:text="@string/profile_fragment_gender_value"
                 android:textColor="@color/dark_jungle_green_color"
@@ -154,6 +159,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
+                    android:fontFamily="@font/iran_sans_mobile"
                     android:text="@string/profile_fragment_birthday_title"
                     android:textColor="@color/dark_jungle_green_color"
                     android:textSize="16sp" />
@@ -177,6 +183,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/iran_sans_mobile"
                 android:textColor="@color/dark_jungle_green_color"
                 android:textSize="16sp" />
 
@@ -200,6 +207,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
                 android:background="@drawable/profile_fragment_filled_button_shape"
+                android:fontFamily="@font/iran_sans_mobile_medium"
                 android:text="@string/profile_fragment_submit_changes_button_text"
                 android:textColor="@color/white"
                 android:textSize="16sp"
@@ -215,6 +223,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
                 android:background="@drawable/profile_fragment_button_shape"
+                android:fontFamily="@font/iran_sans_mobile_medium"
                 android:text="@string/profile_fragment_cancel_button_text"
                 android:textColor="@color/celestialblue"
                 android:textSize="16sp"

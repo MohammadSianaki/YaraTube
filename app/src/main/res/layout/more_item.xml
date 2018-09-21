@@ -13,6 +13,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/iran_sans_mobile"
         android:textColor="@color/darkjunglegreen"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
