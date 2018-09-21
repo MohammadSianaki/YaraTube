@@ -153,7 +153,7 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
         Disposable disposable = appDataManager.isUserAuthorized(new DataManager.LoginDatabaseResultCallback() {
             @Override
             public void onSuccess(String token) {
-                if (token != null) {
+                if (!token.equals("")) {
                     mView.goToPlayerActivity();
                 } else {
                     mView.showLoginDialog();
