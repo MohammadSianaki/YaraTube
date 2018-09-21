@@ -139,18 +139,22 @@ public class ProfilePresenter implements ProfileContract.Presenter {
     }
 
     private String validateBirthday(String birthday) {
-        String[] items = birthday.split("/");
-        for (String str : items
-                ) {
-            Log.d(TAG, "validateBirthday: item= " + str);
+        Log.d(TAG, "validateBirthday() called with: birthday = [" + birthday + "]");
+        if (!birthday.equals("")) {
+            String[] items = birthday.split("/");
+            for (String str : items
+                    ) {
+                Log.d(TAG, "validateBirthday : item = " + str);
+            }
+            if (!items[1].startsWith("0")) {
+                items[1] = "0" + items[1];
+            }
+            if (!items[2].startsWith("0")) {
+                items[2] = "0" + items[2];
+            }
+            return items[0] + "-" + items[1] + "-" + items[2];
         }
-        if (!items[1].startsWith("0")) {
-            items[1] = "0" + items[1];
-        }
-        if (!items[2].startsWith("0")) {
-            items[2] = "0" + items[2];
-        }
-        return items[0] + "-" + items[1] + "-" + items[2];
+        return null;
     }
 
     private String validateGender(String gender) {

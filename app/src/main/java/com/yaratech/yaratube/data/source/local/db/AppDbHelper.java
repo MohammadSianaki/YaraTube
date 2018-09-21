@@ -36,6 +36,7 @@ public class AppDbHelper implements DbHelper {
                     public String call() throws Exception {
                         User user = mAppDatabase.userDao().getUserFromDb();
                         if (user != null && user.getToken() != null) {
+                            Log.d(TAG, "call() called with user = [" + user.toString() + "]");
                             return user.getToken();
                         }
 
@@ -92,6 +93,7 @@ public class AppDbHelper implements DbHelper {
                     @Override
                     public Boolean call() throws Exception {
                         User user = mAppDatabase.userDao().getUserFromDb();
+                        Log.d(TAG, "<<< logout >>> with :  " + user.toString());
                         mAppDatabase.userDao().deleteUserFromDb(user);
                         return true;
                     }

@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:weightSum="3"
     tools:context=".ui.aboutus.AboutFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="129dp"
+        android:layout_weight="1"
+        android:scaleType="fitXY"
+        android:src="@drawable/logo" />
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="2"
+        android:fontFamily="@font/iran_sans_mobile_medium"
+        android:text="یارا، یکی از اولین شرکت های تولید کننده بازی‌های پویای اس‌ام‌اسی و همچنین سرگرمی های مبتنی بر متن اس ام اسی  است.بهترین بازی های آنلاین تحت وب و بازی های اسمارت فون را می توان در مجموعه یارا موبایل جستجو کرد.این شرکت، مشاور و مجری پروژه های نرم افزاری، مختلف اعم از دسکتاپ،تحت وب، موبایل اپلیکیشن ، سرویس ارزش افزوده موبایل و ... می باشد و فعالیت رسمی خود را به صورت مستقل از سال 1383 آغاز کرده است. تجربه کافی در اراِئه مشاوره،تنوع مهارت ها و سازگاری در برخورد با توقعات و نیاز های حرفه ای مشتری، از توانایی های قابل توجه شرکت یارا می باشد."
+        android:textSize="14sp" />
 
-</FrameLayout>
+</LinearLayout>

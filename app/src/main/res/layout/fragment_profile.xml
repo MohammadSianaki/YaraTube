@@ -36,8 +36,8 @@
 
             <ImageView
                 android:id="@+id/profile_fragment_avatar_image_view"
-                android:layout_width="96dp"
-                android:layout_height="96dp" />
+                android:layout_width="104dp"
+                android:layout_height="104dp" />
 
         </LinearLayout>
 
@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_fragment_avatar_image_view_container_linear_layout"
-            android:layout_marginTop="96dp"
+            android:layout_marginTop="32dp"
             android:orientation="vertical">
 
 
@@ -146,6 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_fragment_gender_container_linear_layout"
+            android:layout_marginBottom="32dp"
             android:layout_marginTop="32dp"
             android:orientation="vertical">
 
@@ -194,6 +195,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginTop="32dp"
             android:gravity="center"
             android:orientation="horizontal">
 

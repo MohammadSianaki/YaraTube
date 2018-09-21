@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 
 import com.yaratech.yaratube.R;
 
-import mehdi.sakout.aboutpage.AboutPage;
-import mehdi.sakout.aboutpage.Element;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -35,18 +32,7 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Element versionElement = new Element();
-        versionElement.setTitle("Version 1.0.0");
-        return new AboutPage(getContext())
-                .isRTL(true)
-                .setImage(R.drawable.logo)
-                .setDescription("This application has been developed during my internship at Yara Information Technology")
-                .addItem(versionElement)
-                .addGroup("Connect with us")
-                .addEmail("mohammad.sianaki@ut.ac.ir")
-                .addWebsite("https://github.com/MohammadSianaki")
-                .addGroup("Developer : Mohammad Hosseini Sianaki")
-                .create();
+        return inflater.inflate(R.layout.fragment_about, container, false);
     }
 
 }

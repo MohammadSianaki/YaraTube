@@ -131,7 +131,8 @@ public class ProductDetailsPresenter implements DetailsContract.Presenter {
         Disposable disposable = appDataManager.isUserAuthorized(new DataManager.LoginDatabaseResultCallback() {
             @Override
             public void onSuccess(String token) {
-                if (token != null) {
+                Log.d(TAG, "onSuccess() called with: token = [" + token + "]");
+                if (!token.equals("")) {
                     mView.showCommentDialog(token);
                 } else {
                     mView.showLoginDialog();

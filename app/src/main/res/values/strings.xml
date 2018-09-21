@@ -2,7 +2,9 @@
 <resources>
     <string name="app_name">YaraTube</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_fragment">یارا، یکی از اولین شرکت‌های تولیدکننده‌ی بازی‌های پویای اس‌ام‌اسی و هم‌چنین سرگرمی‌های مبتنی بر متن اس‌ام‌اسی است. بهترین بازی‌های آن‌لاین تحت وب و بازی‌های اسمارت‌فون‌ را می توان در مجموعه یارا موبایل جستجو کرد.
+این شرکت، مشاور و مجری پروژه‌های نرم‌افزاری مختلف اعم از دسکتاپ، تحت وب، موبایل اپلیکیشن‌، سرویس‌ ارزش افزودۀ موبایل و ... می باشد و فعالیت رسمی خود را بصورت مستقل از سال ۱۳۸۳ آغاز کرده است.
+تجربه کافی در ارائه مشاوره، تنوع مهارت ها و سازگاری در برخورد با توقعات و نیازهای حرفه ای مشتری، از توانایی های قابل توجه شرکت یارا می باشد.</string>
     <string name="nav_profile">پروفایل</string>
     <string name="nav_about_us">درباره ما</string>
     <string name="nav_contact_us">تماس با ما</string>
