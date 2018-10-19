@@ -7,7 +7,6 @@ Use MVP architecture
 
 Use popular third party libraries, such as:
 - RxJava2
-- Dagger 2
 - Retrofit 2
 - Room 
 - ButterKnife
